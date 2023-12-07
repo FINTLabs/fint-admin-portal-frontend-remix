@@ -9,7 +9,8 @@ import {
     PersonGroupIcon,
     PersonIcon,
     WrenchIcon,
-    XMarkIcon
+    XMarkIcon,
+    TokenIcon
 } from '@navikt/aksel-icons';
 
 import {Link} from "@remix-run/react";
@@ -89,7 +90,7 @@ export function LayoutAppbar () {
                                 <LinkPanel.Title><ComponentIcon title="a11y-title" fontSize="1.5rem" /> Components</LinkPanel.Title>
                             </LinkPanel>
 
-                            <LinkPanel border={false} href="/packages">
+                            <LinkPanel border={false} href="/access">
                                 <LinkPanel.Title><PackageIcon title="a11y-title" fontSize="1.5rem" /> Packages</LinkPanel.Title>
                             </LinkPanel>
                         </Box>
@@ -100,7 +101,7 @@ export function LayoutAppbar () {
                                 <LinkPanel.Description>Data Consistency Reports</LinkPanel.Description>
                             </LinkPanel>
                             <LinkPanel border={false} href="/molly">
-                                <LinkPanel.Title><PackageIcon title="a11y-title" fontSize="1.5rem" /> Molly</LinkPanel.Title>
+                                <LinkPanel.Title><TokenIcon title="a11y-title" fontSize="1.5rem" /> Molly</LinkPanel.Title>
                                 <LinkPanel.Description>Create a deployment script.</LinkPanel.Description>
                             </LinkPanel>
                         </Box>

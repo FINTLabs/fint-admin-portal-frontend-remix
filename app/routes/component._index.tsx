@@ -35,7 +35,7 @@ const ComponentPage = () => {
     const handleFormClose = () => {
         // Handle form submission logic
         console.log("closing the contact add form inside index");
-        componentEditRef.current.close();
+        componentEditRef?.current?.close();
     };
 
     return (

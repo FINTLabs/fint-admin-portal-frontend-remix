@@ -1,22 +1,22 @@
-import React, { useRef, forwardRef, useImperativeHandle } from "react";
+import React, { useRef, forwardRef, useImperativeHandle, ForwardedRef } from "react";
 import { Button, Modal, TextField } from "@navikt/ds-react";
 import { PencilIcon } from "@navikt/aksel-icons";
 
-const CustomFormModal = forwardRef(({ headerText, onClose }, ref) => {
-    const internalRef = useRef<HTMLDialogElement>(null);
+interface ContactFormProps {
+    headerText: string;
+    onClose: () => void;
+}
 
-    // useImperativeHandle(ref, () => ({
-    //     showModal: () => internalRef.current?.showModal(),
-    //     close: () => internalRef.current?.close(),
-    // }));
+const ContactForm = forwardRef((props: ContactFormProps, ref: ForwardedRef<HTMLDialogElement>) => {
+    const { headerText, onClose } = props;
 
-    const handleSubmit = (e) => {
+    const handleSubmit = (e: any) => {
         e.preventDefault();
         console.log("contact form submitted")
         onClose();
     };
 
-    const handleCancel = (e) => {
+    const handleCancel = (e: any) => {
         e.preventDefault();
         console.log("contact form canceled")
         onClose();
@@ -40,4 +40,4 @@ const CustomFormModal = forwardRef(({ headerText, onClose }, ref) => {
     );
 });
 
-export default CustomFormModal;
+export default ContactForm;

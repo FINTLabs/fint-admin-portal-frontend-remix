@@ -2,13 +2,18 @@ import React from 'react';
 import {Table, Tag} from "@navikt/ds-react";
 import {Link} from "@remix-run/react";
 import {InformationSquareIcon} from "@navikt/aksel-icons";
+import {IComponent} from '../data/types';
 
-const ComponentsTable = ({ data }) => {
+interface ComponentsTableProps {
+    data: IComponent[];
+}
+
+const ComponentsTable = ({ data }: ComponentsTableProps) => {
     return (
         <Table zebraStripes>
             <Table.Header>
                 <Table.Row>
-                    <Table.HeaderCell nowrap="true" style={{ fontWeight: 'bold' }}>Name</Table.HeaderCell>
+                    <Table.HeaderCell style={{ fontWeight: 'bold' }}>Name</Table.HeaderCell>
                     <Table.HeaderCell style={{ fontWeight: 'bold' }}>Miljøer</Table.HeaderCell>
                     <Table.HeaderCell style={{ fontWeight: 'bold' }}>Type</Table.HeaderCell>
                     <Table.HeaderCell style={{ fontWeight: 'bold' }}></Table.HeaderCell>
@@ -17,7 +22,7 @@ const ComponentsTable = ({ data }) => {
             <Table.Body>
                 {data.map((row, index) => (
                     <Table.Row key={index} style={{ borderBottom: '1px dashed #e0e0e0' }} >
-                        <Table.DataCell nowrap="true" >
+                        <Table.DataCell>
                             <div >{row.description}</div>
                             <div >{row.basePath}</div>
                         </Table.DataCell>
@@ -40,7 +45,7 @@ const ComponentsTable = ({ data }) => {
                                 </Tag>
                             )}
                         </Table.DataCell>
-                        <Table.DataCell nowrap="true" >
+                        <Table.DataCell>
                             {row.openData && (
                                 <Tag size="small" variant="alt3">
                                     Open

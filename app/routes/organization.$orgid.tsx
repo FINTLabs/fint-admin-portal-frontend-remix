@@ -5,7 +5,6 @@ import {HGrid, VStack, Tabs, Heading} from "@navikt/ds-react";
 import {PersonGroupIcon, ComponentIcon, Buldings2Icon, Buldings3Icon} from '@navikt/aksel-icons';
 import ComponentsTable from "~/components/components-table";
 import ContactTable from "~/components/contacts-table";
-
 import organisations from '~/data/organisation';
 import contacts from '~/data/contacts';
 import components from '~/data/components';
@@ -23,7 +22,8 @@ export const links: LinksFunction = () => [
     { rel: "stylesheet", href: navStyles }
 ];
 
-export function loader({ params }) {
+
+export function loader({ params }: { params: { orgid: string } }) {
     const orgNumber = params.orgid;
 
     const selectedOrganisation =

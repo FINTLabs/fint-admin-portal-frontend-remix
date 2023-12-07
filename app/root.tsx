@@ -41,18 +41,18 @@ export default function App() {
           }
       >
           <Box background="surface-neutral-moderate" padding="8" as="header">
-              <Page.Block gutters width="sm">
+              <Page.Block gutters>
                   <LayoutAppbar />
               </Page.Block>
           </Box>
 
           <Box
-              background="surface-alt-4-moderate"
+              // background="surface-alt-4-moderate"
               padding="1"
               paddingBlock="16"
               as="main"
           >
-              <Page.Block gutters width="sm">
+              <Page.Block gutters>
                   <Outlet />
               </Page.Block>
           </Box>

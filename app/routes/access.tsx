@@ -3,9 +3,10 @@ import {Alert, Box, Detail, Heading, Hide, HStack, InternalHeader, LinkPanel, Pa
 import navStyles from "@navikt/ds-css/dist/index.css";
 import {LayoutAppbar} from "~/components/layout-appbar";
 import LayoutHeader from "~/components/layout-header";
-import {ComponentIcon, PersonGroupIcon} from "@navikt/aksel-icons";
+import {TasklistIcon} from "@navikt/aksel-icons";
 import {Outlet} from "@remix-run/react";
 import React from "react";
+
 
 
 export const meta: MetaFunction = () => {
@@ -19,13 +20,13 @@ export const links: LinksFunction = () => [
 ];
 
 export default function Index() {
-    let breadcrumbs = ['Dashboard', 'Organizations', 'Component'];
+    let breadcrumbs = ['Dashboard', 'Access Template'];
 
     return (
 
         <>
 
-            <LayoutHeader title={"Components"} icon={ComponentIcon} breadcrumbs={breadcrumbs}/>
+            <LayoutHeader title={"Tilgangspakker (maler)"} icon={TasklistIcon} breadcrumbs={breadcrumbs}/>
 
             <Box
                 // background="surface-alt-4-moderate"
@@ -34,6 +35,11 @@ export default function Index() {
                 as="main"
             >
                 <Page.Block gutters width="lg">
+                    <Box padding="4">
+                        <Alert variant="info">
+                            This area is not finished yet... so this list is only for show...
+                        </Alert>
+                    </Box>
                     <Outlet />
                 </Page.Block>
             </Box>

@@ -5,19 +5,25 @@ import {Button, Table} from "@navikt/ds-react";
 import {Link} from "@remix-run/react";
 import {DocPencilIcon, PencilIcon} from '@navikt/aksel-icons';
 import CustomFormModal from "~/components/contact-add";
+import { IContact } from '~/data/types';
 
-const ContactTable = ({data}) => {
+interface ContactTableProps {
+    data: IContact[];
+}
+
+const ContactTable = ({data} : ContactTableProps) => {
 
     const modalRef = useRef<HTMLDialogElement>(null);
 
     const handleFormClose = () => {
         // Handle form submission logic
         console.log("closing the contact modal from the table");
-        modalRef.current.close();
+
+        modalRef.current?.close();
     };
 
 
-    const getTechnicalContact = (technicalDN) => {
+    const getTechnicalContact = (technicalDN: string) => {
         const technicalContact = organisations.find((org) => org.dn === technicalDN);
 
         if (technicalContact) {
@@ -28,7 +34,7 @@ const ContactTable = ({data}) => {
             );
         }
 
-        return null; // or handle the case when technicalContact is not found
+        return null;
     };
 
     return (
@@ -36,14 +42,14 @@ const ContactTable = ({data}) => {
             <Table.Header>
                 <Table.Row>
                     <Table.HeaderCell />
-                    <Table.HeaderCell nowrap="true" style={{ fontWeight: 'bold' }}>Name</Table.HeaderCell>
+                    <Table.HeaderCell style={{ fontWeight: 'bold' }}>Name</Table.HeaderCell>
                     {/*<Table.HeaderCell style={{ fontWeight: 'bold' }}>Mobile</Table.HeaderCell>*/}
                     <Table.HeaderCell style={{ fontWeight: 'bold' }}>Technical</Table.HeaderCell>
                     <Table.HeaderCell />
                 </Table.Row>
             </Table.Header>
             <Table.Body>
-                {data.map((row, index) => (
+                {data.map((row: IContact, index: number) => (
                     <Table.ExpandableRow
                         key={index}
                         style={{ borderBottom: '1px dashed #e0e0e0' }}
@@ -55,13 +61,13 @@ const ContactTable = ({data}) => {
                             </ul>
                         }
                     >
-                        <Table.DataCell nowrap="true">
+                        <Table.DataCell>
                             <div>{row.firstName} {row.lastName}</div>
                             <div>{row.mail}</div>
                             <div>{row.mobile}</div>
                         </Table.DataCell>
                         {/*<Table.DataCell nowrap="true" >{row.mobile} </Table.DataCell>*/}
-                        <Table.DataCell nowrap="true" >
+                        <Table.DataCell>
                             {row.technical.map((technicalDN) => (
                                 getTechnicalContact(technicalDN)
                             ))}

@@ -6,7 +6,6 @@ import LayoutHeader from "~/components/layout-header";
 import {ComponentIcon, PersonGroupIcon} from "@navikt/aksel-icons";
 import {Outlet} from "@remix-run/react";
 import React from "react";
-import Dashboard from "~/routes/dashboard";
 
 
 export const meta: MetaFunction = () => {
@@ -29,7 +28,7 @@ export default function Index() {
     <LayoutHeader title={"Contacts"} icon={PersonGroupIcon} breadcrumbs={breadcrumbs}/>
 
             <Box
-                background="surface-alt-4-moderate"
+                // background="surface-alt-4-moderate"
                 padding="8"
                 paddingBlock="16"
                 as="main"

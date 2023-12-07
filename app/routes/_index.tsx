@@ -68,29 +68,7 @@ export default function Dashboard() {
 
     return (
         <>
-            {/*<Box*/}
-            {/*    as="header"*/}
-            {/*    borderWidth="0 0 4 0"*/}
-            {/*    borderColor="border-success"*/}
-            {/*    paddingBlock="0 0"*/}
-            {/*>*/}
-            {/*    <div className="max-w-5xl">*/}
-            {/*        <Box background="surface-default" paddingInline="4" paddingBlock="0 6">*/}
-            {/*            <HStack align="start" gap="8">*/}
-            {/*                <Hide below="md">*/}
-            {/*                    <RectangleSectionsIcon title="a11y-title" fontSize="3.5rem" />*/}
-            {/*                </Hide>*/}
-
-            {/*                /!*<VStack gap={{ xs: "4", md: "5" }}>*!/*/}
-            {/*                <Heading level="1" size="xlarge">*/}
-            {/*                    Admin Portal Dashboard*/}
-            {/*                </Heading>*/}
-            {/*            </HStack>*/}
-            {/*        </Box>*/}
-            {/*    </div>*/}
-            {/*</Box>*/}
-
-
+            
             <Page.Block gutters width="lg" >
                 <VStack gap="4">
                     <Box padding="4">

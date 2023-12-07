@@ -20,6 +20,7 @@ import contacts from '~/data/contacts';
 import {useEffect, useState} from "react";
 import Example from "~/components/contact-add";
 import CustomFormModal from "~/components/contact-add";
+import {IContact} from '~/data/types'
 
 export const meta: MetaFunction = () => {
     return [
@@ -33,14 +34,14 @@ export const links: LinksFunction = () => [
 
 export default function ContactPage() {
     const [searchInput, setSearchInput] = useState('');
-    const [filteredData, setFilteredData] = useState([]);
+    const [filteredData, setFilteredData] = useState<IContact[]>([]);
     const contactEditRef = useRef<HTMLDialogElement>(null);
 
     useEffect(() => {
         setFilteredData(contacts);
     }, []);
 
-    const handleSearchInputChange = (input) => {
+    const handleSearchInputChange = (input:any) => {
         setSearchInput(input);
         const filtered = contacts.filter(
             (row) =>
@@ -53,7 +54,7 @@ export default function ContactPage() {
     const handleFormClose = () => {
         // Handle form submission logic
         console.log("closing the contact add form inside index");
-        contactEditRef.current.close();
+        contactEditRef.current?.close();
     };
 
 
