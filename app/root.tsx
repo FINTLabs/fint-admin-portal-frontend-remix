@@ -3,7 +3,7 @@ import { cssBundleHref } from "@remix-run/css-bundle";
 import type { LinksFunction } from "@remix-run/node";
 import navStyles from "@navikt/ds-css/dist/index.css";
 import {LayoutAppbar} from '~/components/layout-appbar';
-import { Box, Page } from "@navikt/ds-react";
+import { Box, Page, BodyShort } from "@navikt/ds-react";
 
 import {
   Links,
@@ -13,7 +13,7 @@ import {
   Scripts,
   ScrollRestoration,
 } from "@remix-run/react";
-
+import {Link} from "@remix-run/react";
 
 export const links: LinksFunction = () => [
     ...(cssBundleHref ? [{ rel: "stylesheet", href: cssBundleHref }, { rel: "stylesheet", href: navStyles }] : []),
@@ -35,6 +35,7 @@ export default function App() {
           footer={
               <Box background="surface-neutral-moderate" padding="8" as="footer">
                   <Page.Block gutters width="lg">
+                      <BodyShort><Link to={'#'}>Til Toppen</Link></BodyShort>
                       Footer from root
                   </Page.Block>
               </Box>

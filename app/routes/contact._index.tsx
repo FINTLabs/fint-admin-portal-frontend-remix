@@ -65,6 +65,7 @@ export default function ContactPage() {
                 ref={contactEditRef}
                 headerText="Add New Contact Form"
                 onClose={handleFormClose}
+                selectedContact={null}
             />
 
             <InternalHeader>

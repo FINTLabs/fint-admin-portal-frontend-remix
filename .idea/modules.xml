@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/admin-portal-remix.iml" filepath="$PROJECT_DIR$/.idea/admin-portal-remix.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/fint-admin-portal-frontend-remix.iml" filepath="$PROJECT_DIR$/.idea/fint-admin-portal-frontend-remix.iml" />
     </modules>
   </component>
 </project>

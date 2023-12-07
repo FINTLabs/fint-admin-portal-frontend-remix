@@ -14,6 +14,13 @@ interface ContactTableProps {
 const ContactTable = ({data} : ContactTableProps) => {
 
     const modalRef = useRef<HTMLDialogElement>(null);
+    const [selectedContact, setSelectedContact] = useState<IContact | null>(null);
+
+
+    const openEditModal = (contact: IContact) => {
+        setSelectedContact(contact);
+        modalRef.current?.showModal();
+    };
 
     const handleFormClose = () => {
         // Handle form submission logic
@@ -55,7 +62,7 @@ const ContactTable = ({data} : ContactTableProps) => {
                         style={{ borderBottom: '1px dashed #e0e0e0' }}
                         content={
                             <ul>
-                                {row.roles.map((role, roleIndex) => (
+                                {row.roles?.map((role, roleIndex) => (
                                     <li key={roleIndex}>{role}</li>
                                 ))}
                             </ul>
@@ -75,7 +82,7 @@ const ContactTable = ({data} : ContactTableProps) => {
                         </Table.DataCell>
                         <Table.DataCell>
                             <Button
-                                onClick={() => modalRef.current?.showModal()}
+                                onClick={() => openEditModal(row)}
                                 icon={<PencilIcon aria-hidden />}
                                 size="xsmall"
                             />
@@ -83,6 +90,7 @@ const ContactTable = ({data} : ContactTableProps) => {
                                 ref={modalRef}
                                 headerText="Edit Contact Form"
                                 onClose={handleFormClose}
+                                selectedContact={selectedContact}
                             />
 
                         </Table.DataCell>

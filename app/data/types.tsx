@@ -19,14 +19,14 @@ export interface IComponent {
 }
 
 export interface IContact {
-    dn: string;
+    dn?: string;
     nin: string;
     firstName: string;
     lastName: string;
     mail: string;
     mobile: string;
-    technical: string[];
-    legal: string[];
-    supportId: string | null;
-    roles: string[];
+    technical?: string[] | null;
+    legal?: string[] | null;
+    supportId?: string | null;
+    roles?: string[] | null;
 }
