@@ -3,7 +3,9 @@ import {InternalHeader, Table, Spacer, Search, HStack, LinkPanel, Box} from "@na
 import navStyles from "@navikt/ds-css/dist/index.css";
 import organisations from '~/data/organisation';
 import OrganizationTable from "~/components/organization-table";
-import {Buldings3Icon, PersonGroupIcon} from "@navikt/aksel-icons";
+import {Buldings3Icon, PersonGroupIcon, PersonPlusIcon} from "@navikt/aksel-icons";
+import React, {useRef} from "react";
+import CustomFormModal from "~/components/contact-add";
 
 export const meta: MetaFunction = () => {
   return [
@@ -13,39 +15,55 @@ export const meta: MetaFunction = () => {
 };
 export const links: LinksFunction = () => [
   { rel: "stylesheet", href: navStyles }
-];
+]
 
 export default function OrganizationPage() {
-  return (
-    <div style={{ fontFamily: "system-ui, sans-serif", lineHeight: "1.8" }}>
+    const organizationEditRef = useRef<HTMLDialogElement>(null);
 
 
 
+    const handleFormClose = () => {
+        // Handle form submission logic
+        console.log("closing the organization add form inside index");
+        organizationEditRef.current?.close();
+    }
 
-
-        <InternalHeader>
-            <InternalHeader.Title as="h1"><Buldings3Icon title="a11y-title" fontSize="1.5rem" /> Organizations</InternalHeader.Title>
-            <Spacer />
-            <form
-                className="self-center px-5"
-                onSubmit={(e) => {
-                    e.preventDefault();
-                    console.log("Search!");
-                }}
-            >
-                <Search
-                    label="InternalHeader søk"
-                    size="medium"
-                    variant="simple"
-                    placeholder="Søk"
+        return (
+            <div style={{fontFamily: "system-ui, sans-serif", lineHeight: "1.8"}}>
+                <CustomFormModal
+                    ref={organizationEditRef}
+                    headerText="Add New organization Form"
+                    onClose={handleFormClose}
+                    selectedContact={null}
                 />
-            </form>
 
 
-        </InternalHeader>
+                <InternalHeader>
+                    <InternalHeader.Button onClick={() => organizationEditRef.current?.showModal()}>
+                        <PersonPlusIcon title="a11y-title" fontSize="1.5rem"/>Add New
+                    </InternalHeader.Button>
+                    <Spacer/>
 
-    <OrganizationTable data={organisations} />
+                    <form
+                        className="self-center px-5"
+                        onSubmit={(e) => {
+                            e.preventDefault();
+                            console.log("Search!");
+                        }}
+                    >
+                        <Search
+                            label="InternalHeader søk"
+                            size="medium"
+                            variant="simple"
+                            placeholder="Søk"
+                        />
+                    </form>
 
-    </div>
-  );
-}
+
+                </InternalHeader>
+
+                <OrganizationTable data={organisations}/>
+
+            </div>
+        );
+    }

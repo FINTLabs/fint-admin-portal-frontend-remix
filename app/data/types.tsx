@@ -30,3 +30,16 @@ export interface IContact {
     supportId?: string | null;
     roles?: string[] | null;
 }
+
+export interface IOrganization {
+    dn: string;
+    name: string;
+    orgNumber: string;
+    displayName: string;
+    components: string[];
+    legalContact: string;
+    techicalContacts: string[];
+    k8sSize: number | null;
+    customer: boolean;
+    primaryAssetId: string;
+}
