@@ -1,10 +1,31 @@
-import React from 'react';
+import React, {useRef, useState} from 'react';
 import {Table, Tag} from "@navikt/ds-react";
 import {Link} from "@remix-run/react";
 import {InformationSquareIcon} from "@navikt/aksel-icons";
-import organisations from "~/data/organisation";
+import { IOrganization } from "~/data/types";
 
-const OrganizationTable = ({ data }) => {
+interface OrganizationTableProps {
+    data: IOrganization[];
+}
+
+const OrganizationTable = ({ data }) : OrganizationTableProps => {
+
+    const modalRef = useRef<HTMLDialogElement>(null);
+    const [selectedOrganization, setSelectedOrganization] = useState<IOrganization | null>(null);
+
+    const openEditModal = (organization: IOrganization) => {
+        setSelectedOrganization(organization);
+        modalRef.current?.showModal();
+    };
+
+    const handleFormClose = () => {
+        //Handle form submisson logic
+        console.log("closing the organization modal from the table");
+
+        modalRef.current?.close();
+    };
+
+
     return (
         <Table zebraStripes>
             <Table.Header>

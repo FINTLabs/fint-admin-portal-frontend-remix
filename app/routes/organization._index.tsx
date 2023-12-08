@@ -5,7 +5,7 @@ import organisations from '~/data/organisation';
 import OrganizationTable from "~/components/organization-table";
 import {Buldings3Icon, PersonGroupIcon, PersonPlusIcon} from "@navikt/aksel-icons";
 import React, {useRef} from "react";
-import CustomFormModal from "~/components/contact-add";
+import CustomFormModal from "~/components/organization-add";
 
 export const meta: MetaFunction = () => {
   return [
@@ -21,7 +21,6 @@ export default function OrganizationPage() {
     const organizationEditRef = useRef<HTMLDialogElement>(null);
 
 
-
     const handleFormClose = () => {
         // Handle form submission logic
         console.log("closing the organization add form inside index");
@@ -34,7 +33,7 @@ export default function OrganizationPage() {
                     ref={organizationEditRef}
                     headerText="Add New organization Form"
                     onClose={handleFormClose}
-                    selectedContact={null}
+                    selectedOrganization={null}
                 />
 
 

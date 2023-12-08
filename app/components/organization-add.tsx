@@ -19,6 +19,16 @@ const OrganizationForm = forwardRef((props: OrganizationFormProps, ref: Forwarde
         orgNumber: "",
     });
 
+    useEffect(() => {
+        if (selectedOrganization) {
+            setFormValues({
+                name: selectedOrganization.name || "",
+                displayName: selectedOrganization.displayName || "",
+                orgNumber: selectedOrganization.orgNumber || "",
+            });
+        }
+    }, [selectedOrganization]);
+
     function onChange(e: ChangeEvent<HTMLInputElement>) {
         let name = e.target.name;
         let value = e.target.value;
@@ -28,17 +38,6 @@ const OrganizationForm = forwardRef((props: OrganizationFormProps, ref: Forwarde
             [name]: value,
         }));
     }
-
-    useEffect(() => {
-        if (selectedOrganization) {
-            setFormValues({
-                name: selectedOrganization.name || "",
-                displayName: selectedOrganization.displayName || "",
-                orgNumber: selectedOrganization.orgNumber || ""
-
-            });
-        }
-    }, [selectedOrganization]);
 
     function resetFormValues() {
         setFormValues({
@@ -62,21 +61,21 @@ const OrganizationForm = forwardRef((props: OrganizationFormProps, ref: Forwarde
                     value = {formValues.name}
                     error = {formValues.name.length < 1 ? "Required" : ""}
                     onChange = {onChange}
-                    name = "firstName"
+                    name = "name"
                     />
                     <TextField
                         label = {"Synlig navn"}
                         value = {formValues.displayName}
                         error = {formValues.displayName.length < 1 ? "Required" : ""}
                         onChange = {onChange}
-                        name = "lastName"
+                        name = "displayName"
                     />
                     <TextField
                         label = {"Organisasjons nummer"}
                         value = {formValues.orgNumber}
                         error = {formValues.orgNumber.length < 1 ? "Required" : ""}
                         onChange = {onChange}
-                        name = "mail"
+                        name = "orgNumber"
                     />
                 </form>
             </Modal.Body>
@@ -91,5 +90,6 @@ const OrganizationForm = forwardRef((props: OrganizationFormProps, ref: Forwarde
         </Modal>
     );
 });
+
 
 export default OrganizationForm;
