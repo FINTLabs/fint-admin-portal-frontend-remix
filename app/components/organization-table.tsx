@@ -1,8 +1,9 @@
 import React, {useRef, useState} from 'react';
-import {Table, Tag} from "@navikt/ds-react";
+import {Button, Table, Tag} from "@navikt/ds-react";
 import {Link} from "@remix-run/react";
-import {InformationSquareIcon} from "@navikt/aksel-icons";
+import {InformationSquareIcon, PencilIcon} from "@navikt/aksel-icons";
 import { IOrganization } from "~/data/types";
+import CustomFormModal from "~/components/organization-add";
 
 interface OrganizationTableProps {
     data: IOrganization[];
@@ -34,6 +35,7 @@ const OrganizationTable = ({ data }) : OrganizationTableProps => {
                     <Table.HeaderCell scope="col">Asset Id</Table.HeaderCell>
                     <Table.HeaderCell scope="col">Org Number</Table.HeaderCell>
                     <Table.HeaderCell style={{ fontWeight: 'bold' }}>View</Table.HeaderCell>
+                    <Table.HeaderCell style={{ fontWeight:'bold' }}>Edit</Table.HeaderCell>
                 </Table.Row>
             </Table.Header>
             <Table.Body>
@@ -46,6 +48,19 @@ const OrganizationTable = ({ data }) : OrganizationTableProps => {
                             <Link to={`/organization/${row.orgNumber}`}>
                                 <InformationSquareIcon title="a11y-title" fontSize="1.5rem" />
                             </Link>
+                        </Table.DataCell>
+                        <Table.DataCell>
+                            <Button
+                                onClick={() => openEditModal(row)}
+                                icon={<PencilIcon aria-hidden />}
+                                size="xsmall"
+                            />
+                            <CustomFormModal
+                                ref={modalRef}
+                                headerText="Edit Organization Form"
+                                onClose={handleFormClose}
+                                selectedOrganization={selectedOrganization}
+                            />
                         </Table.DataCell>
                     </Table.Row>
                 ))}
