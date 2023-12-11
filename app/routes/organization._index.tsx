@@ -4,8 +4,12 @@ import navStyles from "@navikt/ds-css/dist/index.css";
 import organisations from '~/data/organisation';
 import OrganizationTable from "~/components/organization-table";
 import {Buldings3Icon, PersonGroupIcon, PersonPlusIcon} from "@navikt/aksel-icons";
-import React, {useRef} from "react";
+import React, {useEffect, useRef, useState} from "react";
 import CustomFormModal from "~/components/organization-add";
+import {any} from "prop-types";
+import {IOrganization} from "~/data/types";
+import contacts from "~/data/contacts";
+import organisation from "~/data/organisation";
 
 export const meta: MetaFunction = () => {
   return [
@@ -19,7 +23,23 @@ export const links: LinksFunction = () => [
 
 export default function OrganizationPage() {
     const organizationEditRef = useRef<HTMLDialogElement>(null);
+    const [searchInput, setSearchInput] = useState("");
+    const [filteredData, setFilteredData] = useState<IOrganization[]>([])
 
+    useEffect(() => {
+        setFilteredData(organisation);
+    }, []);
+
+    const handleSearchInput = (input:any) => {
+        setSearchInput(input);
+        const filtered = organisations.filter(
+            (row) =>
+                row.name.toLowerCase().includes(input.toLowerCase()) ||
+                row.displayName.toLowerCase().includes(input.toLowerCase()) ||
+                row.orgNumber.toLowerCase().includes(input.toLowerCase())
+        );
+        setFilteredData(filtered)
+    };
 
     const handleFormClose = () => {
         // Handle form submission logic
@@ -55,13 +75,14 @@ export default function OrganizationPage() {
                             size="medium"
                             variant="simple"
                             placeholder="Søk"
+                            onChange={handleSearchInput}
                         />
                     </form>
 
 
                 </InternalHeader>
 
-                <OrganizationTable data={organisations}/>
+                <OrganizationTable data={filteredData}/>
 
             </div>
         );
