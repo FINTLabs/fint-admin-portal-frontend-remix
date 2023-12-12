@@ -1,26 +1,16 @@
 import type {MetaFunction, LinksFunction} from "@remix-run/node";
-import React, {useRef} from "react";
+import React, {useRef, useEffect, useState} from "react";
 import {
     InternalHeader,
-    Table,
     Spacer,
     Search,
-    HStack,
-    VStack,
-    Heading,
-    HGrid,
-    Box,
-    LinkPanel,
-    Button, Modal, TextField
 } from "@navikt/ds-react";
 import navStyles from "@navikt/ds-css/dist/index.css";
 import ContactTable from "~/components/contacts-table";
-import {Buldings3Icon, ComponentIcon, PencilIcon, PersonGroupIcon, PersonPlusIcon} from '@navikt/aksel-icons';
-import contacts from '~/data/contacts';
-import {useEffect, useState} from "react";
-import Example from "~/components/contact-add";
+import { PersonPlusIcon} from '@navikt/aksel-icons';
 import CustomFormModal from "~/components/contact-add";
-import {IContact} from '~/data/types'
+import type {IContact} from '~/data/types'
+import {fetchContacts} from "~/data/api";
 
 export const meta: MetaFunction = () => {
     return [
@@ -37,8 +27,17 @@ export default function ContactPage() {
     const [filteredData, setFilteredData] = useState<IContact[]>([]);
     const contactEditRef = useRef<HTMLDialogElement>(null);
 
+    // const [contacts, setContacts] = useState<IContact[]>([]);
+
     useEffect(() => {
-        setFilteredData(contacts);
+        const fetchData = async () => {
+            const contactsData = await fetchContacts();
+            if (contactsData) {
+                setFilteredData(contactsData);
+            }
+        };
+
+        fetchData();
     }, []);
 
     const handleSearchInputChange = (input:any) => {

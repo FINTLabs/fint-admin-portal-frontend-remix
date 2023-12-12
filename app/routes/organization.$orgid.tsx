@@ -8,7 +8,6 @@ import ContactTable from "~/components/contacts-table";
 import organisations from '~/data/organisation';
 import contacts from '~/data/contacts';
 import components from '~/data/components';
-import InternalHeader from "~/components/layout-header";
 import React from "react";
 
 export const meta: MetaFunction = () => {

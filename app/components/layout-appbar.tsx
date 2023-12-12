@@ -1,4 +1,4 @@
-import React, {useRef, useState} from "react";
+import React, {useEffect, useRef, useState} from "react";
 import {BodyShort, Box, Button, Heading, HGrid, Hide, HStack, LinkPanel, Popover} from "@navikt/ds-react";
 import {
     Buldings3Icon,
@@ -14,11 +14,24 @@ import {
 } from '@navikt/aksel-icons';
 
 import {Link} from "@remix-run/react";
+import {fetchDisplayName} from "~/data/api";
 
 export function LayoutAppbar () {
 
     const buttonRef = useRef<HTMLButtonElement>(null);
     const [menuOpen, setMenuOpen] = useState(false);
+    const [displayName, setDisplayName] = useState("Guest");
+
+    useEffect(() => {
+        const fetchData = async () => {
+            const name = await fetchDisplayName();
+            if (name) {
+                setDisplayName(name);
+            }
+        };
+
+        fetchData();
+    }, []);
 
     return (
 
@@ -48,7 +61,7 @@ export function LayoutAppbar () {
                                 <Hide below="md" asChild>
                                     <Button icon={<PersonIcon aria-hidden />} variant="tertiary">
                                         <BodyShort weight="semibold" truncate className="max-w-[10vw]">
-                                            Jennifer Strand
+                                            {displayName}
                                         </BodyShort>
                                     </Button>
                                 </Hide>

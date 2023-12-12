@@ -1,14 +1,28 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {Table, Tag} from "@navikt/ds-react";
 import {Link} from "@remix-run/react";
 import {InformationSquareIcon} from "@navikt/aksel-icons";
 import {IComponent} from '../data/types';
+import {fetchComponents} from "~/data/api";
 
 interface ComponentsTableProps {
     data: IComponent[];
 }
 
 const ComponentsTable = ({ data }: ComponentsTableProps) => {
+    const [components, setComponents] = useState<IComponent[]>([]);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            const componentsData = await fetchComponents();
+            if (componentsData) {
+                setComponents(componentsData);
+            }
+        };
+
+        fetchData();
+    }, []);
+
     return (
         <Table zebraStripes>
             <Table.Header>
@@ -20,7 +34,7 @@ const ComponentsTable = ({ data }: ComponentsTableProps) => {
                 </Table.Row>
             </Table.Header>
             <Table.Body>
-                {data.map((row, index) => (
+                {components.map((row, index) => (
                     <Table.Row key={index} style={{ borderBottom: '1px dashed #e0e0e0' }} >
                         <Table.DataCell>
                             <div >{row.description}</div>
