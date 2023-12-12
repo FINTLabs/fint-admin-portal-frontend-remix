@@ -43,20 +43,20 @@ const ContactForm = forwardRef((props: ContactFormProps, ref: ForwardedRef<HTMLD
     }
 
     function resetFormValues() {
-        setFormValues({
-            firstName: "",
-            lastName: "",
-            mail: "",
-            mobile: "",
-            nin: "",
-        });
-    }
+            setFormValues({
+                firstName: selectedContact?.firstName,
+                lastName: selectedContact?.lastName,
+                mail: selectedContact?.mail,
+                mobile: selectedContact?.mobile,
+                nin: selectedContact?.nin,
+            });
+        }
+
 
     function handleCancelClick() {
-        resetFormValues();
+        resetFormValues()
         onClose();
     }
-
 
     return (
         <Modal ref={ref} header={{ heading: headerText }} width={400}>
