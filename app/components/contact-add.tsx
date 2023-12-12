@@ -16,8 +16,7 @@ const ContactForm = forwardRef((props: ContactFormProps, ref: ForwardedRef<HTMLD
         firstName: "",
         lastName: "",
         mail: "",
-        mobile: "",
-        nin: "",
+        mobile: ""
     });
 
     useEffect(() => {
@@ -26,8 +25,7 @@ const ContactForm = forwardRef((props: ContactFormProps, ref: ForwardedRef<HTMLD
                 firstName: selectedContact.firstName || "",
                 lastName: selectedContact.lastName || "",
                 mail: selectedContact.mail || "",
-                mobile: selectedContact.mobile || "",
-                nin: selectedContact.nin || "",
+                mobile: selectedContact.mobile || ""
             });
         }
     }, [selectedContact]);
@@ -47,11 +45,9 @@ const ContactForm = forwardRef((props: ContactFormProps, ref: ForwardedRef<HTMLD
                 firstName: selectedContact?.firstName,
                 lastName: selectedContact?.lastName,
                 mail: selectedContact?.mail,
-                mobile: selectedContact?.mobile,
-                nin: selectedContact?.nin,
+                mobile: selectedContact?.mobile
             });
         }
-
 
     function handleCancelClick() {
         resetFormValues()
@@ -89,13 +85,6 @@ const ContactForm = forwardRef((props: ContactFormProps, ref: ForwardedRef<HTMLD
                         error={formValues.mobile.length < 1? "Required":""}
                         onChange={onChange}
                         name="mobile"
-                    />
-                    <TextField
-                        label={"Fødselsnummer"}
-                        value={formValues.nin}
-                        error={formValues.nin.length < 1? "Required":""}
-                        onChange={onChange}
-                        name="nin"
                     />
                 </form>
             </Modal.Body>

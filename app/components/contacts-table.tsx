@@ -45,6 +45,7 @@ const ContactTable = ({data} : ContactTableProps) => {
     };
 
     return (
+        <>
         <Table zebraStripes>
             <Table.Header>
                 <Table.Row>
@@ -86,18 +87,20 @@ const ContactTable = ({data} : ContactTableProps) => {
                                 icon={<PencilIcon aria-hidden />}
                                 size="xsmall"
                             />
-                            <CustomFormModal
-                                ref={modalRef}
-                                headerText="Edit Contact Form"
-                                onClose={handleFormClose}
-                                selectedContact={selectedContact}
-                            />
+
 
                         </Table.DataCell>
                     </Table.ExpandableRow>
                 ))}
             </Table.Body>
         </Table>
+        <CustomFormModal
+            ref={modalRef}
+            headerText="Edit Contact Form"
+            onClose={handleFormClose}
+            selectedContact={selectedContact}
+        />
+        </>
     );
 };
 

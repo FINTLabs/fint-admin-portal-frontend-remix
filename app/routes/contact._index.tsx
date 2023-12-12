@@ -24,15 +24,16 @@ export const links: LinksFunction = () => [
 
 export default function ContactPage() {
     const [searchInput, setSearchInput] = useState('');
-    const [filteredData, setFilteredData] = useState<IContact[]>([]);
+    const [filteredData, setFilteredData] = useState<[IContact]>([]);
     const contactEditRef = useRef<HTMLDialogElement>(null);
+    const [contacts, setContacts] = useState<[IContact]>([]);
 
-    // const [contacts, setContacts] = useState<IContact[]>([]);
 
     useEffect(() => {
         const fetchData = async () => {
             const contactsData = await fetchContacts();
             if (contactsData) {
+                setContacts(contactsData)
                 setFilteredData(contactsData);
             }
         };
@@ -40,8 +41,7 @@ export default function ContactPage() {
         fetchData();
     }, []);
 
-    const handleSearchInputChange = (input:any) => {
-        setSearchInput(input);
+    const handleSearchInputChange = (input: any) => {
         const filtered = contacts.filter(
             (row) =>
                 row.firstName.toLowerCase().includes(input.toLowerCase()) ||
