@@ -68,3 +68,18 @@ export const fetchLegalContact = async (organisation) => {
         return null;
     }
 };
+
+export const fetchOrganizations = async () => {
+    try {
+        const response = await fetch("http://localhost:8081/api/organisations");
+        if (response.ok) {
+            const data = await response.json();
+            return data;
+        } else {
+
+            console.error("Error fetching organizations")
+        }
+    } catch (error) {
+        console.error("Error fetching organizations", error)
+    }
+};
