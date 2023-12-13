@@ -21,8 +21,7 @@ export const fetchComponents = async () => {
     try {
         const response = await fetch("http://localhost:8081/api/components");
         if (response.ok) {
-            const data = await response.json();
-            return data;
+            return await response.json();
         } else {
             // Handle error response
             console.error("Error fetching components");
@@ -39,8 +38,7 @@ export const fetchContacts = async () => {
     try {
         const response = await fetch("http://localhost:8081/api/contacts");
         if (response.ok) {
-            const data = await response.json();
-            return data;
+            return await response.json();
         } else {
             // Handle error response
             console.error("Error fetching contacts");
@@ -49,6 +47,24 @@ export const fetchContacts = async () => {
     } catch (error) {
         // Handle fetch error
         console.error("Error fetching contacts:", error);
+        return null;
+    }
+};
+
+export const fetchLegalContact = async (organisation) => {
+    try {
+        const url = `/api/organisations/${organisation.name}/contacts/legal`;
+        const response = await fetch(url);
+        if (response.ok) {
+            return await response.json();
+        } else {
+            // Handle error response
+            console.error("Error fetching legal contact");
+            return null;
+        }
+    } catch (error) {
+        // Handle fetch error
+        console.error("Error fetching legal contact:", error);
         return null;
     }
 };
