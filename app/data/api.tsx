@@ -55,8 +55,7 @@ export const fetchOrganizations = async () => {
     try {
         const response = await fetch("http://localhost:8081/api/organisations");
         if (response.ok) {
-            const data = await response.json();
-            return data;
+            return await response.json();
         } else {
 
             console.error("Error fetching organizations")
@@ -66,7 +65,7 @@ export const fetchOrganizations = async () => {
     }
 };
 
-//TODO: Create seperate API files for each contact,org,component
+//TODO: Create separate API files for each contact,org,component
 
 export const fetchLegalContact = async (organisation) => {
     try {
