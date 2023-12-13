@@ -1,7 +1,7 @@
 import { Table } from "@navikt/ds-react";
 import { useLoaderData } from "@remix-run/react";
-import template from '~/data/template';
-import configurations from '~/data/configurations';
+import template from '~/api/template';
+import configurations from '~/api/configurations';
 
 export function loader({ params }: { params: { templateid: string } }) {
     const templateid = params.templateid;

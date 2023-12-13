@@ -1,12 +1,12 @@
 import React, {useRef} from "react";
 import type { MetaFunction, LinksFunction } from "@remix-run/node";
 import navStyles from "@navikt/ds-css/dist/index.css";
-import components from "~/data/components";
+import components from "~/api/components";
 import {useLoaderData} from "@remix-run/react";
 import {Box, Button, Heading, HGrid, LinkPanel, Tabs, Tag} from "@navikt/ds-react";
 import {TokenIcon, TenancyIcon, Buldings3Icon, PencilIcon} from '@navikt/aksel-icons';
 import OrganizationTable from "~/components/organization-table";
-import organisations from "~/data/organisation";
+import organisations from "~/api/organisation";
 import ComponentForm from "~/components/component-add";
 
 export const meta: MetaFunction = () => {

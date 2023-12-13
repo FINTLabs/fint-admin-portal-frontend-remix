@@ -9,8 +9,8 @@ import navStyles from "@navikt/ds-css/dist/index.css";
 import ContactTable from "~/components/contacts-table";
 import { PersonPlusIcon} from '@navikt/aksel-icons';
 import CustomFormModal from "~/components/contact-add";
-import type {IContact} from '~/data/types'
-import {fetchContacts} from "~/data/api";
+import type {IContact} from '~/api/types'
+import {fetchContacts} from "~/api/contact";
 
 export const meta: MetaFunction = () => {
     return [

@@ -2,7 +2,7 @@ import React, {useRef, useState} from 'react';
 import {Button, Table, Tag} from "@navikt/ds-react";
 import {Link} from "@remix-run/react";
 import {InformationSquareIcon, PencilIcon} from "@navikt/aksel-icons";
-import { IOrganization } from "~/data/types";
+import { IOrganization } from "~/api/types";
 import CustomFormModal from "~/components/organization-add";
 
 interface OrganizationTableProps {

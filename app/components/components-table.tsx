@@ -2,8 +2,8 @@ import React, {useEffect, useState} from 'react';
 import {Table, Tag} from "@navikt/ds-react";
 import {Link} from "@remix-run/react";
 import {InformationSquareIcon} from "@navikt/aksel-icons";
-import {IComponent} from '../data/types';
-import {fetchComponents} from "~/data/api";
+import {IComponent} from '../api/types';
+import {fetchComponents} from "~/api/contact";
 
 interface ComponentsTableProps {
     data: IComponent[];

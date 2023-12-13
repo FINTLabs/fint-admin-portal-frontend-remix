@@ -1,15 +1,15 @@
 import type { MetaFunction, LinksFunction } from "@remix-run/node";
 import {InternalHeader, Table, Spacer, Search, HStack, LinkPanel, Box} from "@navikt/ds-react";
 import navStyles from "@navikt/ds-css/dist/index.css";
-import organisations from '~/data/organisation';
+import organisations from '~/api/organisation';
 import OrganizationTable from "~/components/organization-table";
 import {Buldings3Icon, PersonGroupIcon, PersonPlusIcon} from "@navikt/aksel-icons";
 import React, {useEffect, useRef, useState} from "react";
 import CustomFormModal from "~/components/organization-add";
 import {any} from "prop-types";
-import {IOrganization} from "~/data/types";
-import contacts from "~/data/contacts";
-import organisation from "~/data/organisation";
+import {IOrganization} from "~/api/types";
+import contacts from "~/api/contacts";
+import organisation from "~/api/organisation";
 
 export const meta: MetaFunction = () => {
   return [

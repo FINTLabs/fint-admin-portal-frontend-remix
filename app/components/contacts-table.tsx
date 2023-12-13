@@ -1,11 +1,11 @@
 import React, {useState} from 'react';
 import { useRef } from "react";
-import organisations from '~/data/organisation';
+import organisations from '~/api/organisation';
 import {Button, Table} from "@navikt/ds-react";
 import {Link} from "@remix-run/react";
 import {DocPencilIcon, PencilIcon} from '@navikt/aksel-icons';
 import CustomFormModal from "~/components/contact-add";
-import { IContact } from '~/data/types';
+import { IContact } from '~/api/types';
 
 interface ContactTableProps {
     data: IContact[];

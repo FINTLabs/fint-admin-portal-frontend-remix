@@ -3,10 +3,10 @@ import styled from 'styled-components';
 import { InternalHeader, Spacer, Search } from "@navikt/ds-react";
 import {ComponentIcon, PersonPlusIcon} from "@navikt/aksel-icons";
 import ComponentsTable from "~/components/components-table";
-import components from "~/data/components";
+import components from "~/api/components";
 import CustomFormModal from "~/components/contact-add";
 import ComponentAdd from "~/components/component-add";
-import {IComponent} from "~/data/types";
+import {IComponent} from "~/api/types";
 
 // Styled InternalHeader
 const StyledInternalHeader = styled(InternalHeader)`

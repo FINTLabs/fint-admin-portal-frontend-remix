@@ -14,7 +14,7 @@ import {
 } from '@navikt/aksel-icons';
 
 import {Link} from "@remix-run/react";
-import {fetchDisplayName} from "~/data/api";
+import {fetchDisplayName} from "~/api/contact";
 
 export function LayoutAppbar () {
 

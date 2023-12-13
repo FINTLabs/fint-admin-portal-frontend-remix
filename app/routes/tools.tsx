@@ -3,11 +3,11 @@ import JSONPretty from 'react-json-pretty';
 import navStyles from "@navikt/ds-css/dist/index.css";
 import {Box, Chips, Heading, List, VStack, Button, HGrid, Page} from "@navikt/ds-react";
 import React, {useMemo, useState} from "react";
-import technicalTools from "~/data/technical-tools";
+import technicalTools from "~/api/technical-tools";
 import {WrenchIcon, ComponentIcon, XMarkOctagonIcon, Buldings3Icon, PersonGroupIcon} from "@navikt/aksel-icons";
 import LayoutHeader from "~/components/layout-header";
 import {Outlet} from "@remix-run/react";
-import organizationTools from "~/data/organization-tools";
+import organizationTools from "~/api/organization-tools";
 
 export const meta: MetaFunction = () => {
     return [
