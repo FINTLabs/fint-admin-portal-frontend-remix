@@ -1,12 +1,11 @@
-import type { MetaFunction, LinksFunction } from "@remix-run/node";
+import type {LinksFunction, MetaFunction} from "@remix-run/node";
 import JSONPretty from 'react-json-pretty';
 import navStyles from "@navikt/ds-css/dist/index.css";
-import {Box, Chips, Heading, List, VStack, Button, HGrid, Page} from "@navikt/ds-react";
-import React, {useMemo, useState} from "react";
+import {Box, Button, Heading, HGrid, Page, VStack} from "@navikt/ds-react";
+import React, {useState} from "react";
 import technicalTools from "~/api/technical-tools";
-import {WrenchIcon, ComponentIcon, XMarkOctagonIcon, Buldings3Icon, PersonGroupIcon} from "@navikt/aksel-icons";
+import {Buldings3Icon, ComponentIcon, PersonGroupIcon, WrenchIcon} from "@navikt/aksel-icons";
 import LayoutHeader from "~/components/layout-header";
-import {Outlet} from "@remix-run/react";
 import organizationTools from "~/api/organization-tools";
 
 export const meta: MetaFunction = () => {
@@ -25,7 +24,7 @@ export default function Index() {
     let breadcrumbs = ['Dashboard', 'Organizations'];
     const [selectedButton, setSelectedButton] = useState("");
     const [data, setData] = useState([]);
-    var JSONPrettyMon = require('react-json-pretty/dist/monikai');
+    const JSONPrettyMon = require('react-json-pretty/dist/monikai');
 
     function handleChangeButton(title, data) {
         setSelectedButton(title);
@@ -38,7 +37,7 @@ export default function Index() {
             <LayoutHeader title={"Tools"} icon={WrenchIcon} breadcrumbs={breadcrumbs}/>
 
             <Box
-                background="surface-alt-4-moderate"
+                // background="surface-alt-4-moderate"
                 padding="8"
                 paddingBlock="16"
                 as="main"
@@ -101,13 +100,13 @@ export default function Index() {
                         </HGrid>
                         {selectedButton ? (
                             <>
-                                <Heading size={"3"}>{selectedButton}</Heading>
+                                <Heading size={"large"}>{selectedButton}</Heading>
                                 <Box padding="2" >
                                     <JSONPretty id="json-pretty" data={data} theme={JSONPrettyMon} />
                                 </Box>
                             </>
                         ) : (
-                            <Heading size={"3"}>Please choose a report to run</Heading>
+                            <Heading size={"large"}>Please choose a report to run</Heading>
                         )}
                     </VStack>
 

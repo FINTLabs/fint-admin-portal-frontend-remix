@@ -1,27 +1,14 @@
-import React, {useEffect, useState} from 'react';
+import React from 'react';
 import {Table, Tag} from "@navikt/ds-react";
 import {Link} from "@remix-run/react";
 import {InformationSquareIcon} from "@navikt/aksel-icons";
-import {IComponent} from '../api/types';
-import {fetchComponents} from "~/api/contact";
+import type {IComponent} from '~/api/types';
 
 interface ComponentsTableProps {
     data: IComponent[];
 }
 
 const ComponentsTable = ({ data }: ComponentsTableProps) => {
-    const [components, setComponents] = useState<IComponent[]>([]);
-
-    useEffect(() => {
-        const fetchData = async () => {
-            const componentsData = await fetchComponents();
-            if (componentsData) {
-                setComponents(componentsData);
-            }
-        };
-
-        fetchData();
-    }, []);
 
     return (
         <Table zebraStripes>
@@ -30,11 +17,11 @@ const ComponentsTable = ({ data }: ComponentsTableProps) => {
                     <Table.HeaderCell style={{ fontWeight: 'bold' }}>Name</Table.HeaderCell>
                     <Table.HeaderCell style={{ fontWeight: 'bold' }}>Miljøer</Table.HeaderCell>
                     <Table.HeaderCell style={{ fontWeight: 'bold' }}>Type</Table.HeaderCell>
-                    <Table.HeaderCell style={{ fontWeight: 'bold' }}></Table.HeaderCell>
+                    <Table.HeaderCell style={{ fontWeight: 'bold' }} />
                 </Table.Row>
             </Table.Header>
             <Table.Body>
-                {components.map((row, index) => (
+                {data.map((row, index) => (
                     <Table.Row key={index} style={{ borderBottom: '1px dashed #e0e0e0' }} >
                         <Table.DataCell>
                             <div >{row.description}</div>

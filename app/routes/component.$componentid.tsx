@@ -3,10 +3,10 @@ import type { MetaFunction, LinksFunction } from "@remix-run/node";
 import navStyles from "@navikt/ds-css/dist/index.css";
 import components from "~/api/components";
 import {useLoaderData} from "@remix-run/react";
-import {Box, Button, Heading, HGrid, LinkPanel, Tabs, Tag} from "@navikt/ds-react";
+import {Button, Heading, HGrid, LinkPanel, Tabs, Tag} from "@navikt/ds-react";
 import {TokenIcon, TenancyIcon, Buldings3Icon, PencilIcon} from '@navikt/aksel-icons';
 import OrganizationTable from "~/components/organization-table";
-import organisations from "~/api/organisation";
+import organisations from "~/api/organisations";
 import ComponentForm from "~/components/component-add";
 
 export const meta: MetaFunction = () => {
@@ -31,7 +31,7 @@ export function loader({ params }: { params: { componentid: string } }) {
 
 export default function ComponentPage() {
     const { selectedComponent } = useLoaderData<typeof loader>();
-    const editRef = useRef<HTMLDialogElement>(null);
+    const editRef = useRef<HTMLDialogElement | null>(null);
 
     let associatedOrganisations;
 

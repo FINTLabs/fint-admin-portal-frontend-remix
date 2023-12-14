@@ -1,13 +1,9 @@
-import type {MetaFunction, LinksFunction} from "@remix-run/node";
-import React, {useRef, useEffect, useState} from "react";
-import {
-    InternalHeader,
-    Spacer,
-    Search,
-} from "@navikt/ds-react";
+import type {LinksFunction, MetaFunction} from "@remix-run/node";
+import React, {useEffect, useRef, useState} from "react";
+import {InternalHeader, Search, Spacer,} from "@navikt/ds-react";
 import navStyles from "@navikt/ds-css/dist/index.css";
 import ContactTable from "~/components/contacts-table";
-import { PersonPlusIcon} from '@navikt/aksel-icons';
+import {PersonPlusIcon} from '@navikt/aksel-icons';
 import CustomFormModal from "~/components/contact-add";
 import type {IContact} from '~/api/types'
 import {fetchContacts} from "~/api/contact";
@@ -18,12 +14,12 @@ export const meta: MetaFunction = () => {
         {name: "description", content: "Welcome to Remix!"},
     ];
 };
+
 export const links: LinksFunction = () => [
     {rel: "stylesheet", href: navStyles}
 ];
 
 export default function ContactPage() {
-    const [searchInput, setSearchInput] = useState('');
     const [filteredData, setFilteredData] = useState<[IContact]>([]);
     const contactEditRef = useRef<HTMLDialogElement>(null);
     const [contacts, setContacts] = useState<[IContact]>([]);
@@ -57,7 +53,6 @@ export default function ContactPage() {
     };
 
 
-
     return (
         <div style={{fontFamily: "system-ui, sans-serif", lineHeight: "1.8"}}>
             <CustomFormModal
@@ -68,13 +63,9 @@ export default function ContactPage() {
             />
 
             <InternalHeader>
-                {/*<InternalHeader.Title as="h1" ><PersonGroupIcon title="a11y-title" fontSize="1.5rem" /> Contacts</InternalHeader.Title>*/}
-
                 <InternalHeader.Button onClick={() => contactEditRef.current?.showModal()}>
                     <PersonPlusIcon title="a11y-title" fontSize="1.5rem"/>Add New
                 </InternalHeader.Button>
-
-
 
                 <Spacer/>
                 <form

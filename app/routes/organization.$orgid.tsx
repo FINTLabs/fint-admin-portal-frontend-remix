@@ -1,11 +1,11 @@
-import type { MetaFunction, LinksFunction } from "@remix-run/node";
+import type {LinksFunction, MetaFunction} from "@remix-run/node";
 import navStyles from "@navikt/ds-css/dist/index.css";
 import {useLoaderData} from "@remix-run/react";
-import {HGrid, VStack, Tabs, Heading} from "@navikt/ds-react";
-import {PersonGroupIcon, ComponentIcon, Buldings2Icon, Buldings3Icon} from '@navikt/aksel-icons';
+import {Heading, HGrid, Tabs, VStack} from "@navikt/ds-react";
+import {ComponentIcon, PersonGroupIcon} from '@navikt/aksel-icons';
 import ComponentsTable from "~/components/components-table";
 import ContactTable from "~/components/contacts-table";
-import organisations from '~/api/organisation';
+import organisations from '~/api/organisations';
 import contacts from '~/api/contacts';
 import components from '~/api/components';
 import React from "react";

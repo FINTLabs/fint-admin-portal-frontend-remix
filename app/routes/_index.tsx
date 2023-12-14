@@ -1,16 +1,13 @@
 import type {MetaFunction, LinksFunction} from "@remix-run/node";
 import {
     Alert,
-    Bleed,
     BodyShort,
     Box,
     GuidePanel,
-    Heading,
     HStack,
     LinkPanel,
     VStack,
     Page,
-    Hide
 } from "@navikt/ds-react";
 import navStyles from "@navikt/ds-css/dist/index.css";
 import {
@@ -19,7 +16,6 @@ import {
     LinkIcon,
     PersonGroupIcon,
     ExternalLinkIcon,
-    RectangleSectionsIcon
 } from "@navikt/aksel-icons";
 import {Link} from "@remix-run/react";
 
@@ -32,18 +28,6 @@ export const meta: MetaFunction = () => {
 export const links: LinksFunction = () => [
     {rel: "stylesheet", href: navStyles}
 ];
-
-
-
-// // Styled GuidePanel
-// const StyledGuidePanel = styled(GuidePanel)`
-//   /* Add your custom styling for the GuidePanel component here */
-//   /* For example: */
-//   background-color: #f0f0f0;
-//   padding: 16px;
-//   /* Add any other styling as needed */
-// `;
-
 
 export default function Dashboard() {
     const links = [

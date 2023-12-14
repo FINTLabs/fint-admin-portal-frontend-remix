@@ -1,7 +1,7 @@
-import type { ForwardedRef, ChangeEvent } from "react";
-import React, {forwardRef, useState, useEffect } from "react";
-import { Button, Modal, TextField } from "@navikt/ds-react";
-import type { IContact } from "~/api/types";
+import type {ChangeEvent, ForwardedRef} from "react";
+import React, {forwardRef, useEffect, useState} from "react";
+import {Button, Modal, TextField} from "@navikt/ds-react";
+import type {IContact} from "~/api/types";
 
 interface ContactFormProps {
     headerText: string;

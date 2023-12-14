@@ -1,5 +1,4 @@
-import { Table } from "@navikt/ds-react";
-import { useLoaderData } from "@remix-run/react";
+import {Table} from "@navikt/ds-react";
 import template from '~/api/template';
 import configurations from '~/api/configurations';
 
@@ -13,14 +12,7 @@ export function loader({ params }: { params: { templateid: string } }) {
 }
 
 const AccessTemplatePage = () => {
-    const { selectedComponent } = useLoaderData<typeof loader>();
-
-    const tableData = selectedComponent.collection.map((item: any, index: any) => ({
-        key: index,
-        name: item,
-        read: selectedComponent.read.includes(item),
-        modify: selectedComponent.modify.includes(item),
-    }));
+    // const { selectedComponent } = useLoaderData<typeof loader>();
 
     return (
         <Table>

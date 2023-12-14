@@ -1,11 +1,10 @@
-import React, {useState} from 'react';
-import { useRef } from "react";
-import organisations from '~/api/organisation';
+import React, {useRef, useState} from 'react';
+import organisations from '~/api/organisations';
 import {Button, Table} from "@navikt/ds-react";
 import {Link} from "@remix-run/react";
-import {DocPencilIcon, PencilIcon} from '@navikt/aksel-icons';
+import {PencilIcon} from '@navikt/aksel-icons';
 import CustomFormModal from "~/components/contact-add";
-import { IContact } from '~/api/types';
+import type {IContact} from '~/api/types';
 
 interface ContactTableProps {
     data: IContact[];
@@ -13,7 +12,7 @@ interface ContactTableProps {
 
 const ContactTable = ({data} : ContactTableProps) => {
 
-    const modalRef = useRef<HTMLDialogElement>(null);
+    const modalRef = useRef<HTMLDialogElement | null>(null);
     const [selectedContact, setSelectedContact] = useState<IContact | null>(null);
 
 
@@ -76,7 +75,7 @@ const ContactTable = ({data} : ContactTableProps) => {
                         </Table.DataCell>
                         {/*<Table.DataCell nowrap="true" >{row.mobile} </Table.DataCell>*/}
                         <Table.DataCell>
-                            {row.technical.map((technicalDN) => (
+                            {row.technical?.map((technicalDN) => (
                                 getTechnicalContact(technicalDN)
                             ))}
 

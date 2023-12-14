@@ -1,5 +1,6 @@
-import React, {ForwardedRef, forwardRef } from "react";
-import {Button, Checkbox, CheckboxGroup, Modal, Switch, TextField} from "@navikt/ds-react";
+import type {ForwardedRef} from "react";
+import React, { forwardRef} from "react";
+import {Button, Modal, Switch, TextField} from "@navikt/ds-react";
 
 interface ComponentFormProps {
     headerText: string;
@@ -21,9 +22,6 @@ const ComponentForm = forwardRef((props: ComponentFormProps, ref: ForwardedRef<H
         console.log("contact form canceled")
         onClose();
     };
-
-    const handleChange = (val: any[]) => console.log(val);
-
     return (
         <Modal ref={ref} header={{ heading: headerText }} width={400}>
             <Modal.Body>

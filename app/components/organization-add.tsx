@@ -1,7 +1,7 @@
-import React, {useRef, forwardRef, useImperativeHandle, ForwardedRef, useState, useEffect, ChangeEvent} from "react";
+import type {ChangeEvent, ForwardedRef} from "react";
+import React, {forwardRef, useEffect, useState} from "react";
 import {Button, Modal, TextField} from "@navikt/ds-react";
-import {PencilIcon} from "@navikt/aksel-icons";
-import {IOrganization} from "~/api/types";
+import type {IOrganization} from "~/api/types";
 
 
 interface OrganizationFormProps {

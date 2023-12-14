@@ -1,15 +1,12 @@
-import type { MetaFunction, LinksFunction } from "@remix-run/node";
-import {InternalHeader, Table, Spacer, Search, HStack, LinkPanel, Box} from "@navikt/ds-react";
+import type {LinksFunction, MetaFunction} from "@remix-run/node";
+import {InternalHeader, Search, Spacer} from "@navikt/ds-react";
 import navStyles from "@navikt/ds-css/dist/index.css";
-import organisations from '~/api/organisation';
+import organisations from '~/api/organisations';
 import OrganizationTable from "~/components/organization-table";
-import {Buldings3Icon, PersonGroupIcon, PersonPlusIcon} from "@navikt/aksel-icons";
+import {PersonPlusIcon} from "@navikt/aksel-icons";
 import React, {useEffect, useRef, useState} from "react";
 import CustomFormModal from "~/components/organization-add";
-import {any} from "prop-types";
-import {IOrganization} from "~/api/types";
-import contacts from "~/api/contacts";
-import organisation from "~/api/organisation";
+import type {IOrganization} from "~/api/types";
 
 export const meta: MetaFunction = () => {
   return [
@@ -23,15 +20,14 @@ export const links: LinksFunction = () => [
 
 export default function OrganizationPage() {
     const organizationEditRef = useRef<HTMLDialogElement>(null);
-    const [searchInput, setSearchInput] = useState("");
     const [filteredData, setFilteredData] = useState<IOrganization[]>([])
 
+    //TODO: make type correct after API connection
     useEffect(() => {
-        setFilteredData(organisation);
+        setFilteredData(organisations);
     }, []);
 
     const handleSearchInput = (input:any) => {
-        setSearchInput(input);
         const filtered = organisations.filter(
             (row) =>
                 row.name.toLowerCase().includes(input.toLowerCase()) ||

@@ -1,9 +1,8 @@
-import type { MetaFunction, LinksFunction } from "@remix-run/node";
-import {Alert, Box, Detail, Heading, Hide, HStack, InternalHeader, LinkPanel, Page, VStack} from "@navikt/ds-react";
+import type {LinksFunction, MetaFunction} from "@remix-run/node";
+import {Box, Page} from "@navikt/ds-react";
 import navStyles from "@navikt/ds-css/dist/index.css";
-import {LayoutAppbar} from "~/components/layout-appbar";
 import LayoutHeader from "~/components/layout-header";
-import {ComponentIcon, PersonGroupIcon} from "@navikt/aksel-icons";
+import {PersonGroupIcon} from "@navikt/aksel-icons";
 import {Outlet} from "@remix-run/react";
 import React from "react";
 

@@ -1,12 +1,11 @@
 import React, {useEffect, useRef, useState} from 'react';
 import styled from 'styled-components';
-import { InternalHeader, Spacer, Search } from "@navikt/ds-react";
-import {ComponentIcon, PersonPlusIcon} from "@navikt/aksel-icons";
+import {InternalHeader, Search, Spacer} from "@navikt/ds-react";
+import {ComponentIcon} from "@navikt/aksel-icons";
 import ComponentsTable from "~/components/components-table";
-import components from "~/api/components";
-import CustomFormModal from "~/components/contact-add";
 import ComponentAdd from "~/components/component-add";
-import {IComponent} from "~/api/types";
+import type {IComponent} from "~/api/types";
+import {fetchComponents} from "~/api/contact";
 
 // Styled InternalHeader
 const StyledInternalHeader = styled(InternalHeader)`
@@ -20,11 +19,19 @@ const StyledInternalHeader = styled(InternalHeader)`
 
 const ComponentPage = () => {
     const componentEditRef = useRef<HTMLDialogElement>(null);
-    const [searchInput, setSearchInput] = useState("");
     const [filteredData, setFilteredData] = useState<IComponent[]>([])
+    const [components, setComponents] = useState<IComponent[]>([]);
 
     useEffect(() => {
-        setFilteredData(components)
+        const fetchData = async () => {
+            const componentsData = await fetchComponents();
+            if (componentsData) {
+                setComponents(componentsData);
+                setFilteredData(componentsData);
+            }
+        };
+
+        fetchData();
     }, []);
 
 
@@ -35,7 +42,6 @@ const ComponentPage = () => {
     };
 
     const handleSearchInput = (input:any) => {
-        setSearchInput(input);
         const filtered = components.filter(
             (row) =>
                 row.name.toLowerCase().includes(input.toLowerCase()) ||

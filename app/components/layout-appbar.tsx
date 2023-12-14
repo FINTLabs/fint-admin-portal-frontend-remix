@@ -8,9 +8,9 @@ import {
     PackageIcon,
     PersonGroupIcon,
     PersonIcon,
+    TokenIcon,
     WrenchIcon,
-    XMarkIcon,
-    TokenIcon
+    XMarkIcon
 } from '@navikt/aksel-icons';
 
 import {Link} from "@remix-run/react";

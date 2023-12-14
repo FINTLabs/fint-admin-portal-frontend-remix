@@ -1,15 +1,15 @@
 import React, {useRef, useState} from 'react';
-import {Button, Table, Tag} from "@navikt/ds-react";
+import {Button, Table} from "@navikt/ds-react";
 import {Link} from "@remix-run/react";
 import {InformationSquareIcon, PencilIcon} from "@navikt/aksel-icons";
-import { IOrganization } from "~/api/types";
+import type {IOrganization} from "~/api/types";
 import CustomFormModal from "~/components/organization-add";
 
 interface OrganizationTableProps {
     data: IOrganization[];
 }
 
-const OrganizationTable = ({ data }) : OrganizationTableProps => {
+const OrganizationTable = ({ data } : OrganizationTableProps) => {
 
     const modalRef = useRef<HTMLDialogElement>(null);
     const [selectedOrganization, setSelectedOrganization] = useState<IOrganization | null>(null);

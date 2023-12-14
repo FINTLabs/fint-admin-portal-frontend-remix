@@ -1,14 +1,4 @@
-import {
-    BodyShort,
-    Box,
-    Detail,
-    HStack,
-    Heading,
-    Hide,
-    Show,
-    VStack,
-} from "@navikt/ds-react";
-import { ComponentIcon, Buldings3Icon } from '@navikt/aksel-icons';
+import {Box, Detail, Heading, Hide, HStack, VStack,} from "@navikt/ds-react";
 
 
 const LayoutHeader = ({ icon: IconComponent, title, breadcrumbs }) => {
@@ -21,7 +11,7 @@ const LayoutHeader = ({ icon: IconComponent, title, breadcrumbs }) => {
             // paddingBlock="0 0"
         >
             <div className="max-w-5xl">
-                <Box background="surface-default" paddingInline="4" paddingBlock="0 6">
+                <Box paddingInline="4" paddingBlock="0 6">
                     <VStack gap={"3"}>
                         <HStack gap={"5"}>
                             {breadcrumbs?.map((detail, index) => (

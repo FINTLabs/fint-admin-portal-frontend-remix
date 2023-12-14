@@ -1,4 +1,4 @@
-// api.js
+// contact.js API
 export const fetchDisplayName = async () => {
     try {
         const response = await fetch("http://localhost:8081/api/me");

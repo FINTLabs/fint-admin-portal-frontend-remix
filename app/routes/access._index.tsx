@@ -1,8 +1,8 @@
 import type { MetaFunction, LinksFunction } from "@remix-run/node";
-import {InternalHeader, Table, Spacer, Search, HStack, LinkPanel, Box, VStack} from "@navikt/ds-react";
+import {LinkPanel, Box, VStack} from "@navikt/ds-react";
 import navStyles from "@navikt/ds-css/dist/index.css";
 import template from '~/api/template';
-import {Buldings3Icon, PersonGroupIcon, TasklistIcon} from "@navikt/aksel-icons";
+import {TasklistIcon} from "@navikt/aksel-icons";
 
 export const meta: MetaFunction = () => {
     return [
@@ -20,7 +20,7 @@ export default function AccessPage() {
             {template.map((dataPoint, index) => (
                 <Box
                     key={index}
-                    background="surface-subtle"
+                    // background="surface-subtle"
                     borderColor="border-alt-3"
                     padding="4"
                     borderWidth="2"
