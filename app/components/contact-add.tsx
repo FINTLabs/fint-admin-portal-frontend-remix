@@ -1,5 +1,5 @@
 import type {ChangeEvent, ForwardedRef} from "react";
-import React, {forwardRef, useEffect, useState} from "react";
+import React, { forwardRef, useEffect, useState} from "react";
 import {Button, Modal, TextField} from "@navikt/ds-react";
 import type {IContact} from "~/api/types";
 
@@ -42,10 +42,10 @@ const ContactForm = forwardRef((props: ContactFormProps, ref: ForwardedRef<HTMLD
 
     function resetFormValues() {
             setFormValues({
-                firstName: selectedContact?.firstName,
-                lastName: selectedContact?.lastName,
-                mail: selectedContact?.mail,
-                mobile: selectedContact?.mobile
+                firstName: "",
+                lastName: "",
+                mail: "",
+                mobile: ""
             });
         }
 
@@ -100,4 +100,5 @@ const ContactForm = forwardRef((props: ContactFormProps, ref: ForwardedRef<HTMLD
     );
 });
 
+ContactForm.displayName = 'ContactForm';
 export default ContactForm;
