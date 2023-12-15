@@ -39,7 +39,6 @@ export default function ContactPage() {
     }, []);
 
 
-
     const handleSearchInputChange = (input: any) => {
         const filtered = contacts.filter(
             (row) =>

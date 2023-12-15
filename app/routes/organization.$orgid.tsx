@@ -36,6 +36,7 @@ export default function OrganizationDetailsPage() {
     const [contacts, setContacts] = useState<[IContact]>([]);
     const [components, setComponents] = useState<[IComponent]>([]);
 
+    //TODO: add a loading function so that old contacts and components do not show during load
     useEffect(() => {
         const fetchData = async () => {
             try {
