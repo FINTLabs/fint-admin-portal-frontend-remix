@@ -1,43 +1,59 @@
-import {Table} from "@navikt/ds-react";
-import template from '~/api/template';
-import configurations from '~/api/configurations';
+import React from "react";
+import {Heading, Table} from "@navikt/ds-react";
+import templateApi from "~/api/template-api";
+import {useLoaderData} from "@remix-run/react";
 
-export function loader({ params }: { params: { templateid: string } }) {
-    const templateid = params.templateid;
+export async function loader({ params }: { params: { templateid: string } }) {
+    const templateName = params.templateid;
 
-    const selectedComponent =
-        template.find((t) => t.name === templateid) || null;
+    const selectedTemplate = await templateApi.fetchTemplateByName(templateName);
 
-    return { selectedComponent };
+    const checkPermission = (collectionPath, permissionList) => {
+        return permissionList.includes(collectionPath);
+    };
+
+    const dataWithPermissions = selectedTemplate.collection.map(collection => {
+        return {
+            collectionPath: collection,
+            hasReadPermission: checkPermission(collection, selectedTemplate.read),
+            hasWritePermission: checkPermission(collection, selectedTemplate.modify),
+        };
+    });
+
+    return { selectedTemplate, dataWithPermissions };
 }
 
 const AccessTemplatePage = () => {
-    // const { selectedComponent } = useLoaderData<typeof loader>();
+    const { selectedTemplate, dataWithPermissions } = useLoaderData<typeof loader>();
 
     return (
-        <Table>
-            <Table.Header>
-                <Table.Row>
-                    <Table.HeaderCell scope="col">Navn</Table.HeaderCell>
-                    <Table.HeaderCell scope="col">Read</Table.HeaderCell>
-                    <Table.HeaderCell scope="col">Modify</Table.HeaderCell>
-                </Table.Row>
-            </Table.Header>
-            <Table.Body>
-                {configurations.map((item: any, i: any) => {
-                    return (
-                        <Table.Row
-                            key={i}
-                            content="Innhold i ekspanderbar rad"
-                        >
-                            <Table.DataCell scope="row">{item.name}</Table.DataCell>
-                            <Table.DataCell scope="row">{item.path}</Table.DataCell>
-                            <Table.DataCell scope="row">{item.classes.length}</Table.DataCell>
+        <>
+            <Heading level="1" size="large">
+                {selectedTemplate?.name}
+            </Heading>
+            <Heading level="1" size="small">
+                {selectedTemplate?.description}
+            </Heading>
+
+            <Table>
+                <Table.Header>
+                    <Table.Row>
+                        <Table.HeaderCell scope="col">Components</Table.HeaderCell>
+                        <Table.HeaderCell scope="col">Read</Table.HeaderCell>
+                        <Table.HeaderCell scope="col">Modify</Table.HeaderCell>
+                    </Table.Row>
+                </Table.Header>
+                <Table.Body>
+                    {dataWithPermissions.map((item, i) => (
+                        <Table.Row key={i}>
+                            <Table.DataCell>{item.collectionPath}</Table.DataCell>
+                            <Table.DataCell>{item.hasReadPermission ? "Read Checkmark" : ""}</Table.DataCell>
+                            <Table.DataCell>{item.hasWritePermission ? "Write Checkmark" : ""}</Table.DataCell>
                         </Table.Row>
-                    );
-                })}
-            </Table.Body>
-        </Table>
+                    ))}
+                </Table.Body>
+            </Table>
+        </>
     );
 };
 

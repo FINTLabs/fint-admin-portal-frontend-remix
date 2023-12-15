@@ -1,30 +1,20 @@
 import React, {useEffect, useRef, useState} from 'react';
-import styled from 'styled-components';
 import {InternalHeader, Search, Spacer} from "@navikt/ds-react";
 import {ComponentIcon} from "@navikt/aksel-icons";
 import ComponentsTable from "~/components/components-table";
 import ComponentAdd from "~/components/component-add";
 import type {IComponent} from "~/api/types";
-import {fetchComponents} from "~/api/contact";
-
-// Styled InternalHeader
-const StyledInternalHeader = styled(InternalHeader)`
-  --ac-internalheader-bg: var(--a-surface-inverted);
-  --ac-internalheader-divider: var(--a-gray-600);
-  --ac-internalheader-text: var(--a-text-on-inverted);
-  --ac-internalheader-hover-bg: var(--a-surface-inverted-hover);
-  --ac-internalheader-active-bg: var(--a-surface-inverted-active);
-
-`;
+import ComponentApi from "~/api/component-api";
 
 const ComponentPage = () => {
     const componentEditRef = useRef<HTMLDialogElement>(null);
     const [filteredData, setFilteredData] = useState<IComponent[]>([])
     const [components, setComponents] = useState<IComponent[]>([]);
 
+    //TODO: write a context for each main menu item
     useEffect(() => {
         const fetchData = async () => {
-            const componentsData = await fetchComponents();
+            const componentsData = await ComponentApi.fetchComponents();
             if (componentsData) {
                 setComponents(componentsData);
                 setFilteredData(componentsData);
@@ -58,7 +48,7 @@ const ComponentPage = () => {
                 onClose={handleFormClose}
             />
 
-            <StyledInternalHeader>
+            <InternalHeader>
 
                 <InternalHeader.Button onClick={() => componentEditRef.current?.showModal()}>
                     <ComponentIcon title="a11y-title" fontSize="1.5rem"/>Add New
@@ -81,7 +71,7 @@ const ComponentPage = () => {
                         onChange={handleSearchInput}
                     />
                 </form>
-            </StyledInternalHeader>
+            </InternalHeader>
 
             <ComponentsTable data={filteredData} />
         </div>

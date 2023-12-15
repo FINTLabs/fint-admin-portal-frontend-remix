@@ -1,13 +1,14 @@
-import React, {useRef} from "react";
+import React, {useEffect, useRef, useState} from "react";
 import type { MetaFunction, LinksFunction } from "@remix-run/node";
 import navStyles from "@navikt/ds-css/dist/index.css";
-import components from "~/api/components";
 import {useLoaderData} from "@remix-run/react";
 import {Button, Heading, HGrid, LinkPanel, Tabs, Tag} from "@navikt/ds-react";
 import {TokenIcon, TenancyIcon, Buldings3Icon, PencilIcon} from '@navikt/aksel-icons';
 import OrganizationTable from "~/components/organization-table";
-import organisations from "~/api/organisations";
 import ComponentForm from "~/components/component-add";
+import type {IComponent, IOrganization} from "~/api/types";
+import ComponentApi from "~/api/component-api";
+import OrganizationApi from "~/api/organization-api";
 
 export const meta: MetaFunction = () => {
     return [
@@ -22,30 +23,55 @@ export const links: LinksFunction = () => [
 export function loader({ params }: { params: { componentid: string } }) {
     const componentName = params.componentid;
 
-    const selectedComponent =
-        components.find((component) => component.name === componentName) || null;
-
-    return { selectedComponent };
+    return { componentName };
 }
 
 
 export default function ComponentPage() {
-    const { selectedComponent } = useLoaderData<typeof loader>();
+    const { componentName } = useLoaderData<typeof loader>();
     const editRef = useRef<HTMLDialogElement | null>(null);
+    const [selectedComponent, setSelectedComponent] = useState<IComponent>();
+    const [associatedOrganisations, setAssociatedOrganisations]  = useState<[IOrganization]>([]);
+    const [organizations, setOrganizations] = useState<[IOrganization]>([]);
 
-    let associatedOrganisations;
+    useEffect(() => {
+        const fetchData = async () => {
+            const componentsData = await ComponentApi.fetchComponents();
+
+            if (componentsData) {
+                const findOne = componentsData.find((component) => component.name === componentName);
+                console.log(componentName)
+                setSelectedComponent(findOne);
+            }
+        };
+
+        fetchData();
+    }, [componentName]);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            const organizationData = await OrganizationApi.fetchOrganizations();
+            if(organizationData) setOrganizations(organizationData);
+
+        };
+
+        fetchData();
+    }, []);
+
+    useEffect(() => {
+        if (selectedComponent) {
+            const filteredOrganisations = organizations.filter((org) =>
+                selectedComponent.organisations.includes(org.dn)
+            );
+            setAssociatedOrganisations(filteredOrganisations);
+        }
+    }, [selectedComponent, organizations]);
 
     const handleFormClose = () => {
-        // Handle form submission logic
+        // todo: Handle form submission logic
         console.log("closing the modal form");
         editRef.current?.close();
     };
-
-    if (selectedComponent) {
-        associatedOrganisations = organisations.filter((org) =>
-            selectedComponent.organisations.includes(org.dn)
-        );
-    }
 
     return (
         <div style={{ fontFamily: "system-ui, sans-serif", lineHeight: "1.8" }}>

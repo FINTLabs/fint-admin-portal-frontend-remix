@@ -12,9 +12,9 @@ import {
     WrenchIcon,
     XMarkIcon
 } from '@navikt/aksel-icons';
-
 import {Link} from "@remix-run/react";
-import {fetchDisplayName} from "~/api/contact";
+import ContactApi from "~/api/contact-api";
+
 
 export function LayoutAppbar () {
 
@@ -24,7 +24,7 @@ export function LayoutAppbar () {
 
     useEffect(() => {
         const fetchData = async () => {
-            const name = await fetchDisplayName();
+            const name = await ContactApi.fetchDisplayName();
             if (name) {
                 setDisplayName(name);
             }
@@ -36,11 +36,9 @@ export function LayoutAppbar () {
     return (
 
         <>
-            {/*<Page.Block gutters width="lg">*/}
                 <header className="grid h-20">
                     <HStack as="nav" justify="space-between" align="center">
                         <a href="/" className="px-2 py-5">
-                            {/*<img src="https://cdn.flais.io/media/fint-by-vigo-white.svg" alt="logo" height={'56px'} />*/}
                             Novari Logo Here
                         </a>
                         <div className="grid h-full">
@@ -74,8 +72,6 @@ export function LayoutAppbar () {
                         </div>
                     </HStack>
                 </header>
-            {/*</Page.Block>*/}
-
 
             <Popover
                 open={menuOpen}

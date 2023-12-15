@@ -1,10 +1,10 @@
-import React, {useRef, useState} from 'react';
-import organisations from '~/api/organisations';
+import React, {useEffect, useRef, useState} from 'react';
 import {Button, Table} from "@navikt/ds-react";
 import {Link} from "@remix-run/react";
 import {PencilIcon} from '@navikt/aksel-icons';
 import CustomFormModal from "~/components/contact-add";
 import type {IContact} from '~/api/types';
+import OrganizationApi from "~/api/organization-api";
 
 interface ContactTableProps {
     data: IContact[];
@@ -14,7 +14,20 @@ const ContactTable = ({data} : ContactTableProps) => {
 
     const modalRef = useRef<HTMLDialogElement | null>(null);
     const [selectedContact, setSelectedContact] = useState<IContact | null>(null);
+    const [organizations, setOrganizations] = useState([]); // State to store organizations
 
+    useEffect(() => {
+        const fetchOrganizations = async () => {
+            try {
+                const organizationData = await OrganizationApi.fetchOrganizations();
+                setOrganizations(organizationData || []); // Set organizations or empty array if fetch fails
+            } catch (error) {
+                console.error("Error fetching organizations:", error);
+            }
+        };
+
+        fetchOrganizations();
+    }, []);
 
     const openEditModal = (contact: IContact) => {
         setSelectedContact(contact);
@@ -30,7 +43,7 @@ const ContactTable = ({data} : ContactTableProps) => {
 
 
     const getTechnicalContact = (technicalDN: string) => {
-        const technicalContact = organisations.find((org) => org.dn === technicalDN);
+        const technicalContact = organizations.find((org) => org.dn === technicalDN);
 
         if (technicalContact) {
             return (

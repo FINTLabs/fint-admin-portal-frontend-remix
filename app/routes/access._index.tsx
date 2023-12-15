@@ -1,8 +1,10 @@
 import type { MetaFunction, LinksFunction } from "@remix-run/node";
 import {LinkPanel, Box, VStack} from "@navikt/ds-react";
 import navStyles from "@navikt/ds-css/dist/index.css";
-import template from '~/api/template';
 import {TasklistIcon} from "@navikt/aksel-icons";
+import {useEffect, useState} from "react";
+import AccessTemplateApi from "~/api/template-api";
+import type {IOrganization} from "~/api/types";
 
 export const meta: MetaFunction = () => {
     return [
@@ -15,6 +17,21 @@ export const links: LinksFunction = () => [
 ];
 
 export default function AccessPage() {
+
+    const [template, setTemplate] = useState<IOrganization[]>([]);
+    
+    useEffect(() => {
+        const fetchData = async () => {
+            const templateData = await AccessTemplateApi.fetchAccessTemplates();
+
+            if (templateData) {
+                setTemplate(templateData);
+            }
+        };
+
+        fetchData();
+    }, []);
+    
     return (
         <VStack gap="4">
             {template.map((dataPoint, index) => (

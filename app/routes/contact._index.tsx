@@ -6,7 +6,7 @@ import ContactTable from "~/components/contacts-table";
 import {PersonPlusIcon} from '@navikt/aksel-icons';
 import CustomFormModal from "~/components/contact-add";
 import type {IContact} from '~/api/types'
-import {fetchContacts} from "~/api/contact";
+import ContactApi from "~/api/contact-api";
 
 export const meta: MetaFunction = () => {
     return [
@@ -24,10 +24,9 @@ export default function ContactPage() {
     const contactEditRef = useRef<HTMLDialogElement>(null);
     const [contacts, setContacts] = useState<[IContact]>([]);
 
-
     useEffect(() => {
         const fetchData = async () => {
-            const contactsData = await fetchContacts();
+            const contactsData = await ContactApi.fetchContacts();
             if (contactsData) {
                 setContacts(contactsData)
                 setFilteredData(contactsData);
@@ -47,7 +46,7 @@ export default function ContactPage() {
     };
 
     const handleFormClose = () => {
-        // Handle form submission logic
+        // TODO: Handle form submission logic
         console.log("closing the contact add form inside index");
         contactEditRef.current?.close();
     };

@@ -1,3 +1,4 @@
+import React, {useEffect, useState} from "react";
 import type {LinksFunction, MetaFunction} from "@remix-run/node";
 import navStyles from "@navikt/ds-css/dist/index.css";
 import {useLoaderData} from "@remix-run/react";
@@ -5,10 +6,10 @@ import {Heading, HGrid, Tabs, VStack} from "@navikt/ds-react";
 import {ComponentIcon, PersonGroupIcon} from '@navikt/aksel-icons';
 import ComponentsTable from "~/components/components-table";
 import ContactTable from "~/components/contacts-table";
-import organisations from '~/api/organisations';
-import contacts from '~/api/contacts';
-import components from '~/api/components';
-import React from "react";
+import ContactApi from "~/api/contact-api";
+import type {IComponent, IContact} from "~/api/types";
+import OrganizationApi from "~/api/organization-api";
+import ComponentApi from "~/api/component-api";
 
 export const meta: MetaFunction = () => {
     return [
@@ -18,23 +19,44 @@ export const meta: MetaFunction = () => {
 };
 
 export const links: LinksFunction = () => [
-    { rel: "stylesheet", href: navStyles }
+    { rel: "stylesheet", href: navStyles },
 ];
 
-
-export function loader({ params }: { params: { orgid: string } }) {
+export async function loader({params}: { params: { orgid: string } }) {
     const orgNumber = params.orgid;
 
-    const selectedOrganisation =
-        organisations.find((org) => org.orgNumber === orgNumber) || null;
+    const selectedOrganisation = await OrganizationApi.fetchOrganizationByOrgNumber(orgNumber);
 
-    return { selectedOrganisation };
+    return {selectedOrganisation};
 }
-
 
 export default function OrganizationDetailsPage() {
     const { selectedOrganisation } = useLoaderData<typeof loader>();
-    let techContacts, associatedComponents, legalContact;
+    let techContacts, associatedComponents;
+    const [legalContact, setLegalContact] = useState<IContact | null>(null);
+    const [contacts, setContacts] = useState<[IContact]>([]);
+    const [components, setComponents] = useState<[IComponent]>([]);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            const contactsData = await ContactApi.fetchContacts();
+            if (contactsData) {
+                setContacts(contactsData);
+            }
+
+            const legalData = await OrganizationApi.fetchLegalContact(selectedOrganisation);
+            if (legalData) {
+                setLegalContact(legalData);
+            }
+
+            const componentsData = await ComponentApi.fetchComponents();
+            if (componentsData) {
+                setComponents(componentsData);
+            }
+        };
+
+        fetchData();
+    }, [selectedOrganisation]);
 
     if (selectedOrganisation) {
         techContacts = contacts.filter((contact) =>
@@ -44,10 +66,6 @@ export default function OrganizationDetailsPage() {
         associatedComponents = components.filter((component) =>
             component.organisations.includes(selectedOrganisation.dn)
         );
-
-        //TODO: use api to get legal contact
-        legalContact =
-            contacts.find((contact) => contact.dn === selectedOrganisation?.legalContact);
     }
 
     return (
@@ -55,15 +73,15 @@ export default function OrganizationDetailsPage() {
             <Heading size={"small"}>{selectedOrganisation?.displayName}</Heading>
             <HGrid gap="5" columns={2}>
                 <VStack>
-                    <p>Org Number: {selectedOrganisation?.orgNumber} <br/>
-                    Name: {selectedOrganisation?.name} <br/>
-                    Primary Asset Id: {selectedOrganisation?.primaryAssetId}</p>
+                    <p>Org Number: {selectedOrganisation?.orgNumber} <br />
+                        Name: {selectedOrganisation?.name} <br />
+                        Primary Asset Id: {selectedOrganisation?.primaryAssetId}</p>
                 </VStack>
                 <VStack>
                     <Heading size="xsmall">Legal Contact:</Heading>
-                    <p>{legalContact?.firstName} {legalContact?.lastName}<br/>
-                        {legalContact?.mail}<br/>
-                    {legalContact?.mobile}</p>
+                    <p>{legalContact?.firstName} {legalContact?.lastName}<br />
+                        {legalContact?.mail}<br />
+                        {legalContact?.mobile}</p>
 
                 </VStack>
             </HGrid>
@@ -83,15 +101,13 @@ export default function OrganizationDetailsPage() {
 
                 </Tabs.List>
                 <Tabs.Panel value="contacts" className="h-24 w-full bg-gray-50 p-4">
-                    <ContactTable
-                        data={techContacts}
-                        // isAdding={isAdding}
-                        // newContact={newContact}
-                        // handleSaveClick={handleSaveClick}
-                        // handleCancelClick={handleCancelClick}
-                        // handleEditClick={handleEditClick}
-                    />
+                    {techContacts && techContacts.length > 0 ? (
+                        <ContactTable data={techContacts} />
+                    ) : (
+                        <p>No contacts</p>
+                    )}
                 </Tabs.Panel>
+
                 <Tabs.Panel value="components" className="h-24 w-full bg-gray-50 p-4">
                     <ComponentsTable
                         data={associatedComponents}
