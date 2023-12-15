@@ -7,21 +7,23 @@ import type {IComponent} from "~/api/types";
 import ComponentApi from "~/api/component-api";
 
 const ComponentPage = () => {
-    const componentEditRef = useRef<HTMLDialogElement>(null);
+    const componentEditRef = useRef<HTMLDialogElement>(null!);
     const [filteredData, setFilteredData] = useState<IComponent[]>([])
     const [components, setComponents] = useState<IComponent[]>([]);
 
-    //TODO: write a context for each main menu item
+    //TODO: write a context for each main menu item??
     useEffect(() => {
-        const fetchData = async () => {
-            const componentsData = await ComponentApi.fetchComponents();
-            if (componentsData) {
-                setComponents(componentsData);
-                setFilteredData(componentsData);
-            }
-        };
-
-        fetchData();
+        ComponentApi.fetchComponents()
+            .then((componentsData) => {
+                if (componentsData) {
+                    setComponents(componentsData);
+                    setFilteredData(componentsData);
+                }
+            })
+            .catch((error) => {
+                // Handle error
+                console.error("Error fetching components:", error);
+            });
     }, []);
 
 

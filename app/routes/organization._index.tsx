@@ -20,7 +20,7 @@ export const links: LinksFunction = () => [
 ];
 
 export default function OrganizationPage() {
-    const organizationEditRef = useRef<HTMLDialogElement>(null);
+    const organizationEditRef = useRef<HTMLDialogElement>(null!);
     const [filteredData, setFilteredData] = useState<IOrganization[]>([]);
 
     useEffect(() => {

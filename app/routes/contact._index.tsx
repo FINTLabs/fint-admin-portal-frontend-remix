@@ -21,20 +21,24 @@ export const links: LinksFunction = () => [
 
 export default function ContactPage() {
     const [filteredData, setFilteredData] = useState<[IContact]>([]);
-    const contactEditRef = useRef<HTMLDialogElement>(null);
+    const contactEditRef = useRef<HTMLDialogElement>(null!);
     const [contacts, setContacts] = useState<[IContact]>([]);
 
     useEffect(() => {
-        const fetchData = async () => {
-            const contactsData = await ContactApi.fetchContacts();
-            if (contactsData) {
-                setContacts(contactsData)
-                setFilteredData(contactsData);
-            }
-        };
-
-        fetchData();
+        ContactApi.fetchContacts()
+            .then((contactsData) => {
+                if (contactsData) {
+                    setContacts(contactsData);
+                    setFilteredData(contactsData);
+                }
+            })
+            .catch((error) => {
+                // Handle error
+                console.error("Error fetching contacts:", error);
+            });
     }, []);
+
+
 
     const handleSearchInputChange = (input: any) => {
         const filtered = contacts.filter(

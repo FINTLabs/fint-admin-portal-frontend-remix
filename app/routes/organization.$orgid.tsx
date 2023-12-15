@@ -39,24 +39,30 @@ export default function OrganizationDetailsPage() {
 
     useEffect(() => {
         const fetchData = async () => {
-            const contactsData = await ContactApi.fetchContacts();
-            if (contactsData) {
-                setContacts(contactsData);
-            }
+            try {
+                const contactsData = await ContactApi.fetchContacts();
+                if (contactsData) {
+                    setContacts(contactsData);
+                }
 
-            const legalData = await OrganizationApi.fetchLegalContact(selectedOrganisation);
-            if (legalData) {
-                setLegalContact(legalData);
-            }
+                const legalData = await OrganizationApi.fetchLegalContact(selectedOrganisation);
+                if (legalData) {
+                    setLegalContact(legalData);
+                }
 
-            const componentsData = await ComponentApi.fetchComponents();
-            if (componentsData) {
-                setComponents(componentsData);
+                const componentsData = await ComponentApi.fetchComponents();
+                if (componentsData) {
+                    setComponents(componentsData);
+                }
+            } catch (error) {
+                // Handle error
+                console.error("Error fetching data:", error);
             }
         };
 
         fetchData();
     }, [selectedOrganisation]);
+
 
     if (selectedOrganisation) {
         techContacts = contacts.filter((contact) =>

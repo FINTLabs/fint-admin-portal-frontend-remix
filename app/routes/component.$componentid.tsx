@@ -35,28 +35,32 @@ export default function ComponentPage() {
     const [organizations, setOrganizations] = useState<[IOrganization]>([]);
 
     useEffect(() => {
-        const fetchData = async () => {
-            const componentsData = await ComponentApi.fetchComponents();
-
-            if (componentsData) {
-                const findOne = componentsData.find((component) => component.name === componentName);
-                console.log(componentName)
-                setSelectedComponent(findOne);
-            }
-        };
-
-        fetchData();
+        ComponentApi.fetchComponents()
+            .then((componentsData) => {
+                if (componentsData) {
+                    const findOne = componentsData.find((component) => component.name === componentName);
+                    console.log(componentName);
+                    setSelectedComponent(findOne);
+                }
+            })
+            .catch((error) => {
+                // Handle error
+                console.error("Error fetching components:", error);
+            });
     }, [componentName]);
 
+
     useEffect(() => {
-        const fetchData = async () => {
-            const organizationData = await OrganizationApi.fetchOrganizations();
-            if(organizationData) setOrganizations(organizationData);
-
-        };
-
-        fetchData();
+        OrganizationApi.fetchOrganizations()
+            .then((organizationData) => {
+                if (organizationData) setOrganizations(organizationData);
+            })
+            .catch((error) => {
+                // Handle error
+                console.error("Error fetching organizations:", error);
+            });
     }, []);
+
 
     useEffect(() => {
         if (selectedComponent) {

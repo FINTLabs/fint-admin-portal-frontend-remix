@@ -19,18 +19,20 @@ export const links: LinksFunction = () => [
 export default function AccessPage() {
 
     const [template, setTemplate] = useState<IOrganization[]>([]);
-    
+
     useEffect(() => {
-        const fetchData = async () => {
-            const templateData = await AccessTemplateApi.fetchAccessTemplates();
-
-            if (templateData) {
-                setTemplate(templateData);
-            }
-        };
-
-        fetchData();
+        AccessTemplateApi.fetchAccessTemplates()
+            .then((templateData) => {
+                if (templateData) {
+                    setTemplate(templateData);
+                }
+            })
+            .catch((error) => {
+                // Handle error
+                console.error("Error fetching access templates:", error);
+            });
     }, []);
+
     
     return (
         <VStack gap="4">
