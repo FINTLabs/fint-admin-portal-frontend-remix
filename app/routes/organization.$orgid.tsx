@@ -32,7 +32,6 @@ export async function loader({params}: { params: { orgid: string } }) {
 
 export default function OrganizationDetailsPage() {
     const { selectedOrganisation } = useLoaderData<typeof loader>();
-    let techContacts, associatedComponents;
     const [legalContact, setLegalContact] = useState<IContact | null>(null);
     const [contacts, setContacts] = useState<[IContact]>([]);
     const [components, setComponents] = useState<[IComponent]>([]);
@@ -50,29 +49,23 @@ export default function OrganizationDetailsPage() {
                     setLegalContact(legalData);
                 }
 
-                const componentsData = await ComponentApi.fetchComponents();
+                const componentsData = await ComponentApi.fetchComponentsByOrganization(selectedOrganisation);
                 if (componentsData) {
                     setComponents(componentsData);
                 }
+
+                const techContactsData = await ContactApi.fetchTechnicalContactsByOrganization(selectedOrganisation);
+                if(techContactsData) {
+                    setContacts(techContactsData);
+                }
+
             } catch (error) {
-                // Handle error
                 console.error("Error fetching data:", error);
             }
         };
 
         fetchData();
     }, [selectedOrganisation]);
-
-
-    if (selectedOrganisation) {
-        techContacts = contacts.filter((contact) =>
-            selectedOrganisation.techicalContacts.includes(contact.dn)
-        );
-
-        associatedComponents = components.filter((component) =>
-            component.organisations.includes(selectedOrganisation.dn)
-        );
-    }
 
     return (
         <div style={{ fontFamily: "system-ui, sans-serif", lineHeight: "1.8" }}>
@@ -107,8 +100,8 @@ export default function OrganizationDetailsPage() {
 
                 </Tabs.List>
                 <Tabs.Panel value="contacts" className="h-24 w-full bg-gray-50 p-4">
-                    {techContacts && techContacts.length > 0 ? (
-                        <ContactTable data={techContacts} />
+                    {contacts && contacts.length > 0 ? (
+                        <ContactTable data={contacts} />
                     ) : (
                         <p>No contacts</p>
                     )}
@@ -116,7 +109,7 @@ export default function OrganizationDetailsPage() {
 
                 <Tabs.Panel value="components" className="h-24 w-full bg-gray-50 p-4">
                     <ComponentsTable
-                        data={associatedComponents}
+                        data={components}
                     />
                 </Tabs.Panel>
 

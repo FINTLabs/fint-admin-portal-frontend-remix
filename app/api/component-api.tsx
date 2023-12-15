@@ -15,6 +15,23 @@ class ComponentApi {
             return null;
         }
     }
+
+    static async fetchComponentsByOrganization(selectedOrganisation) {
+        try {
+            const components = await this.fetchComponents();
+
+            if (components && selectedOrganisation) {
+                return components.filter((component) =>
+                    component.organisations.includes(selectedOrganisation.dn)
+                );
+            } else {
+                return null;
+            }
+        } catch (error) {
+            console.error("Error fetching components by organization:", error);
+            return null;
+        }
+    }
 }
 
 export default ComponentApi;

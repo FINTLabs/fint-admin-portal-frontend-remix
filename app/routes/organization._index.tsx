@@ -22,21 +22,24 @@ export const links: LinksFunction = () => [
 export default function OrganizationPage() {
     const organizationEditRef = useRef<HTMLDialogElement>(null!);
     const [filteredData, setFilteredData] = useState<IOrganization[]>([]);
+    const [organizations, setOrganizations]  = useState<IOrganization[]>([]);
 
     useEffect(() => {
-        const fetchData = async () => {
-            const organizationsData = await OrganizationApi.fetchOrganizations();
-
-            if (organizationsData) {
-                setFilteredData(organizationsData);
-            }
-        };
-
-        fetchData();
+        OrganizationApi.fetchOrganizations()
+            .then((organizationsData) => {
+                if (organizationsData) {
+                    setFilteredData(organizationsData);
+                    setOrganizations(organizationsData);
+                }
+            })
+            .catch((error) => {
+                // Handle error
+                console.error("Error fetching organizations:", error);
+            });
     }, []);
 
     const handleSearchInput = (input: any) => {
-        const filtered = filteredData.filter(
+        const filtered = organizations.filter(
             (row) =>
                 row.name.toLowerCase().includes(input.toLowerCase()) ||
                 row.displayName.toLowerCase().includes(input.toLowerCase()) ||
