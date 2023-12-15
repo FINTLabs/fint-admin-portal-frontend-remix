@@ -16,11 +16,12 @@ const ContactTable = ({data} : ContactTableProps) => {
     const [selectedContact, setSelectedContact] = useState<IContact | null>(null);
     const [organizations, setOrganizations] = useState([]); // State to store organizations
 
+    //TODO: move filter to organization API with a fetchOrganizationsByContact
     useEffect(() => {
         const fetchOrganizations = async () => {
             try {
                 const organizationData = await OrganizationApi.fetchOrganizations();
-                setOrganizations(organizationData || []); // Set organizations or empty array if fetch fails
+                setOrganizations(organizationData || []);
             } catch (error) {
                 console.error("Error fetching organizations:", error);
             }
@@ -35,7 +36,7 @@ const ContactTable = ({data} : ContactTableProps) => {
     };
 
     const handleFormClose = () => {
-        // Handle form submission logic
+        //todo:  Handle form submission logic
         console.log("closing the contact modal from the table");
 
         modalRef.current?.close();
