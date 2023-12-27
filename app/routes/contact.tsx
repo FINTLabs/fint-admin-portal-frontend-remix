@@ -5,6 +5,7 @@ import LayoutHeader from "~/components/layout-header";
 import {PersonGroupIcon} from "@navikt/aksel-icons";
 import {Outlet} from "@remix-run/react";
 import React from "react";
+import Breadcrumbs from "~/components/breadcrumbs";
 
 
 export const meta: MetaFunction = () => {
@@ -18,14 +19,11 @@ export const links: LinksFunction = () => [
 ];
 
 export default function Index() {
-    let breadcrumbs = ['Dashboard', 'Organizations', 'Contact'];
-
     return (
 
 <>
-
-    <LayoutHeader title={"Contacts"} icon={PersonGroupIcon} breadcrumbs={breadcrumbs}/>
-
+    <Breadcrumbs />
+    <LayoutHeader title={"Contacts"} icon={PersonGroupIcon}/>
             <Box
                 // background="surface-alt-4-moderate"
                 padding="8"

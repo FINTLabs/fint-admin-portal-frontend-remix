@@ -5,6 +5,7 @@ import navStyles from "@navikt/ds-css/dist/index.css";
 import LayoutHeader from "~/components/layout-header";
 import {Buldings3Icon} from "@navikt/aksel-icons";
 import {Outlet} from "@remix-run/react";
+import Breadcrumbs from "~/components/breadcrumbs";
 
 
 export const meta: MetaFunction = () => {
@@ -18,13 +19,12 @@ export const links: LinksFunction = () => [
 ];
 
 export default function Index() {
-    let breadcrumbs = ['Dashboard', 'Organizations'];
-
     return (
 
         <>
 
-            <LayoutHeader title={"Organizations"} icon={Buldings3Icon} breadcrumbs={breadcrumbs}/>
+            <Breadcrumbs />
+            <LayoutHeader title={"Organizations"} icon={Buldings3Icon}/>
 
             <Box
                 // background="surface-alt-4-moderate"
