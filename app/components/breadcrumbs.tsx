@@ -3,9 +3,7 @@ import {Link} from "@remix-run/react";
 
 export default function Breadcrumbs(){
     const location = useLocation();
-    console.log(location)
 
-    const homeLink = "/"
     let currentLink = ''
 
     const crumbs = location.pathname.split('/')
@@ -16,7 +14,6 @@ export default function Breadcrumbs(){
 
             return(
                 <div className='crumb' key='crumb' >
-                    <Link to={homeLink}>Dashboard</Link>
                     <Link to={currentLink}>{crumb}</Link>
                 </div>
             )
