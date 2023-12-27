@@ -1,23 +1,30 @@
-import React from "react";
-import { Link } from 'react-router-dom';
+import {useLocation} from "react-router";
+import {Link} from "@remix-run/react";
 
-interface BreadCrumbs {
-    lable: String;
-    path: String;
+export default function Breadcrumbs(){
+    const location = useLocation();
+    console.log(location)
+
+    const homeLink = "/"
+    let currentLink = ''
+
+    const crumbs = location.pathname.split('/')
+        .filter(crumb => crumb !== '')
+        .map(crumb => {
+
+            currentLink += `/${crumb}`
+
+            return(
+                <div className='crumb' key='crumb' >
+                    <Link to={homeLink}>Dashboard</Link>
+                    <Link to={currentLink}>{crumb}</Link>
+                </div>
+            )
+        })
+
+    return(
+        <div className='breadcrumbs'>
+            {crumbs}
+        </div>
+    )
 }
-
-interface BreadCrumbsProps{
-    paths: BreadCrumbs[];
-}
-
-const BreadCrumbs: React.FC<BreadCrumbsProps> = ({ paths }) => (
-    <div>
-        {paths.map((path, index) => (
-            <span key={path.lable}>
-                <Link to={path.path}>{path.lable}</Link>
-                {index < paths.length - 1 && <span>  </span> }
-            </span>
-    ))}
-</div>
-);
-export default BreadCrumbs;
