@@ -5,6 +5,8 @@ export default function Breadcrumbs(){
     const location = useLocation();
 
     let currentLink = ''
+    const homeLink = '/'
+    const linkStyle = {textDecoration: 'none'}
 
     const crumbs = location.pathname.split('/')
         .filter(crumb => crumb !== '')
@@ -14,13 +16,14 @@ export default function Breadcrumbs(){
 
             return(
                 <div className='crumb' key='crumb' >
-                    <Link to={currentLink}>{crumb}</Link>
+                    <Link to={currentLink} style={linkStyle}>{crumb}</Link>
                 </div>
             )
         })
 
     return(
         <div className='breadcrumbs'>
+            <Link to={homeLink} style={linkStyle}>{'Dash board'}</Link>
             {crumbs}
         </div>
     )
