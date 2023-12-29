@@ -41,9 +41,9 @@ const OrganizationForm = forwardRef((props: OrganizationFormProps, ref: Forwarde
 
     function resetFormValues() {
         setFormValues({
-            name: "",
-            displayName: "",
-            orgNumber: "",
+            name: selectedOrganization?.name,
+            displayName: selectedOrganization?.displayName,
+            orgNumber: selectedOrganization?.orgNumber,
         });
     }
 

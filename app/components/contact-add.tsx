@@ -42,10 +42,10 @@ const ContactForm = forwardRef((props: ContactFormProps, ref: ForwardedRef<HTMLD
 
     function resetFormValues() {
             setFormValues({
-                firstName: "",
-                lastName: "",
-                mail: "",
-                mobile: ""
+                firstName: selectedContact?.firstName,
+                lastName: selectedContact?.lastName,
+                mail: selectedContact?.mail,
+                mobile: selectedContact?.mobile
             });
         }
 
