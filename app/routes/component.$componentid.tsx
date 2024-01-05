@@ -2,10 +2,10 @@ import React, {useEffect, useRef, useState} from "react";
 import type { MetaFunction, LinksFunction } from "@remix-run/node";
 import navStyles from "@navikt/ds-css/dist/index.css";
 import {useLoaderData} from "@remix-run/react";
-import {Button, Heading, HGrid, LinkPanel, Tabs, Tag} from "@navikt/ds-react";
+import {Button, Heading, HGrid, LinkPanel, Switch, Tabs, Tag, TextField} from "@navikt/ds-react";
 import {TokenIcon, TenancyIcon, Buldings3Icon, PencilIcon} from '@navikt/aksel-icons';
 import OrganizationTable from "~/components/organization-table";
-import ComponentForm from "~/components/component-add";
+import ComponentForm from "~/components/component-form";
 import type {IComponent, IOrganization} from "~/api/types";
 import ComponentApi from "~/api/component-api";
 import OrganizationApi from "~/api/organization-api";
@@ -26,10 +26,11 @@ export function loader({ params }: { params: { componentid: string } }) {
     return { componentName };
 }
 
+//TODO: Ask to save changes on tab change ?
 
 export default function ComponentPage() {
     const { componentName } = useLoaderData<typeof loader>();
-    const editRef = useRef<HTMLDialogElement | null>(null);
+    // const editRef = useRef<HTMLDialogElement | null>(null);
     const [selectedComponent, setSelectedComponent] = useState<IComponent>();
     const [associatedOrganisations, setAssociatedOrganisations]  = useState<[IOrganization]>([]);
     const [organizations, setOrganizations] = useState<[IOrganization]>([]);
@@ -71,11 +72,11 @@ export default function ComponentPage() {
         }
     }, [selectedComponent, organizations]);
 
-    const handleFormClose = () => {
-        // todo: Handle form submission logic
-        console.log("closing the modal form");
-        editRef.current?.close();
-    };
+    // const handleFormClose = () => {
+    //     // todo: Handle form submission logic
+    //     console.log("closing the modal form");
+    //     editRef.current?.close();
+    // };
 
     return (
         <div style={{ fontFamily: "system-ui, sans-serif", lineHeight: "1.8" }}>
@@ -113,21 +114,6 @@ export default function ComponentPage() {
                     )}
 
                 </div>
-                <div>
-                    <ComponentForm
-                        ref={editRef}
-                        headerText="Edit Contact Form"
-                        onClose={handleFormClose}
-                    />
-                    <Button
-                        onClick={() => editRef.current?.showModal()}
-                        icon={<PencilIcon aria-hidden />}
-                        size="xsmall"
-                    >
-                        Edit Component
-                    </Button>
-
-                </div>
             </HGrid>
 
 
@@ -148,6 +134,11 @@ export default function ComponentPage() {
                         label="Swagger"
                         icon={<TokenIcon title="sendt" />}
                     />
+                    <Tabs.Tab
+                        value="edit"
+                        label="Edit Component"
+                        icon={<PencilIcon title="Edit" />}
+                        />
                 </Tabs.List>
                 <Tabs.Panel value="logg" className="h-24 w-full bg-gray-50 p-4">
                     <OrganizationTable data={associatedOrganisations} />
@@ -184,8 +175,6 @@ export default function ComponentPage() {
                 </Tabs.Panel>
                 <Tabs.Panel value="sendt" className="h-24  w-full bg-gray-50 p-4">
 
-
-
                     {selectedComponent?.inPlayWithFint && (
                         <LinkPanel border={false} href="#">
                             <LinkPanel.Title>Play With Fint</LinkPanel.Title>
@@ -213,6 +202,24 @@ export default function ComponentPage() {
                         </LinkPanel>
                     )}
 
+
+                </Tabs.Panel>
+                <Tabs.Panel value="edit" className="h-24  w-full bg-gray-50 p-4">
+
+                    <form method="dialog" id="skjema" >
+                        <TextField label="Name" />
+                        <TextField label="Description" />
+                        <TextField label="Path" />
+                        Component Type:
+                        <Switch size="small">Open</Switch>
+                        <Switch size="small">Felles</Switch>
+                        <Switch size="small">FINT Core</Switch>
+                        Environment:
+                        <Switch size="small">Play With Fint</Switch>
+                        <Switch size="small">Beta</Switch>
+                        <Switch size="small">API (Production)</Switch>
+
+                    </form>
 
                 </Tabs.Panel>
             </Tabs>

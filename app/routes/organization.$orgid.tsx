@@ -2,14 +2,15 @@ import React, {useEffect, useState} from "react";
 import type {LinksFunction, MetaFunction} from "@remix-run/node";
 import navStyles from "@navikt/ds-css/dist/index.css";
 import {useLoaderData} from "@remix-run/react";
-import {Heading, HGrid, Tabs, VStack} from "@navikt/ds-react";
-import {ComponentIcon, PersonGroupIcon} from '@navikt/aksel-icons';
+import {Heading, HGrid, Tabs, VStack, Button} from "@navikt/ds-react";
+import {ComponentIcon, PersonGroupIcon, PencilIcon} from '@navikt/aksel-icons';
 import ComponentsTable from "~/components/components-table";
 import ContactTable from "~/components/contacts-table";
 import ContactApi from "~/api/contact-api";
 import type {IComponent, IContact} from "~/api/types";
 import OrganizationApi from "~/api/organization-api";
 import ComponentApi from "~/api/component-api";
+import CustomFormModal from "~/components/organization-add";
 
 export const meta: MetaFunction = () => {
     return [
@@ -99,6 +100,12 @@ export default function OrganizationDetailsPage() {
                         icon={<ComponentIcon title="component" />}
                     />
 
+                    <Tabs.Tab
+                        value="edit"
+                        label="Edit Org"
+                        icon={<PencilIcon title="edit" />}
+                    />
+
                 </Tabs.List>
                 <Tabs.Panel value="contacts" className="h-24 w-full bg-gray-50 p-4">
                     {contacts && contacts.length > 0 ? (
@@ -112,6 +119,10 @@ export default function OrganizationDetailsPage() {
                     <ComponentsTable
                         data={components}
                     />
+                </Tabs.Panel>
+
+                <Tabs.Panel value="edit" className="h-24 w-full bg-gray-50 p-4">
+                    <p>organization edit form here??</p>
                 </Tabs.Panel>
 
             </Tabs>
