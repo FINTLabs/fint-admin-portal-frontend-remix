@@ -2,13 +2,13 @@ import React, {useEffect, useRef, useState} from "react";
 import type { MetaFunction, LinksFunction } from "@remix-run/node";
 import navStyles from "@navikt/ds-css/dist/index.css";
 import {useLoaderData} from "@remix-run/react";
-import {Button, Heading, HGrid, LinkPanel, Switch, Tabs, Tag, TextField} from "@navikt/ds-react";
+import {Box, Heading, HGrid, LinkPanel, Switch, Tabs, Tag, TextField} from "@navikt/ds-react";
 import {TokenIcon, TenancyIcon, Buldings3Icon, PencilIcon} from '@navikt/aksel-icons';
 import OrganizationTable from "~/components/organization-table";
-import ComponentForm from "~/components/component-form";
 import type {IComponent, IOrganization} from "~/api/types";
 import ComponentApi from "~/api/component-api";
 import OrganizationApi from "~/api/organization-api";
+import ComponentForm from "~/components/component-form";
 
 export const meta: MetaFunction = () => {
     return [
@@ -204,22 +204,25 @@ export default function ComponentPage() {
 
 
                 </Tabs.Panel>
+
                 <Tabs.Panel value="edit" className="h-24  w-full bg-gray-50 p-4">
 
-                    <form method="dialog" id="skjema" >
-                        <TextField label="Name" />
-                        <TextField label="Description" />
-                        <TextField label="Path" />
-                        Component Type:
-                        <Switch size="small">Open</Switch>
-                        <Switch size="small">Felles</Switch>
-                        <Switch size="small">FINT Core</Switch>
-                        Environment:
-                        <Switch size="small">Play With Fint</Switch>
-                        <Switch size="small">Beta</Switch>
-                        <Switch size="small">API (Production)</Switch>
 
-                    </form>
+
+                    <Box padding="8">
+
+                        <Box
+                            background="surface-subtle"
+                            borderColor="border-alt-3"
+                            padding="4"
+                            borderWidth="2"
+                            borderRadius="xlarge"
+                        >
+                            <ComponentForm selectedComponent={selectedComponent} />
+                        </Box>
+                    </Box>
+
+
 
                 </Tabs.Panel>
             </Tabs>

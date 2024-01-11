@@ -35,32 +35,18 @@ const OrganizationTable = ({ data } : OrganizationTableProps) => {
                     <Table.HeaderCell scope="col">Asset Id</Table.HeaderCell>
                     <Table.HeaderCell scope="col">Org Number</Table.HeaderCell>
                     <Table.HeaderCell style={{ fontWeight: 'bold' }}>View</Table.HeaderCell>
-                    <Table.HeaderCell style={{ fontWeight:'bold' }}>Edit</Table.HeaderCell>
                 </Table.Row>
             </Table.Header>
             <Table.Body>
                 {data.map((row, index) => (
                     <Table.Row key={index}>
-                        <Table.HeaderCell scope="row">{row.displayName}</Table.HeaderCell>
+                        <Table.DataCell scope="row">{row.displayName}</Table.DataCell>
                         <Table.DataCell>{row.primaryAssetId}</Table.DataCell>
                         <Table.DataCell>{row.orgNumber}</Table.DataCell>
                         <Table.DataCell>
                             <Link to={`/organization/${row.orgNumber}`}>
                                 <InformationSquareIcon title="a11y-title" fontSize="1.5rem" />
                             </Link>
-                        </Table.DataCell>
-                        <Table.DataCell>
-                            <Button
-                                onClick={() => openEditModal(row)}
-                                icon={<PencilIcon aria-hidden />}
-                                size="xsmall"
-                            />
-                            <CustomFormModal
-                                ref={modalRef}
-                                headerText="Edit Organization Form"
-                                onClose={handleFormClose}
-                                selectedOrganization={selectedOrganization}
-                            />
                         </Table.DataCell>
                     </Table.Row>
                 ))}

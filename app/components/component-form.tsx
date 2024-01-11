@@ -1,53 +1,118 @@
-import type {ForwardedRef} from "react";
-import React, { forwardRef} from "react";
-import {Button, Modal, Switch, TextField} from "@navikt/ds-react";
+import React, { useState, useEffect } from 'react';
+import {Switch, TextField, Button, Box} from "@navikt/ds-react";
+import { FloppydiskIcon } from '@navikt/aksel-icons';
 
-interface ComponentFormProps {
-    headerText: string;
-    onClose: () => void;
-}
+const ComponentForm = ({ selectedComponent }) => {
+    const [formData, setFormData] = useState({
+        name: selectedComponent.name || '',
+        description: selectedComponent.description || '',
+        basePath: selectedComponent.basePath || '',
+        openData: selectedComponent.openData || false,
+        common: selectedComponent.common || false,
+        core: selectedComponent.core || false,
+        inPlayWithFint: selectedComponent.inPlayWithFint || false,
+        inBeta: selectedComponent.inBeta || false,
+        inProduction: selectedComponent.inProduction || false,
+    });
 
-const ComponentForm = forwardRef((props: ComponentFormProps, ref: ForwardedRef<HTMLDialogElement>) => {
+    const [formChanged, setFormChanged] = useState(false);
 
-    const { headerText, onClose } = props;
-
-    const handleSubmit = (e:any) => {
-        e.preventDefault();
-        console.log("contact form submitted")
-        onClose();
+    const handleInputChange = (fieldName, value) => {
+        setFormData((prevData) => ({
+            ...prevData,
+            [fieldName]: value,
+        }));
+        setFormChanged(true);
     };
 
-    const handleCancel = (e:any) => {
-        e.preventDefault();
-        console.log("contact form canceled")
-        onClose();
+    const handleSave = () => {
+        // Implement your save logic here
+        // You can use the formData to send the updated data to your backend
+        // Reset formChanged to false after saving
+        setFormChanged(false);
     };
+
+    // Listen for changes in formData to enable or disable the Save button
+    useEffect(() => {
+        setFormChanged(false); // Reset formChanged when selectedComponent changes
+    }, [selectedComponent]);
+
     return (
-        <Modal ref={ref} header={{ heading: headerText }} width={400}>
-            <Modal.Body>
-                <form method="dialog" id="skjema" onSubmit={handleSubmit}>
-                    <TextField label="Name" />
-                    <TextField label="Description" />
-                    <TextField label="Path" />
-                    Component Type:
-                    <Switch size="small">Open</Switch>
-                    <Switch size="small">Felles</Switch>
-                    <Switch size="small">FINT Core</Switch>
-                    Environment:
-                    <Switch size="small">Play With Fint</Switch>
-                    <Switch size="small">Beta</Switch>
-                    <Switch size="small">API (Production)</Switch>
+        <form method="dialog" id="skjema">
+            <TextField
+                label="Name"
+                value={formData.name}
+                onChange={(e) => handleInputChange('name', e.target.value)}
+            />
+            <TextField
+                label="Description"
+                value={formData.description}
+                onChange={(e) => handleInputChange('description', e.target.value)}
+            />
+            <TextField
+                label="Path"
+                value={formData.basePath}
+                onChange={(e) => handleInputChange('basePath', e.target.value)}
+            />
 
-                </form>
-            </Modal.Body>
-            <Modal.Footer>
-                <Button form="skjema">Send</Button>
-                <Button type="button" variant="secondary" onClick={handleCancel}>
-                    Avbryt
+            Component Type:
+            <Switch
+                size="small"
+                defaultChecked={formData.openData}
+                onChange={(checked) => handleInputChange('openData', checked)}
+            >
+                Open
+            </Switch>
+            <Switch
+                size="small"
+                defaultChecked={formData.common}
+                onChange={(checked) => handleInputChange('common', checked)}
+            >
+                Felles
+            </Switch>
+            <Switch
+                size="small"
+                defaultChecked={formData.core}
+                onChange={(checked) => handleInputChange('core', checked)}
+            >
+                FINT Core
+            </Switch>
+
+            Environment:
+            <Switch
+                size="small"
+                defaultChecked={formData.inPlayWithFint}
+                onChange={(checked) => handleInputChange('inPlayWithFint', checked)}
+            >
+                Play With Fint
+            </Switch>
+            <Switch
+                size="small"
+                defaultChecked={formData.inBeta}
+                onChange={(checked) => handleInputChange('inBeta', checked)}
+            >
+                Beta
+            </Switch>
+            <Switch
+                size="small"
+                defaultChecked={formData.inProduction}
+                onChange={(checked) => handleInputChange('inProduction', checked)}
+            >
+                API (Production)
+            </Switch>
+            <Box padding={"4"} >
+                <Button
+                    icon={<FloppydiskIcon aria-hidden />}
+                    disabled={!formChanged}
+                    onClick={handleSave}
+                >
+                    Save
                 </Button>
-            </Modal.Footer>
-        </Modal>
+            </Box>
+        </form>
+
+
     );
-});
+};
 
 export default ComponentForm;

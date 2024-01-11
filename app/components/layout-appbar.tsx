@@ -36,10 +36,10 @@ export function LayoutAppbar () {
     return (
 
         <>
-                <header className="grid h-20">
+                {/*<header className="grid h-20">*/}
                     <HStack as="nav" justify="space-between" align="center">
                         <a href="/" className="px-2 py-5">
-                            Novari Logo Here
+                            <img src={"/img/Novari-big-gray.png"} height={"50px"}/>
                         </a>
                         <div className="grid h-full">
                             <HStack align="center">
@@ -71,7 +71,7 @@ export function LayoutAppbar () {
                             </HStack>
                         </div>
                     </HStack>
-                </header>
+                {/*</header>*/}
 
             <Popover
                 open={menuOpen}

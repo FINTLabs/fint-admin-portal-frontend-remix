@@ -12,8 +12,7 @@ import {
   Outlet,
   Scripts,
   ScrollRestoration,
-} from "@remix-run/react";
-import {Link} from "@remix-run/react";
+Link} from "@remix-run/react";
 
 export const links: LinksFunction = () => [
     ...(cssBundleHref ? [{ rel: "stylesheet", href: cssBundleHref }, { rel: "stylesheet", href: navStyles }] : []),
@@ -33,7 +32,7 @@ export default function App() {
 
       <Page
           footer={
-              <Box background="surface-neutral-moderate" padding="8" as="footer">
+              <Box background="grayalpha-100" padding="8" as="footer">
                   <Page.Block gutters width="lg">
                       <BodyShort><Link to={'#'}>Til Toppen</Link></BodyShort>
                       Footer from root
@@ -41,7 +40,11 @@ export default function App() {
               </Box>
           }
       >
-          <Box background="surface-neutral-moderate" padding="8" as="header">
+          <Box
+              background="grayalpha-100"
+              padding="8"
+              as="header"
+          >
               <Page.Block gutters>
                   <LayoutAppbar />
               </Page.Block>
@@ -50,7 +53,7 @@ export default function App() {
           <Box
               // background="surface-alt-4-moderate"
               padding="1"
-              paddingBlock="16"
+              paddingBlock="2"
               as="main"
           >
               <Page.Block gutters>

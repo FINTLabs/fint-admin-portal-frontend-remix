@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useRef, useState} from "react";
 import type {LinksFunction, MetaFunction} from "@remix-run/node";
 import navStyles from "@navikt/ds-css/dist/index.css";
 import {useLoaderData} from "@remix-run/react";
@@ -36,6 +36,20 @@ export default function OrganizationDetailsPage() {
     const [legalContact, setLegalContact] = useState<IContact | null>(null);
     const [contacts, setContacts] = useState<[IContact]>([]);
     const [components, setComponents] = useState<[IComponent]>([]);
+    const [isEditModalOpen, setEditModalOpen] = useState(false);
+    const modalRef = useRef<HTMLDialogElement>(null);
+
+    const handleEditTabClick = () => {
+        // Open the modal when the "Edit Org" tab is clicked
+        modalRef.current?.showModal();
+        console.log("and now here")
+        setEditModalOpen(true);
+    };
+
+    const handleCloseModal = () => {
+        // Close the modal
+        setEditModalOpen(false);
+    };
 
     //TODO: add a loading function so that old contacts and components do not show during load
     useEffect(() => {
@@ -87,7 +101,14 @@ export default function OrganizationDetailsPage() {
                 </VStack>
             </HGrid>
 
-            <Tabs defaultValue="contacts" selectionFollowsFocus>
+            <Tabs defaultValue="contacts" selectionFollowsFocus
+                  onChange={(tab) => {
+                      if (tab === "edit") {
+                          handleEditTabClick();
+                          console.log("hello world")
+                      }
+                  }}
+            >
                 <Tabs.List>
                     <Tabs.Tab
                         value="contacts"
@@ -126,7 +147,12 @@ export default function OrganizationDetailsPage() {
                 </Tabs.Panel>
 
             </Tabs>
-
+            <CustomFormModal
+                ref={modalRef}
+                headerText="Edit Organization Form"
+                onClose={handleCloseModal}
+                selectedOrganization={selectedOrganisation}
+            />
         </div>
     );
 }

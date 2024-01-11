@@ -2,7 +2,7 @@ import React, {useEffect, useRef, useState} from 'react';
 import {InternalHeader, Search, Spacer} from "@navikt/ds-react";
 import {ComponentIcon} from "@navikt/aksel-icons";
 import ComponentsTable from "~/components/components-table";
-import ComponentAdd from "~/components/component-form";
+import ComponentAdd from "~/components/component-form-modal";
 import type {IComponent} from "~/api/types";
 import ComponentApi from "~/api/component-api";
 

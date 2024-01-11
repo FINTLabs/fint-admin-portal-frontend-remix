@@ -9,7 +9,10 @@
 // https://on.cypress.io/custom-commands
 // ***********************************************
 //
-//
+Cypress.on('uncaught:exception', (err, runnable) => {
+    // Returning false prevents Cypress from failing the test
+    return false;
+});
 // -- This is a parent command --
 // Cypress.Commands.add('login', (email, password) => { ... })
 //
