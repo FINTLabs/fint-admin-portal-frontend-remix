@@ -10,12 +10,12 @@ class ContactApi {
             } else {
                 // Handle error response
                 console.error("Error fetching display name");
-                return null;
+                return "try-error";
             }
         } catch (error) {
             // Handle fetch error
             console.error("Error fetching display name:", error);
-            return null;
+            return "catch-error";
         }
     }
 

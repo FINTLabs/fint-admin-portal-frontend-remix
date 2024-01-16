@@ -32,6 +32,24 @@ class ComponentApi {
             return null;
         }
     }
+
+    static async fetchComponentsByName(name) {
+        try {
+            const url = `http://localhost:8081/api/components/${name}`;
+            const response = await fetch(url);
+            if (response.ok) {
+                return await response.json();
+            } else {
+                // Handle error response
+                console.error("Error fetching components by name");
+                return null;
+            }
+        } catch (error) {
+            // Handle fetch error
+            console.error("Error fetching components by name:", error);
+            return null;
+        }
+    }
 }
 
 export default ComponentApi;

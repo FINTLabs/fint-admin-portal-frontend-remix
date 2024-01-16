@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState} from "react";
+import React, {useRef, useState} from "react";
 import {BodyShort, Box, Button, Heading, HGrid, Hide, HStack, LinkPanel, Popover} from "@navikt/ds-react";
 import {
     Buldings3Icon,
@@ -12,26 +12,13 @@ import {
     WrenchIcon,
     XMarkIcon
 } from '@navikt/aksel-icons';
-import {Link} from "@remix-run/react";
-import ContactApi from "~/api/contact-api";
+import {Link, useLoaderData} from "@remix-run/react";
 
-
-export function LayoutAppbar () {
+export function LayoutAppbar() {
 
     const buttonRef = useRef<HTMLButtonElement>(null);
     const [menuOpen, setMenuOpen] = useState(false);
-    const [displayName, setDisplayName] = useState("Guest");
-
-    useEffect(() => {
-        const fetchData = async () => {
-            const name = await ContactApi.fetchDisplayName();
-            if (name) {
-                setDisplayName(name);
-            }
-        };
-
-        fetchData();
-    }, []);
+    const { displayName } = useLoaderData();
 
     return (
 
@@ -39,7 +26,7 @@ export function LayoutAppbar () {
                 {/*<header className="grid h-20">*/}
                     <HStack as="nav" justify="space-between" align="center">
                         <a href="/" className="px-2 py-5">
-                            <img src={"/img/Novari-big-gray.png"} height={"50px"}/>
+                            <img src={"/img/Novari-big-gray.png"} height={"50px"} alt={"Novari Logo"}/>
                         </a>
                         <div className="grid h-full">
                             <HStack align="center">

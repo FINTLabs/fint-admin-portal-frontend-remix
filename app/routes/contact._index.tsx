@@ -1,46 +1,38 @@
-import type {LinksFunction, MetaFunction} from "@remix-run/node";
-import React, {useEffect, useRef, useState} from "react";
+import React, {useRef, useState} from "react";
 import {InternalHeader, Search, Spacer,} from "@navikt/ds-react";
-import navStyles from "@navikt/ds-css/dist/index.css";
 import ContactTable from "~/components/contacts-table";
 import {PersonPlusIcon} from '@navikt/aksel-icons';
 import CustomFormModal from "~/components/contact-add";
 import type {IContact} from '~/api/types'
 import ContactApi from "~/api/contact-api";
+import type { LoaderFunction } from '@remix-run/node';
+import { json } from '@remix-run/node';
+import {useLoaderData} from "@remix-run/react";
+import OrganizationApi from "~/api/organization-api";
 
-export const meta: MetaFunction = () => {
-    return [
-        {title: "Contacts"},
-        {name: "description", content: "Welcome to Remix!"},
-    ];
+
+export const loader: LoaderFunction = async () => {
+    try {
+        const [contactsData, organizationsData] = await Promise.all([
+            ContactApi.fetchContacts(),
+            OrganizationApi.fetchOrganizations() // Adjust this call as needed
+        ]);
+        return json({ contactsData, organizationsData });
+    } catch (error) {
+        console.error("Error fetching data:", error);
+        throw new Response("Not Found", { status: 404 });
+    }
 };
-
-export const links: LinksFunction = () => [
-    {rel: "stylesheet", href: navStyles}
-];
 
 export default function ContactPage() {
     const [filteredData, setFilteredData] = useState<[IContact]>([]);
     const contactEditRef = useRef<HTMLDialogElement>(null!);
-    const [contacts, setContacts] = useState<[IContact]>([]);
-
-    useEffect(() => {
-        ContactApi.fetchContacts()
-            .then((contactsData) => {
-                if (contactsData) {
-                    setContacts(contactsData);
-                    setFilteredData(contactsData);
-                }
-            })
-            .catch((error) => {
-                // Handle error
-                console.error("Error fetching contacts:", error);
-            });
-    }, []);
-
+    const { contactsData, organizationsData } = useLoaderData();
+    const [search, setSearch] = useState<string>("");
 
     const handleSearchInputChange = (input: any) => {
-        const filtered = contacts.filter(
+        setSearch(input);
+        const filtered = contactsData.filter(
             (row) =>
                 row.firstName.toLowerCase().includes(input.toLowerCase()) ||
                 row.lastName.toLowerCase().includes(input.toLowerCase())
@@ -88,7 +80,7 @@ export default function ContactPage() {
 
             </InternalHeader>
 
-            <ContactTable data={filteredData}/>
+            <ContactTable data={search !== "" ? filteredData : contactsData} organizations={organizationsData} />
 
         </div>
     );

@@ -1,11 +1,13 @@
-//access.tsx
 import React from "react";
+import {Box, Page} from "@navikt/ds-react";
 import navStyles from "@navikt/ds-css/dist/index.css";
-import {Alert, Box, Page} from "@navikt/ds-react";
 import LayoutHeader from "~/components/layout-header";
-import {TasklistIcon} from "@navikt/aksel-icons";
+import {ComponentIcon} from "@navikt/aksel-icons";
 import {Outlet} from "@remix-run/react";
-import type { LinksFunction, MetaFunction} from '@remix-run/node';
+import Breadcrumbs from "~/components/breadcrumbs";
+import type { LinksFunction, MetaFunction} from "@remix-run/node";
+import {json} from "@remix-run/node";
+import ComponentApi from "~/api/component-api";
 
 export const meta: MetaFunction = () => {
     return [
@@ -17,15 +19,24 @@ export const links: LinksFunction = () => [
     { rel: "stylesheet", href: navStyles }
 ];
 
+export const loader = async () => {
+    try {
+        const componentsData = await ComponentApi.fetchComponents();
+        return json({ componentsData });
+    } catch (error) {
+        console.log("Error fetching components:", error);
+        throw new Error("Error fetching components");
+    }
+};
 
-export default function Index() {
-    let breadcrumbs = ['Dashboard', 'Access Template'];
+export default function Component() {
 
     return (
 
         <>
 
-            <LayoutHeader title={"Tilgangspakker (maler)"} icon={TasklistIcon} breadcrumbs={breadcrumbs}/>
+            <Breadcrumbs/>
+            <LayoutHeader title={"Testing index"} icon={ComponentIcon}/>
 
             <Box
                 // background="surface-alt-4-moderate"
@@ -34,11 +45,6 @@ export default function Index() {
                 as="main"
             >
                 <Page.Block gutters width="lg">
-                    <Box padding="4">
-                        <Alert variant="info">
-                            This area is not finished yet... so this list is only for show...
-                        </Alert>
-                    </Box>
                     <Outlet />
                 </Page.Block>
             </Box>

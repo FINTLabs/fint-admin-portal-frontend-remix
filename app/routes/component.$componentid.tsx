@@ -1,82 +1,40 @@
-import React, {useEffect, useRef, useState} from "react";
-import type { MetaFunction, LinksFunction } from "@remix-run/node";
-import navStyles from "@navikt/ds-css/dist/index.css";
+import React from "react";
+import type {LoaderFunction} from "@remix-run/node";
 import {useLoaderData} from "@remix-run/react";
-import {Box, Heading, HGrid, LinkPanel, Switch, Tabs, Tag, TextField} from "@navikt/ds-react";
+import {Box, Heading, HGrid, LinkPanel, Tabs, Tag} from "@navikt/ds-react";
 import {TokenIcon, TenancyIcon, Buldings3Icon, PencilIcon} from '@navikt/aksel-icons';
 import OrganizationTable from "~/components/organization-table";
-import type {IComponent, IOrganization} from "~/api/types";
 import ComponentApi from "~/api/component-api";
 import OrganizationApi from "~/api/organization-api";
 import ComponentForm from "~/components/component-form";
+import {json} from "@remix-run/node";
 
-export const meta: MetaFunction = () => {
-    return [
-        { title: "Admin Portal Dashboard" },
-        { name: "description", content: "Welcome to Remix!" },
-    ];
-};
-export const links: LinksFunction = () => [
-    { rel: "stylesheet", href: navStyles }
-];
-
-export function loader({ params }: { params: { componentid: string } }) {
+export const loader: LoaderFunction = async ({ params }) => {
     const componentName = params.componentid;
 
-    return { componentName };
-}
+    try {
+        const componentsPromise = ComponentApi.fetchComponentsByName(componentName);
+        const organizationsPromise = OrganizationApi.fetchOrganizations();
+
+        const [selectedComponent, organizations] = await Promise.all([componentsPromise, organizationsPromise]);
+
+        // Filter organizations if selectedComponent is not null and has 'organisations'
+        const associatedOrganizations = selectedComponent && selectedComponent.organisations
+            ? organizations.filter(org => selectedComponent.organisations.includes(org.dn))
+            : [];
+
+        return json({ selectedComponent, organizations, associatedOrganizations });
+    } catch (error) {
+        console.error("Error in loader fetching data:", error);
+        throw new Response("Not Found", { status: 404 });
+    }
+};
 
 //TODO: Ask to save changes on tab change ?
 
 export default function ComponentPage() {
-    const { componentName } = useLoaderData<typeof loader>();
-    // const editRef = useRef<HTMLDialogElement | null>(null);
-    const [selectedComponent, setSelectedComponent] = useState<IComponent>();
-    const [associatedOrganisations, setAssociatedOrganisations]  = useState<[IOrganization]>([]);
-    const [organizations, setOrganizations] = useState<[IOrganization]>([]);
 
-    useEffect(() => {
-        ComponentApi.fetchComponents()
-            .then((componentsData) => {
-                if (componentsData) {
-                    const findOne = componentsData.find((component) => component.name === componentName);
-                    console.log(componentName);
-                    setSelectedComponent(findOne);
-                }
-            })
-            .catch((error) => {
-                // Handle error
-                console.error("Error fetching components:", error);
-            });
-    }, [componentName]);
-
-
-    useEffect(() => {
-        OrganizationApi.fetchOrganizations()
-            .then((organizationData) => {
-                if (organizationData) setOrganizations(organizationData);
-            })
-            .catch((error) => {
-                // Handle error
-                console.error("Error fetching organizations:", error);
-            });
-    }, []);
-
-
-    useEffect(() => {
-        if (selectedComponent) {
-            const filteredOrganisations = organizations.filter((org) =>
-                selectedComponent.organisations.includes(org.dn)
-            );
-            setAssociatedOrganisations(filteredOrganisations);
-        }
-    }, [selectedComponent, organizations]);
-
-    // const handleFormClose = () => {
-    //     // todo: Handle form submission logic
-    //     console.log("closing the modal form");
-    //     editRef.current?.close();
-    // };
+    const { selectedComponent, associatedOrganizations } = useLoaderData();
 
     return (
         <div style={{ fontFamily: "system-ui, sans-serif", lineHeight: "1.8" }}>
@@ -121,7 +79,7 @@ export default function ComponentPage() {
                 <Tabs.List>
                     <Tabs.Tab
                         value="logg"
-                        label="Organizations"
+                        label={`Organizations (${associatedOrganizations.length})`}
                         icon={<Buldings3Icon title="historielogg" />}
                     />
                     <Tabs.Tab
@@ -141,7 +99,7 @@ export default function ComponentPage() {
                         />
                 </Tabs.List>
                 <Tabs.Panel value="logg" className="h-24 w-full bg-gray-50 p-4">
-                    <OrganizationTable data={associatedOrganisations} />
+                    <OrganizationTable data={associatedOrganizations} />
                 </Tabs.Panel>
                 <Tabs.Panel value="inbox" className="h-24 w-full bg-gray-50 p-4">
 
@@ -207,8 +165,6 @@ export default function ComponentPage() {
 
                 <Tabs.Panel value="edit" className="h-24  w-full bg-gray-50 p-4">
 
-
-
                     <Box padding="8">
 
                         <Box
@@ -221,8 +177,6 @@ export default function ComponentPage() {
                             <ComponentForm selectedComponent={selectedComponent} />
                         </Box>
                     </Box>
-
-
 
                 </Tabs.Panel>
             </Tabs>

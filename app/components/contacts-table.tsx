@@ -1,34 +1,19 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, { useRef, useState} from 'react';
 import {Button, Table} from "@navikt/ds-react";
 import {Link} from "@remix-run/react";
 import {PencilIcon} from '@navikt/aksel-icons';
 import CustomFormModal from "~/components/contact-add";
 import type {IContact} from '~/api/types';
-import OrganizationApi from "~/api/organization-api";
 
 interface ContactTableProps {
     data: IContact[];
+    organizations: any[]; // Update the type according to your data structure
 }
 
-const ContactTable = ({data} : ContactTableProps) => {
+const ContactTable = ({ data, organizations }: ContactTableProps) => {
 
     const modalRef = useRef<HTMLDialogElement | null>(null);
     const [selectedContact, setSelectedContact] = useState<IContact | null>(null);
-    const [organizations, setOrganizations] = useState([]); // State to store organizations
-
-    //TODO: move filter to organization API with a fetchOrganizationsByContact
-    useEffect(() => {
-        const fetchOrganizations = async () => {
-            try {
-                const organizationData = await OrganizationApi.fetchOrganizations();
-                setOrganizations(organizationData || []);
-            } catch (error) {
-                console.error("Error fetching organizations:", error);
-            }
-        };
-
-        fetchOrganizations();
-    }, []);
 
     const openEditModal = (contact: IContact) => {
         setSelectedContact(contact);

@@ -1,43 +1,58 @@
-import React, {useEffect, useRef, useState} from "react";
-import type {LinksFunction, MetaFunction} from "@remix-run/node";
-import navStyles from "@navikt/ds-css/dist/index.css";
+import React, { useRef, useState} from "react";
+import type {LoaderFunction} from "@remix-run/node";
 import {useLoaderData} from "@remix-run/react";
-import {Heading, HGrid, Tabs, VStack, Button} from "@navikt/ds-react";
+import {Heading, HGrid, Tabs, VStack} from "@navikt/ds-react";
 import {ComponentIcon, PersonGroupIcon, PencilIcon} from '@navikt/aksel-icons';
 import ComponentsTable from "~/components/components-table";
 import ContactTable from "~/components/contacts-table";
 import ContactApi from "~/api/contact-api";
-import type {IComponent, IContact} from "~/api/types";
 import OrganizationApi from "~/api/organization-api";
 import ComponentApi from "~/api/component-api";
 import CustomFormModal from "~/components/organization-add";
+import {json} from "@remix-run/node";
 
-export const meta: MetaFunction = () => {
-    return [
-        { title: "Admin Portal Dashboard" },
-        { name: "description", content: "Welcome to Remix!" },
-    ];
-};
-
-export const links: LinksFunction = () => [
-    { rel: "stylesheet", href: navStyles },
-];
-
-export async function loader({params}: { params: { orgid: string } }) {
+export const loader: LoaderFunction = async ({ params }) => {
     const orgNumber = params.orgid;
 
-    const selectedOrganisation = await OrganizationApi.fetchOrganizationByOrgNumber(orgNumber);
+    try {
+        const selectedOrganisation = await OrganizationApi.fetchOrganizationByOrgNumber(orgNumber);
 
-    return {selectedOrganisation};
-}
+        const [
+            organizations,
+            legalContact,
+            components,
+            contacts
+        ] = await Promise.all([
+            OrganizationApi.fetchOrganizations(),
+            OrganizationApi.fetchLegalContact(selectedOrganisation),
+            ComponentApi.fetchComponentsByOrganization(selectedOrganisation),
+            ContactApi.fetchTechnicalContactsByOrganization(selectedOrganisation)
+        ]);
+
+        return json({
+            selectedOrganisation,
+            organizations,
+            legalContact,
+            components,
+            contacts
+        });
+    } catch (error) {
+        console.error("Error fetching organization details data:", error);
+        throw new Response("Not Found", { status: 404 });
+    }
+};
 
 export default function OrganizationDetailsPage() {
-    const { selectedOrganisation } = useLoaderData<typeof loader>();
-    const [legalContact, setLegalContact] = useState<IContact | null>(null);
-    const [contacts, setContacts] = useState<[IContact]>([]);
-    const [components, setComponents] = useState<[IComponent]>([]);
     const [isEditModalOpen, setEditModalOpen] = useState(false);
     const modalRef = useRef<HTMLDialogElement>(null);
+
+    const {
+        selectedOrganisation,
+        organizations,
+        legalContact,
+        components,
+        contacts
+    } = useLoaderData();
 
     const handleEditTabClick = () => {
         // Open the modal when the "Edit Org" tab is clicked
@@ -50,38 +65,6 @@ export default function OrganizationDetailsPage() {
         // Close the modal
         setEditModalOpen(false);
     };
-
-    //TODO: add a loading function so that old contacts and components do not show during load
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const contactsData = await ContactApi.fetchContacts();
-                if (contactsData) {
-                    setContacts(contactsData);
-                }
-
-                const legalData = await OrganizationApi.fetchLegalContact(selectedOrganisation);
-                if (legalData) {
-                    setLegalContact(legalData);
-                }
-
-                const componentsData = await ComponentApi.fetchComponentsByOrganization(selectedOrganisation);
-                if (componentsData) {
-                    setComponents(componentsData);
-                }
-
-                const techContactsData = await ContactApi.fetchTechnicalContactsByOrganization(selectedOrganisation);
-                if(techContactsData) {
-                    setContacts(techContactsData);
-                }
-
-            } catch (error) {
-                console.error("Error fetching data:", error);
-            }
-        };
-
-        fetchData();
-    }, [selectedOrganisation]);
 
     return (
         <div style={{ fontFamily: "system-ui, sans-serif", lineHeight: "1.8" }}>
@@ -112,12 +95,12 @@ export default function OrganizationDetailsPage() {
                 <Tabs.List>
                     <Tabs.Tab
                         value="contacts"
-                        label="Contacts"
+                        label={`Contacts (${contacts.length})`}
                         icon={<PersonGroupIcon title="contacts" />}
                     />
                     <Tabs.Tab
                         value="components"
-                        label="Components"
+                        label={`Components (${components.length})`}
                         icon={<ComponentIcon title="component" />}
                     />
 
@@ -130,7 +113,7 @@ export default function OrganizationDetailsPage() {
                 </Tabs.List>
                 <Tabs.Panel value="contacts" className="h-24 w-full bg-gray-50 p-4">
                     {contacts && contacts.length > 0 ? (
-                        <ContactTable data={contacts} />
+                        <ContactTable data={contacts} organizations={organizations} />
                     ) : (
                         <p>No contacts</p>
                     )}

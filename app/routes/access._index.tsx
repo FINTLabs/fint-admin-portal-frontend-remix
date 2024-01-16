@@ -1,42 +1,30 @@
-import type { MetaFunction, LinksFunction } from "@remix-run/node";
+// access_index.tsx
 import {LinkPanel, Box, VStack} from "@navikt/ds-react";
-import navStyles from "@navikt/ds-css/dist/index.css";
 import {TasklistIcon} from "@navikt/aksel-icons";
-import {useEffect, useState} from "react";
+import {useLoaderData} from "@remix-run/react";
+import type { LoaderFunction} from "@remix-run/node";
+import {json} from "@remix-run/node";
 import AccessTemplateApi from "~/api/template-api";
-import type {IOrganization} from "~/api/types";
 
-export const meta: MetaFunction = () => {
-    return [
-        { title: "Admin Portal Dashboard" },
-        { name: "description", content: "Welcome to Remix!" },
-    ];
+export const loader: LoaderFunction = async () => {
+        const templateData = await AccessTemplateApi.fetchAccessTemplates();
+
+        if(!templateData) {
+            throw new Response(`No data found `, {
+                status: 404,
+            });
+        }
+
+        return json({ templateData });
 };
-export const links: LinksFunction = () => [
-    { rel: "stylesheet", href: navStyles }
-];
 
 export default function AccessPage() {
 
-    const [template, setTemplate] = useState<IOrganization[]>([]);
+    const { templateData } = useLoaderData<typeof loader>();
 
-    useEffect(() => {
-        AccessTemplateApi.fetchAccessTemplates()
-            .then((templateData) => {
-                if (templateData) {
-                    setTemplate(templateData);
-                }
-            })
-            .catch((error) => {
-                // Handle error
-                console.error("Error fetching access templates:", error);
-            });
-    }, []);
-
-    
     return (
         <VStack gap="4">
-            {template.map((dataPoint, index) => (
+            {templateData.map((dataPoint, index) => (
                 <Box
                     key={index}
                     // background="surface-subtle"
@@ -54,4 +42,10 @@ export default function AccessPage() {
 
         </VStack>
     );
+}
+
+export function ErrorBoundary({ error }: { error: Error }) {
+    console.error(error);
+
+    return <div>Uh oh. I did a whoopsies</div>;
 }

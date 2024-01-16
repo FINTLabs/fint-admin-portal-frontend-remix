@@ -1,44 +1,34 @@
-import React, {useEffect, useRef, useState} from "react";
-import type {LinksFunction, MetaFunction} from "@remix-run/node";
+import React, {useRef, useState} from "react";
 import {InternalHeader, Search, Spacer} from "@navikt/ds-react";
-import navStyles from "@navikt/ds-css/dist/index.css";
 import OrganizationApi from "~/api/organization-api";
 import OrganizationTable from "~/components/organization-table";
 import {PersonPlusIcon} from "@navikt/aksel-icons";
 import CustomFormModal from "~/components/organization-add";
 import type {IOrganization} from "~/api/types";
+import type {LoaderFunction} from "@remix-run/router";
+import {json} from "@remix-run/node";
+import {useLoaderData} from "@remix-run/react";
 
-export const meta: MetaFunction = () => {
-    return [
-        { title: "Admin Portal Dashboard" },
-        { name: "description", content: "Welcome to Remix!" },
-    ];
+export const loader: LoaderFunction = async () => {
+    try {
+        const organizationsData = await OrganizationApi.fetchOrganizations();
+        return json({ organizationsData });
+    } catch (error) {
+        console.error("Error fetching organizations:", error);
+        throw new Response("Not Found", { status: 404 });
+    }
 };
-
-export const links: LinksFunction = () => [
-    { rel: "stylesheet", href: navStyles },
-];
 
 export default function OrganizationPage() {
     const organizationEditRef = useRef<HTMLDialogElement>(null!);
     const [filteredData, setFilteredData] = useState<IOrganization[]>([]);
-    const [organizations, setOrganizations]  = useState<IOrganization[]>([]);
+    const [search, setSearch] = useState<string>("");
+    const loaderData = useLoaderData();
+    const organizations = loaderData ? loaderData.organizationsData : [];
 
-    useEffect(() => {
-        OrganizationApi.fetchOrganizations()
-            .then((organizationsData) => {
-                if (organizationsData) {
-                    setFilteredData(organizationsData);
-                    setOrganizations(organizationsData);
-                }
-            })
-            .catch((error) => {
-                // Handle error
-                console.error("Error fetching organizations:", error);
-            });
-    }, []);
 
     const handleSearchInput = (input: any) => {
+        setSearch(input);
         const filtered = organizations.filter(
             (row) =>
                 row.name.toLowerCase().includes(input.toLowerCase()) ||
@@ -87,7 +77,7 @@ export default function OrganizationPage() {
                 </form>
             </InternalHeader>
 
-            <OrganizationTable data={filteredData} />
+            <OrganizationTable data={search!= ""? filteredData:organizations} />
         </div>
     );
 }

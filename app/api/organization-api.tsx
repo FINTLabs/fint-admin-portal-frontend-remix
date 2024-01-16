@@ -14,6 +14,24 @@ class OrganizationApi {
         }
     }
 
+    static async fetchOrganizationsByName(name) {
+        try {
+            const url = `http://localhost:8081/api/organisations/${name}`;
+            const response = await fetch(url);
+            if (response.ok) {
+                return await response.json();
+            } else {
+                // Handle error response
+                console.error("Error fetching organization by name");
+                return null;
+            }
+        } catch (error) {
+            // Handle fetch error
+            console.error("Error fetching organization by name:", error);
+            return null;
+        }
+    }
+
     static async fetchOrganizationByOrgNumber(orgNumber) {
         try {
             const organizations = await this.fetchOrganizations();

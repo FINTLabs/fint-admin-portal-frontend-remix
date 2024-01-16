@@ -6,20 +6,48 @@ import {LayoutAppbar} from '~/components/layout-appbar';
 import { Box, Page, BodyShort } from "@navikt/ds-react";
 
 import {
-  Links,
-  LiveReload,
-  Meta,
-  Outlet,
-  Scripts,
-  ScrollRestoration,
-Link} from "@remix-run/react";
+    Links,
+    LiveReload,
+    Meta,
+    Outlet,
+    Scripts,
+    ScrollRestoration,
+    Link,
+    useRouteError
+} from "@remix-run/react";
+import ContactApi from "~/api/contact-api";
+import {json} from "@remix-run/node";
 
 export const links: LinksFunction = () => [
     ...(cssBundleHref ? [{ rel: "stylesheet", href: cssBundleHref }, { rel: "stylesheet", href: navStyles }] : []),
 ];
 
+export async function loader(){
+    const displayName = await ContactApi.fetchDisplayName();
+    return json({ displayName });
+}
+
+
+export function ErrorBoundary() {
+    const error = useRouteError();
+    console.error(error);
+    return (
+        <html>
+        <head>
+            <title>Oh no!</title>
+            <Meta />
+            <Links />
+        </head>
+        <body>
+        Something went wrong.
+        <Scripts />
+        </body>
+        </html>
+    );
+}
 
 export default function App() {
+    // const { displayName } = useLoaderData();
   return (
     <html lang="en">
       <head>
@@ -64,7 +92,7 @@ export default function App() {
 
         <ScrollRestoration />
         <Scripts />
-        <LiveReload />
+      {process.env.NODE_ENV === "development" && <LiveReload />}
       </body>
     </html>
   );
