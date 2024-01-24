@@ -1,20 +1,18 @@
 import React, { useRef, useState} from 'react';
-import {InternalHeader, Search, Spacer} from "@navikt/ds-react";
+import {InternalHeader, Modal, Search, Spacer} from "@navikt/ds-react";
 import {ComponentIcon} from "@navikt/aksel-icons";
 import ComponentsTable from "~/components/components-table";
-import ComponentAdd from "~/components/component-form-modal";
 import {useLoaderData} from "@remix-run/react";
 import ComponentApi from "~/api/component-api";
 import {json} from "@remix-run/node";
+import ComponentForm from "~/components/component-form";
 
 
 export const loader = async () => {
     try {
         const componentsData = await ComponentApi.fetchComponents();
-        console.log(componentsData.length);
         return json({ componentsData });
     } catch (error) {
-        console.log("Error fetching components:", error);
         throw new Error("Error fetching components");
     }
 };
@@ -26,12 +24,6 @@ export default function ComponentPage ()  {
     const [search, setSearch] = useState("");
     const loaderData = useLoaderData();
     const componentsData = loaderData ? loaderData.componentsData : [];
-
-    const handleFormClose = () => {
-        // Handle form submission logic
-        console.log("closing the contact add form inside index");
-        componentEditRef?.current?.close();
-    };
 
     const handleSearchInput = (input:any) => {
         setSearch(input);
@@ -45,11 +37,12 @@ export default function ComponentPage ()  {
 
     return (
         <div style={{ fontFamily: "system-ui, sans-serif", lineHeight: "1.8" }}>
-            <ComponentAdd
-                ref={componentEditRef}
-                headerText="Add New Component Form"
-                onClose={handleFormClose}
-            />
+
+            <Modal ref={componentEditRef} header={{ heading: "Add New Component" }} width={400}>
+                <Modal.Body>
+                    <ComponentForm  />
+                </Modal.Body>
+            </Modal>
 
             <InternalHeader>
 

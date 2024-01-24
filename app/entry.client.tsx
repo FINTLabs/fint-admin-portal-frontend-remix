@@ -7,6 +7,7 @@
 import { RemixBrowser } from "@remix-run/react";
 import { startTransition, StrictMode } from "react";
 import { hydrateRoot } from "react-dom/client";
+// import {hydrate} from "react-dom";
 
 startTransition(() => {
   hydrateRoot(
@@ -16,3 +17,19 @@ startTransition(() => {
     </StrictMode>
   );
 });
+
+// if (process.env.MY_TEST === "test") {
+//     hydrate(
+//         <StrictMode>
+//             <RemixBrowser />
+//         </StrictMode>,
+//         document
+//     );
+// } else {
+//     hydrateRoot(
+//         document,
+//         <StrictMode>
+//             <RemixBrowser />
+//         </StrictMode>
+//     );
+// }

@@ -1,5 +1,5 @@
 import React from "react";
-import {Box, Page} from "@navikt/ds-react";
+import {Box, Heading, Page} from "@navikt/ds-react";
 import navStyles from "@navikt/ds-css/dist/index.css";
 import LayoutHeader from "~/components/layout-header";
 import {ComponentIcon} from "@navikt/aksel-icons";
@@ -8,6 +8,7 @@ import Breadcrumbs from "~/components/breadcrumbs";
 import type { LinksFunction, MetaFunction} from "@remix-run/node";
 import {json} from "@remix-run/node";
 import ComponentApi from "~/api/component-api";
+import {TestForm} from "~/routes/test/TestForm";
 
 export const meta: MetaFunction = () => {
     return [
@@ -45,7 +46,8 @@ export default function Component() {
                 as="main"
             >
                 <Page.Block gutters width="lg">
-                    <Outlet />
+                    <Heading size={"xsmall"}>Test Page</Heading>
+                    <TestForm />
                 </Page.Block>
             </Box>
         </>

@@ -1,22 +1,15 @@
 export interface IComponent {
-    dn: string;
     name: string;
     description: string;
-    organisations: string[];
-    clients: string[];
-    adapters: string[];
     basePath: string;
-    port: number | null;
-    core: boolean;
     openData: boolean;
     common: boolean;
-    dockerImage: string | null;
-    componentSizes: string | null;
-    cacheDisabledFor: string[];
-    inProduction: boolean;
-    inBeta: boolean;
+    core: boolean;
     inPlayWithFint: boolean;
+    inBeta: boolean;
+    inProduction: boolean;
 }
+
 
 export interface IContact {
     dn?: string;

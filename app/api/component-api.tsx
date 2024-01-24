@@ -50,6 +50,43 @@ class ComponentApi {
             return null;
         }
     }
+
+    static async createComponent(componentData) {
+        console.log("componentData", JSON.stringify(componentData));
+        try {
+            const response = await fetch("http://localhost:8081/api/components", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(componentData)
+            });
+
+            if (response.ok) {
+                return response;
+            } else {
+                console.error("Error creating component", response);
+                return null;
+            }
+        } catch (error) {
+            console.error("Error creating component:", error);
+            throw error;
+        }
+    }
+
+    static deleteComponent(component) {
+        const url = `/api/components/${component.name}`;
+        const request = new Request(url, {
+            method: 'DELETE',
+            credentials: 'same-origin'
+        });
+
+        return fetch(request).then(response => {
+            return response;
+        }).catch(error => {
+            return error;
+        });
+    }
 }
 
 export default ComponentApi;

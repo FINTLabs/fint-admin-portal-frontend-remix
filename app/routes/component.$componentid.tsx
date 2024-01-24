@@ -1,12 +1,13 @@
 import React from "react";
 import type {LoaderFunction} from "@remix-run/node";
-import {useLoaderData} from "@remix-run/react";
+import {useLoaderData, useNavigate} from "@remix-run/react";
 import {Box, Heading, HGrid, LinkPanel, Tabs, Tag} from "@navikt/ds-react";
 import {TokenIcon, TenancyIcon, Buldings3Icon, PencilIcon} from '@navikt/aksel-icons';
 import OrganizationTable from "~/components/organization-table";
 import ComponentApi from "~/api/component-api";
 import OrganizationApi from "~/api/organization-api";
 import ComponentForm from "~/components/component-form";
+import DeleteButton from "~/components/delete-button";
 import {json} from "@remix-run/node";
 
 export const loader: LoaderFunction = async ({ params }) => {
@@ -34,13 +35,26 @@ export const loader: LoaderFunction = async ({ params }) => {
 
 export default function ComponentPage() {
 
+    const navigate = useNavigate();
     const { selectedComponent, associatedOrganizations } = useLoaderData();
+
+    const handleDeleteConfirm = (isConfirmed) => {
+        if (isConfirmed) {
+            console.log('Deletion confirmed');
+            navigate('/component');
+        } else {
+            console.log('Deletion canceled');
+        }
+    };
 
     return (
         <div style={{ fontFamily: "system-ui, sans-serif", lineHeight: "1.8" }}>
 
             <Heading level="1" size="xlarge">
                 {selectedComponent?.name}
+            </Heading>
+            <Heading level="1" size="small">
+                {selectedComponent?.description}
             </Heading>
 
             <HGrid columns={2}>
@@ -176,6 +190,14 @@ export default function ComponentPage() {
                         >
                             <ComponentForm selectedComponent={selectedComponent} />
                         </Box>
+
+                        <Box padding={"3"}>
+                            <DeleteButton
+                                onClose={handleDeleteConfirm}
+                                buttonText={"Delete Component"}
+                            />
+                        </Box>
+
                     </Box>
 
                 </Tabs.Panel>
