@@ -1,0 +1,38 @@
+[
+  {
+    "dn": "cn=07089544771,ou=contacts,o=fint",
+    "nin": "07089544771",
+    "firstName": "C3PO",
+    "lastName": "Aase",
+    "mail": "sfaa@bmoe.no",
+    "mobile": "+4745816764",
+    "technical": [],
+    "legal": [],
+    "supportId": null,
+    "roles": []
+  },
+  {
+    "dn": "cn=25086131172,ou=contacts,o=fint",
+    "nin": "25086131172",
+    "firstName": "Per Martin",
+    "lastName": "Jøraholmen",
+    "mail": "perjor@innlandetfylke.no",
+    "mobile": "98240965",
+    "technical": [],
+    "legal": [],
+    "supportId": null,
+    "roles": []
+  },
+  {
+    "dn": "cn=09097749369,ou=contacts,o=fint",
+    "nin": "09097749369",
+    "firstName": "Tor Endre",
+    "lastName": "Bakken",
+    "mail": "tor.endre.v.bakken@agderfk.no",
+    "mobile": "95025478",
+    "technical": [],
+    "legal": [],
+    "supportId": null,
+    "roles": []
+  }
+]

@@ -8,9 +8,16 @@ Cypress.on('uncaught:exception', (err) => {
 
 describe('My First Test', () => {
   it('Visits the app', () => {
-    cy.intercept('GET', 'http://localhost:8081/api/me', { fixture: 'me.json' }).as('getMe');
-    cy.visit('http://localhost:3000');
-    // cy.contains('Novari Logo Here');
+    cy.visit('http://localhost:3000/');
+    cy.get('img').should('be.visible');
+    cy.get('.grid > .navds-stack > :nth-child(1)').should('be.visible');
+    cy.get(':nth-child(1) > .navds-label').should('contain', 'Meny');
+    cy.get('.grid > .navds-stack > :nth-child(2)').should('be.visible');
+    cy.get('.grid > .navds-stack > :nth-child(3)').should('be.visible');
+    cy.get('.navds-stack > [href="/contact"] > .navds-link-panel__content > .navds-link-panel__title').should('contain', 'Contacts');
+
+    cy.get('.navds-stack > [href="/contact"]').click();
+    cy.get('.navds-stack > [href="/organization"]').click()
   });
 });
 

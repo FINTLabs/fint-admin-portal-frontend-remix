@@ -46,7 +46,7 @@ export function LayoutAppbar() {
                                 <Hide below="md" asChild>
                                     <Button icon={<PersonIcon aria-hidden />} variant="tertiary">
                                         <BodyShort weight="semibold" truncate className="max-w-[10vw]">
-                                            {displayName}
+                                            {displayName.fullName}
                                         </BodyShort>
                                     </Button>
                                 </Hide>

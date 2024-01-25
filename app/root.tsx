@@ -15,7 +15,7 @@ import {
     Link,
     useRouteError
 } from "@remix-run/react";
-import ContactApi from "~/api/contact-api";
+import MeApi from "~/api/me-api";
 import {json} from "@remix-run/node";
 
 export const links: LinksFunction = () => [
@@ -23,7 +23,7 @@ export const links: LinksFunction = () => [
 ];
 
 export async function loader(){
-    const displayName = await ContactApi.fetchDisplayName();
+    const displayName = await MeApi.fetchDisplayName();
     return json({ displayName });
 }
 

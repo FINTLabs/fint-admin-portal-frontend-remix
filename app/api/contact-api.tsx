@@ -1,23 +1,6 @@
 import type {IOrganization} from "~/api/types";
 
 class ContactApi {
-    static async fetchDisplayName() {
-        try {
-            const response = await fetch("http://localhost:8081/api/me");
-            if (response.ok) {
-                const data = await response.json();
-                return data.fullName;
-            } else {
-                // Handle error response
-                console.error("Error fetching display name");
-                return "try-error";
-            }
-        } catch (error) {
-            // Handle fetch error
-            console.error("Error fetching display name:", error);
-            return "catch-error";
-        }
-    }
 
     static async fetchContacts() {
         try {
