@@ -17,7 +17,6 @@ describe('My First Test', () => {
     cy.get('.navds-stack > [href="/contact"] > .navds-link-panel__content > .navds-link-panel__title').should('contain', 'Contacts');
 
     cy.get('.navds-stack > [href="/contact"]').click();
-    cy.get('.navds-stack > [href="/organization"]').click()
   });
 });
 
