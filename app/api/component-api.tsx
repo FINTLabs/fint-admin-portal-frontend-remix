@@ -1,7 +1,9 @@
+const API_URL = process.env.API_URL;
+
 class ComponentApi {
     static async fetchComponents() {
         try {
-            const response = await fetch("http://localhost:8081/api/components");
+            const response = await fetch(`${API_URL}/api/components/`);
             if (response.ok) {
                 return await response.json();
             } else {
@@ -34,7 +36,7 @@ class ComponentApi {
     }
 
     static async fetchComponentsByName(name) {
-        const url = `http://localhost:8081/api/components/${name}`;
+        const url = `${API_URL}/api/components/${name}`;
         const response = await fetch(url);
         if (response.ok) {
             return await response.json();
@@ -47,7 +49,7 @@ class ComponentApi {
     static async createComponent(componentData) {
         console.log("component Data to add:", JSON.stringify(componentData));
         try {
-            const response = await fetch("http://localhost:8081/api/components", {
+            const response = await fetch(`${API_URL}/api/components`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -73,7 +75,7 @@ class ComponentApi {
     }
 
     static async updateComponent(componentData) {
-        const url = `http://localhost:8081/api/components/${componentData.name}`;
+        const url = `${API_URL}/api/components/${componentData.name}`;
         console.log("json: ", JSON.stringify(componentData));
         console.log("url: ", url);
 
@@ -97,7 +99,7 @@ class ComponentApi {
     }
 
     static async deleteComponent(componentName) {
-        const url = `http://localhost:8081/api/components/${componentName}`;
+        const url = `${API_URL}/api/components/${componentName}`;
         console.log("url: ", url);
         const request = new Request(url, {
             method: 'DELETE',

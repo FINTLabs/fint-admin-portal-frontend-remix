@@ -1,8 +1,10 @@
+const API_URL = process.env.API_URL;
+
 class MaintenanceApi {
 
   //TODO: move this to its own component and use it more?
   static async fetchConsistency(endpoint) {
-    const url = `http://localhost:8081/api/maintenance/consistency/${endpoint}`;
+    const url = `${API_URL}/api/maintenance/consistency/${endpoint}`;
 
     try {
       const response = await fetch(url);

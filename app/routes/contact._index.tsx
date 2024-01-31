@@ -2,7 +2,7 @@ import React, {useRef, useState} from "react";
 import {InternalHeader, Search, Spacer,} from "@navikt/ds-react";
 import ContactTable from "~/components/contacts-table";
 import {PersonPlusIcon} from '@navikt/aksel-icons';
-import CustomFormModal from "~/components/contact-add";
+import CustomFormModal from "~/components/contact-form";
 import type {IContact} from '~/api/types'
 import ContactApi from "~/api/contact-api";
 import type { LoaderFunction } from '@remix-run/node';

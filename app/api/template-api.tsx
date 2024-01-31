@@ -1,9 +1,11 @@
+const API_URL = process.env.API_URL;
+
 class AccessTemplateApi {
 
     static async fetchAccessTemplates() {
-
         try {
-            const response = await fetch("http://localhost:8081/api/accesspackage/template");
+            const response = await fetch(`${API_URL}/api/accesspackage/template`);
+
             if (response.ok) {
                 return await response.json();
             } else {

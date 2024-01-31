@@ -2,6 +2,7 @@ import type {ChangeEvent, ForwardedRef} from "react";
 import React, { forwardRef, useEffect, useState} from "react";
 import {Button, Modal, TextField} from "@navikt/ds-react";
 import type {IContact} from "~/api/types";
+import {defaultContact} from "~/api/types";
 
 interface ContactFormProps {
     headerText: string;
@@ -11,24 +12,25 @@ interface ContactFormProps {
 
 const ContactForm = forwardRef((props: ContactFormProps, ref: ForwardedRef<HTMLDialogElement>) => {
     const { headerText, selectedContact, onClose } = props;
+    const [formValues, setFormValues] = useState<IContact>(selectedContact || defaultContact);
 
-    const [formValues, setFormValues] = useState({
-        firstName: "",
-        lastName: "",
-        mail: "",
-        mobile: ""
-    });
+    // const [formValues, setFormValues] = useState({
+    //     firstName: "",
+    //     lastName: "",
+    //     mail: "",
+    //     mobile: ""
+    // });
 
-    useEffect(() => {
-        if (selectedContact) {
-            setFormValues({
-                firstName: selectedContact.firstName || "",
-                lastName: selectedContact.lastName || "",
-                mail: selectedContact.mail || "",
-                mobile: selectedContact.mobile || ""
-            });
-        }
-    }, [selectedContact]);
+    // useEffect(() => {
+    //     if (selectedContact) {
+    //         setFormValues({
+    //             firstName: selectedContact.firstName || "",
+    //             lastName: selectedContact.lastName || "",
+    //             mail: selectedContact.mail || "",
+    //             mobile: selectedContact.mobile || ""
+    //         });
+    //     }
+    // }, [selectedContact]);
 
     function onChange(e: ChangeEvent<HTMLInputElement>) {
         let name = e.target.name;
@@ -40,17 +42,17 @@ const ContactForm = forwardRef((props: ContactFormProps, ref: ForwardedRef<HTMLD
         }));
     }
 
-    function resetFormValues() {
-            setFormValues({
-                firstName: selectedContact?.firstName,
-                lastName: selectedContact?.lastName,
-                mail: selectedContact?.mail,
-                mobile: selectedContact?.mobile
-            });
-        }
+    // function resetFormValues() {
+    //         setFormValues({
+    //             firstName: selectedContact?.firstName,
+    //             lastName: selectedContact?.lastName,
+    //             mail: selectedContact?.mail,
+    //             mobile: selectedContact?.mobile
+    //         });
+    //     }
 
     function handleCancelClick() {
-        resetFormValues()
+        // resetFormValues()
         onClose();
     }
 
@@ -100,5 +102,5 @@ const ContactForm = forwardRef((props: ContactFormProps, ref: ForwardedRef<HTMLD
     );
 });
 
-ContactForm.displayName = 'ContactForm';
+// ContactForm.displayName = 'ContactForm';
 export default ContactForm;

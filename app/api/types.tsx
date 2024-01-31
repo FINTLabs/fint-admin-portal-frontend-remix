@@ -11,6 +11,18 @@ export interface IComponent {
     inProduction: boolean;
 }
 
+export const defaultComponent: IComponent = {
+    dn: '',
+    name: '',
+    description: '',
+    basePath: '',
+    openData: false,
+    common: false,
+    core: false,
+    inPlayWithFint: false,
+    inBeta: false,
+    inProduction: false,
+};
 
 export interface IContact {
     dn?: string;
@@ -24,6 +36,18 @@ export interface IContact {
     supportId?: string | null;
     roles?: string[] | null;
 }
+
+export const defaultContact: IContact = {
+    nin: '',
+    firstName: '',
+    lastName: '',
+    mail: '',
+    mobile: '',
+    technical: null,
+    legal: null,
+    supportId: null,
+    roles: null,
+};
 
 export interface IOrganization {
     dn: string;

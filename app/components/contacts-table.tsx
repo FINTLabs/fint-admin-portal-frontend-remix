@@ -2,7 +2,7 @@ import React, { useRef, useState} from 'react';
 import {Button, Table} from "@navikt/ds-react";
 import {Link} from "@remix-run/react";
 import {PencilIcon} from '@navikt/aksel-icons';
-import CustomFormModal from "~/components/contact-add";
+import CustomFormModal from "~/components/contact-form";
 import type {IContact} from '~/api/types';
 
 interface ContactTableProps {

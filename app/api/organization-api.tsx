@@ -1,7 +1,9 @@
+const API_URL = process.env.API_URL;
+
 class OrganizationApi {
     static async fetchOrganizations() {
         try {
-            const response = await fetch("http://localhost:8081/api/organisations");
+            const response = await fetch(`${API_URL}/api/organisations`);
             if (response.ok) {
                 return await response.json();
             } else {
@@ -16,7 +18,7 @@ class OrganizationApi {
 
     static async fetchOrganizationsByName(name) {
         try {
-            const url = `http://localhost:8081/api/organisations/${name}`;
+            const url = `${API_URL}/api/organisations/${name}`;
             const response = await fetch(url);
             if (response.ok) {
                 return await response.json();
@@ -48,7 +50,7 @@ class OrganizationApi {
 
     static async fetchLegalContact(organisation) {
         try {
-            const url = `http://localhost:8081/api/organisations/${organisation.name}/contacts/legal`;
+            const url = `${API_URL}/api/organisations/${organisation.name}/contacts/legal`;
             const response = await fetch(url);
             if (response.ok) {
                 return await response.json();

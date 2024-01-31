@@ -1,23 +1,13 @@
 // component-form.tsx
-import React, { useState } from 'react';
-import {Switch, TextField, Button, Box} from "@navikt/ds-react";
-import { FloppydiskIcon } from '@navikt/aksel-icons';
+import React, {useState} from 'react';
+import {Box, Button, Switch, TextField} from "@navikt/ds-react";
+import {FloppydiskIcon} from '@navikt/aksel-icons';
 import type {IComponent} from "~/api/types";
+import {defaultComponent} from "~/api/types";
 
-const ComponentForm = ({ selectedComponent = {} as IComponent, f, r }) => {
-    const [formData, setFormData] = useState<IComponent>({
-        dn: selectedComponent.dn || '',
-        name: selectedComponent.name || '',
-        description: selectedComponent.description || '',
-        basePath: selectedComponent.basePath || '',
-        openData: selectedComponent.openData || false,
-        common: selectedComponent.common || false,
-        core: selectedComponent.core || false,
-        inPlayWithFint: selectedComponent.inPlayWithFint || false,
-        inBeta: selectedComponent.inBeta || false,
-        inProduction: selectedComponent.inProduction || false,
-    });
+const ComponentForm = ({ selectedComponent = defaultComponent, f, r }) => {
 
+    const [formData, setFormData] = useState<IComponent>(selectedComponent);
     const [errors, setErrors] = useState({});
 
     const handleInputChange = (fieldName, value) => {
