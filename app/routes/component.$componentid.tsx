@@ -1,20 +1,23 @@
+//component.$componentid.tsx
 import React from "react";
 import type {LoaderFunction} from "@remix-run/node";
-import {useLoaderData, useNavigate} from "@remix-run/react";
-import {Box, Heading, HGrid, LinkPanel, Tabs, Tag} from "@navikt/ds-react";
-import {TokenIcon, TenancyIcon, Buldings3Icon, PencilIcon} from '@navikt/aksel-icons';
+import {json} from "@remix-run/node";
+import {isRouteErrorResponse, Link, useFetcher, useLoaderData, useRouteError} from "@remix-run/react";
+import {Alert, Box, Heading, HGrid, LinkPanel, Tabs, Tag} from "@navikt/ds-react";
+import {Buldings3Icon, PencilIcon, TenancyIcon, TokenIcon} from '@navikt/aksel-icons';
 import OrganizationTable from "~/components/organization-table";
 import ComponentApi from "~/api/component-api";
 import OrganizationApi from "~/api/organization-api";
 import ComponentForm from "~/components/component-form";
-import DeleteButton from "~/components/delete-button";
-import {json} from "@remix-run/node";
+import ComponentDelete from "~/components/component-delete";
+import {AlertWithCloseButton} from "~/components/alert-with-close";
 
 export const loader: LoaderFunction = async ({ params }) => {
     const componentName = params.componentid;
 
     try {
         const componentsPromise = ComponentApi.fetchComponentsByName(componentName);
+
         const organizationsPromise = OrganizationApi.fetchOrganizations();
 
         const [selectedComponent, organizations] = await Promise.all([componentsPromise, organizationsPromise]);
@@ -27,25 +30,49 @@ export const loader: LoaderFunction = async ({ params }) => {
         return json({ selectedComponent, organizations, associatedOrganizations });
     } catch (error) {
         console.error("Error in loader fetching data:", error);
-        throw new Response("Not Found", { status: 404 });
+        throw new Response("Component Not Found", { status: 404 });
     }
 };
+
+export async function action({ request }) {
+
+    const formData = await request.formData();
+    const formValues = {};
+
+    for (const [key, value] of formData) {
+        formValues[key] = value;
+    }
+    const actionType = formData.get("actionType");
+    console.log("actionType", actionType);
+
+    // try {
+        if (actionType === "delete") {
+            const componentName = formData.get("componentName");
+            const response = await ComponentApi.deleteComponent(componentName);
+            return json({ show: true, message: response.message, variant: response.variant });
+        }
+
+        if(actionType === "update") {
+            try {
+                const response = await ComponentApi.updateComponent(formValues);
+                console.log("response from API", response);
+                return json({ show: true, message: response.message, variant: response.variant });
+            } catch (error) {
+                // Handle any errors here
+                return json({ show: true, message: error.message, variant: "error" });
+            }
+        }
+
+    return json({ show: true, message: "Unknown action type", variant: "error" });
+
+}
 
 //TODO: Ask to save changes on tab change ?
 
 export default function ComponentPage() {
 
-    const navigate = useNavigate();
     const { selectedComponent, associatedOrganizations } = useLoaderData();
-
-    const handleDeleteConfirm = (isConfirmed) => {
-        if (isConfirmed) {
-            console.log('Deletion confirmed');
-            navigate('/component');
-        } else {
-            console.log('Deletion canceled');
-        }
-    };
+    const fetcher = useFetcher();
 
     return (
         <div style={{ fontFamily: "system-ui, sans-serif", lineHeight: "1.8" }}>
@@ -179,6 +206,12 @@ export default function ComponentPage() {
 
                 <Tabs.Panel value="edit" className="h-24  w-full bg-gray-50 p-4">
 
+                    {fetcher.data && fetcher.data.show && (
+                        <AlertWithCloseButton variant={fetcher.data && fetcher.data.variant}>
+                            {fetcher.data && fetcher.data.message}
+                        </AlertWithCloseButton>
+                    )}
+
                     <Box padding="8">
 
                         <Box
@@ -188,14 +221,19 @@ export default function ComponentPage() {
                             borderWidth="2"
                             borderRadius="xlarge"
                         >
-                            <ComponentForm selectedComponent={selectedComponent} />
+                            <ComponentForm
+                                selectedComponent={selectedComponent}
+                                f={fetcher}
+                            />
                         </Box>
 
-                        <Box padding={"3"}>
-                            <DeleteButton
-                                onClose={handleDeleteConfirm}
-                                buttonText={"Delete Component"}
+                        <Box padding={"5"}>
+
+                            <ComponentDelete
+                                componentName={selectedComponent.name}
+                                f={fetcher}
                             />
+
                         </Box>
 
                     </Box>
@@ -204,8 +242,37 @@ export default function ComponentPage() {
             </Tabs>
 
 
-
-
         </div>
+    );
+}
+
+export function ErrorBoundary() {
+    const error = useRouteError();
+
+    return (
+        <Box padding="4">
+            <Alert variant="info">
+                <h1 style={{ fontSize: "24px", fontWeight: "bold" }}>Notice!</h1>
+                {isRouteErrorResponse(error) ? (
+                    <>
+                        {error.status === 200 ? (
+                            <p>
+                                <p>{error.data}</p>
+                            </p>
+                        ) : (
+                            <>
+                                <p>Error: {error.status} - {error.statusText}</p>
+                                <p>{error.data}</p>
+                            </>
+                        )}
+                    </>
+                ) : (
+                    <p>{error?.message || "Unknown Error"}</p>
+                )}
+                <Link to={`/component/`} style={{ marginTop: "20px" }}>
+                    View a list of components
+                </Link>
+            </Alert>
+        </Box>
     );
 }

@@ -1,12 +1,12 @@
+// component-form.tsx
 import React, { useState } from 'react';
-import {Switch, TextField, Button, Box, Alert} from "@navikt/ds-react";
+import {Switch, TextField, Button, Box} from "@navikt/ds-react";
 import { FloppydiskIcon } from '@navikt/aksel-icons';
-import ComponentApi from "~/api/component-api";
 import type {IComponent} from "~/api/types";
 
-
-const ComponentForm = ({ selectedComponent = {} as IComponent }) => {
+const ComponentForm = ({ selectedComponent = {} as IComponent, f, r }) => {
     const [formData, setFormData] = useState<IComponent>({
+        dn: selectedComponent.dn || '',
         name: selectedComponent.name || '',
         description: selectedComponent.description || '',
         basePath: selectedComponent.basePath || '',
@@ -18,33 +18,21 @@ const ComponentForm = ({ selectedComponent = {} as IComponent }) => {
         inProduction: selectedComponent.inProduction || false,
     });
 
-    const [isSubmitting, setIsSubmitting] = React.useState(false);
     const [errors, setErrors] = useState({});
-    const [alert, setAlert] = useState({ show: false, message: '', variant: 'error' });
 
     const handleInputChange = (fieldName, value) => {
         setFormData((prevData) => ({
             ...prevData,
             [fieldName]: value,
         }));
-        // setFormChanged(true);
     };
 
-    const handleSwitchChange = (fieldName, value) => {
-
-        if (value === 'on') {
-            value = true;
-        } else {
-            value = false;
-        }
-
-        console.log("handleInputChange", fieldName, value);
+    const handleSwitchChange = (fieldName, checked) => {
 
         setFormData((prevData) => ({
             ...prevData,
-            [fieldName]: value,
+            [fieldName]: checked,
         }));
-        // setFormChanged(true);
     };
 
     const handleInputBlur = (fieldName, value) => {
@@ -80,53 +68,56 @@ const ComponentForm = ({ selectedComponent = {} as IComponent }) => {
         );
     }
 
-    const handleSave = async () => {
-        if (validateForm()) {
-
-            setIsSubmitting(true);
-            ComponentApi.createComponent(formData)
-                .then(response => {
-                    if (response && response.status === 201) {
-                        // Notify component creation success
-                        console.log("Komponenten ble opprettet");
-                    } else if (response && response.status === 302) {
-                        // Notify if component already exists
-                        console.log("Komponenten finnes fra før");
-                    } else {
-                        // Notify error
-                        console.log("Det oppsto en feil ved opprettelse av komponenten.");
-                    }
-                })
-                .catch(() => {
-                    // Notify error
-                    console.log("Det oppsto en feil ved opprettelse av komponenten.");
-                })
-                .finally(() => {
-                    setIsSubmitting(false);
-                });
+    const handleSubmit = () => {
+        // Close the modal if the ref is provided
+        if (r && r.current) {
+            r.current.close();
         }
-
     };
 
     return (
-        <form method="dialog" id="skjema">
-            {alert.show && <Alert variant={alert.variant}>{alert.message}</Alert>}
+        <f.Form method="post" >
+            {selectedComponent.dn && (
+                <input
+                    type="hidden"
+                    name="dn"
+                    value={formData.dn}
+                />
+            )}
+
+            {selectedComponent.name && (
+                <input
+                    type="hidden"
+                    name="name"
+                    value={formData.name}
+                />
+            )}
+
+            <input
+                type="hidden"
+                name="actionType"
+                value={selectedComponent.dn ? "update" : "create"}
+            />
 
             <TextField
                 label="Name"
                 value={formData.name}
+                name={"name"}
                 onChange={(e) => handleInputChange('name', e.target.value)}
                 error={errors['name'] || ''}
                 onBlur={(e) => handleInputBlur('name', e.target.value)}
                 description="Navnet kan bare inneholde a-z, og . (punktum). Det kan fra 3-128 tegn langt"
+                disabled={!!selectedComponent.name}
             />
             <TextField
                 label="Description"
+                name={"description"}
                 value={formData.description}
                 onChange={(e) => handleInputChange('description', e.target.value)}
             />
             <TextField
                 label="Path"
+                name={"basePath"}
                 value={formData.basePath}
                 onChange={(e) => handleInputChange('basePath', e.target.value)}
             />
@@ -134,22 +125,26 @@ const ComponentForm = ({ selectedComponent = {} as IComponent }) => {
             Component Type:
             <Switch
                 size="small"
-                defaultChecked={formData.openData}
-                onChange={(e) => handleSwitchChange('openData', e.target.value)}
+                name={"openData"}
+                checked={formData.openData}
+                value={formData.openData}
+                onChange={(e) => handleSwitchChange('openData', e.target.checked)}
             >
                 Open
             </Switch>
             <Switch
                 size="small"
-                defaultChecked={formData.common}
-                onChange={(e) => handleSwitchChange('common', e.target.value)}
+                name={"common"}
+                checked={formData.common}
+                onChange={(e) => handleSwitchChange('common', e.target.checked)}
             >
                 Felles
             </Switch>
             <Switch
                 size="small"
-                defaultChecked={formData.core}
-                onChange={(e) => handleSwitchChange('core', e.target.value)}
+                name={"core"}
+                value={formData.core}
+                onChange={(e) => handleSwitchChange('core', e.target.checked)}
             >
                 FINT Core
             </Switch>
@@ -157,39 +152,39 @@ const ComponentForm = ({ selectedComponent = {} as IComponent }) => {
             Environment:
             <Switch
                 size="small"
-                defaultChecked={formData.inPlayWithFint}
-                onChange={(e) => handleSwitchChange('inPlayWithFint', e.target.value)}
+                name={"inPlayWithFint"}
+                value={formData.inPlayWithFint}
+                onChange={(e) => handleSwitchChange('inPlayWithFint', e.target.checked)}
             >
                 Play With Fint
             </Switch>
             <Switch
                 size="small"
-                defaultChecked={formData.inBeta}
-                onChange={(e) => handleSwitchChange('inBeta', e.target.value)}
+                name={"inBeta"}
+                value={formData.inBeta}
+                onChange={(e) => handleSwitchChange('inBeta', e.target.checked)}
             >
                 Beta
             </Switch>
             <Switch
                 size="small"
-                defaultChecked={formData.inProduction}
-                onChange={(e) => handleSwitchChange('inProduction', e.target.value)}
+                name={"inProduction"}
+                value={formData.inProduction}
+                onChange={(e) => handleSwitchChange('inProduction', e.target.checked)}
             >
                 API (Production)
             </Switch>
             <Box padding={"4"} >
-                {isSubmitting ? (
-                    <Button loading>Loading</Button>
-                ) : (
                     <Button
                         icon={<FloppydiskIcon aria-hidden />}
                         disabled={!validateForm()}
-                        onClick={handleSave}
+                        type={"submit"}
+                        onClick={handleSubmit}
                     >
                         Save
                     </Button>
-                )}
             </Box>
-        </form>
+        </f.Form>
 
 
     );

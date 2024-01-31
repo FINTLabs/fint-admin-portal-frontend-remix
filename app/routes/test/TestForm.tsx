@@ -1,6 +1,7 @@
 import { useForm } from 'react-hook-form';
+import React from "react";
 
-export const TestForm = ({ selectedComponent = {} }) => {
+export const TestForm = ({ selectedComponent = {},f }) => {
     const { register, handleSubmit, errors } = useForm({
         defaultValues: selectedComponent
     });
@@ -10,10 +11,9 @@ export const TestForm = ({ selectedComponent = {} }) => {
     };
 
     return (
-        <form onSubmit={handleSubmit(onSubmit)}>
-            <input name="name" ref={register} />
-            {/* other fields */}
+        <f.Form method="post">
+            {/* form fields */}
             <button type="submit">Submit</button>
-        </form>
+        </f.Form>
     );
 };

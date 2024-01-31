@@ -1,4 +1,5 @@
 export interface IComponent {
+    dn: string;
     name: string;
     description: string;
     basePath: string;

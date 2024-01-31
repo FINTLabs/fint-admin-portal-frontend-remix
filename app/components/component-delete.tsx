@@ -1,15 +1,14 @@
+//component-delete.tsx
 import { useState } from "react";
-import { BodyLong, Button, Modal } from "@navikt/ds-react";
+import {BodyLong, Button, Modal} from "@navikt/ds-react";
+import {Form} from "@remix-run/react";
 
-const DeleteButton = ({ onClose, buttonText }) => {
+const ComponentDelete = ({ componentName,f }) => {
     const [open, setOpen] = useState(false);
 
     const handleClose = (isConfirmed) => {
-        console.log("handleClose", isConfirmed);
+        console.log("delete confirmed: ", isConfirmed);
         setOpen(false);
-        if (onClose) {
-            onClose(isConfirmed);
-        }
     };
 
     return (
@@ -19,12 +18,11 @@ const DeleteButton = ({ onClose, buttonText }) => {
                 size="xsmall"
                 onClick={() => setOpen(true)}
             >
-                {buttonText}
+                Delete Component
             </Button>
 
             <Modal
                 open={open}
-                //onClose={() => handleClose(false)}
                 header={{
                     heading: "Er du sikker?",
                     size: "small",
@@ -34,16 +32,25 @@ const DeleteButton = ({ onClose, buttonText }) => {
             >
                 <Modal.Body>
                     <BodyLong>
-                        Culpa aliquip ut cupidatat laborum minim quis ex in aliqua. Qui
-                        incididunt dolor do ad ut. Incididunt eiusmod nostrud deserunt duis
-                        laborum.
+                        Are you really sure you want to delete this component:
+                        {componentName}
                     </BodyLong>
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button type="button" variant="danger" onClick={() => handleClose(true)}>
+                    <f.Form method="post">
+                        <input type="hidden" name="actionType" value="delete" />
+                        <input type="hidden" name="componentName" value={componentName} />
+                    <Button
+                        type="submit"
+                        variant="danger"
+                        onClick={() => handleClose(true)}
+                    >
                         Ja, jeg er sikker
                     </Button>
-                    <Button
+
+                    </f.Form>
+
+                        <Button
                         type="button"
                         variant="secondary"
                         onClick={() => handleClose(false)}
@@ -56,4 +63,4 @@ const DeleteButton = ({ onClose, buttonText }) => {
     );
 };
 
-export default DeleteButton;
+export default ComponentDelete;
