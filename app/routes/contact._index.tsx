@@ -1,14 +1,16 @@
 import React, {useRef, useState} from "react";
-import {InternalHeader, Search, Spacer,} from "@navikt/ds-react";
+import {InternalHeader, Modal, Search, Spacer,} from "@navikt/ds-react";
 import ContactTable from "~/components/contacts-table";
 import {PersonPlusIcon} from '@navikt/aksel-icons';
-import CustomFormModal from "~/components/contact-form";
 import type {IContact} from '~/api/types'
 import ContactApi from "~/api/contact-api";
 import type { LoaderFunction } from '@remix-run/node';
 import { json } from '@remix-run/node';
-import {useLoaderData} from "@remix-run/react";
+import {useFetcher, useLoaderData} from "@remix-run/react";
 import OrganizationApi from "~/api/organization-api";
+import ContactForm from "~/components/contact-form";
+import {defaultContact} from "~/api/types";
+import {AlertWithCloseButton} from "~/components/alert-with-close";
 
 
 export const loader: LoaderFunction = async () => {
@@ -24,11 +26,51 @@ export const loader: LoaderFunction = async () => {
     }
 };
 
+export async function action({ request }) {
+
+    const formData = await request.formData();
+    const formValues = {};
+    const actionType = formData.get("actionType");
+
+    for (const [key, value] of formData) {
+        formValues[key] = value;
+    }
+    console.log("formValues", formValues);
+
+    if(actionType === "create") {
+        try {
+            const response = await ContactApi.createContact(formValues);
+            return json({ show: true, message: response?.message, variant: response?.variant });
+        } catch (error) {
+            // Handle any errors here
+            return json({ show: true, message: error.message, variant: "error" });
+        }
+    } else if(actionType === "update") {
+        try {
+            const response = await ContactApi.updateContact(formValues);
+            return json({ show: true, message: response.message, variant: response.variant });
+        } catch (error) {
+            return json({ show: true, message: error.message, variant: "error" });
+        }
+    } else if(actionType === "delete") {
+        try {
+            const response = await ContactApi.deleteContact(formValues);
+            return json({ show: true, message: response.message, variant: response.variant });
+        } catch (error) {
+            return json({ show: true, message: error.message, variant: "error" });
+        }
+    }
+
+    return json({ show: true, message: "Unknown action type", variant: "error" });
+
+}
+
 export default function ContactPage() {
     const [filteredData, setFilteredData] = useState<[IContact]>([]);
     const contactEditRef = useRef<HTMLDialogElement>(null!);
     const { contactsData, organizationsData } = useLoaderData();
     const [search, setSearch] = useState<string>("");
+    const fetcher = useFetcher();
 
     const handleSearchInputChange = (input: any) => {
         setSearch(input);
@@ -40,21 +82,19 @@ export default function ContactPage() {
         setFilteredData(filtered);
     };
 
-    const handleFormClose = () => {
-        // TODO: Handle form submission logic
-        console.log("closing the contact add form inside index");
-        contactEditRef.current?.close();
-    };
-
-
     return (
         <div style={{fontFamily: "system-ui, sans-serif", lineHeight: "1.8"}}>
-            <CustomFormModal
-                ref={contactEditRef}
-                headerText="Add New Contact Form"
-                onClose={handleFormClose}
-                selectedContact={null}
-            />
+            <Modal ref={contactEditRef} header={{ heading: "Add New Contact" }} width={400}>
+                <Modal.Body>
+                    <ContactForm  selectedContact={defaultContact} f={fetcher} r={contactEditRef}/>
+                </Modal.Body>
+            </Modal>
+
+            {fetcher.data && fetcher.data.show && (
+                <AlertWithCloseButton variant={fetcher.data && fetcher.data.variant}>
+                    {fetcher.data && fetcher.data.message}
+                </AlertWithCloseButton>
+            )}
 
             <InternalHeader>
                 <InternalHeader.Button onClick={() => contactEditRef.current?.showModal()}>
@@ -80,7 +120,11 @@ export default function ContactPage() {
 
             </InternalHeader>
 
-            <ContactTable data={search !== "" ? filteredData : contactsData} organizations={organizationsData} />
+            <ContactTable
+                data={search !== "" ? filteredData : contactsData}
+                organizations={organizationsData}
+                f={fetcher}
+            />
 
         </div>
     );

@@ -3,7 +3,7 @@ import {Button, Table} from "@navikt/ds-react";
 import {Link} from "@remix-run/react";
 import {InformationSquareIcon, PencilIcon} from "@navikt/aksel-icons";
 import type {IOrganization} from "~/api/types";
-import CustomFormModal from "~/components/organization-add";
+import CustomFormModal from "~/components/organization-form";
 
 interface OrganizationTableProps {
     data: IOrganization[];

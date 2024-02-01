@@ -8,7 +8,7 @@ import ContactTable from "~/components/contacts-table";
 import ContactApi from "~/api/contact-api";
 import OrganizationApi from "~/api/organization-api";
 import ComponentApi from "~/api/component-api";
-import CustomFormModal from "~/components/organization-add";
+import CustomFormModal from "~/components/organization-form";
 import {json} from "@remix-run/node";
 
 export const loader: LoaderFunction = async ({ params }) => {

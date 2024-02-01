@@ -76,8 +76,6 @@ class ComponentApi {
 
     static async updateComponent(componentData) {
         const url = `${API_URL}/api/components/${componentData.name}`;
-        console.log("json: ", JSON.stringify(componentData));
-        console.log("url: ", url);
 
         const request = new Request(url, {
             method: 'PUT',

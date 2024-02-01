@@ -25,7 +25,7 @@ export const defaultComponent: IComponent = {
 };
 
 export interface IContact {
-    dn?: string;
+    dn: string;
     nin: string;
     firstName: string;
     lastName: string;
@@ -38,6 +38,7 @@ export interface IContact {
 }
 
 export const defaultContact: IContact = {
+    dn: '',
     nin: '',
     firstName: '',
     lastName: '',

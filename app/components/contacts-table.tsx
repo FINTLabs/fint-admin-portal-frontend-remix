@@ -1,32 +1,32 @@
 import React, { useRef, useState} from 'react';
-import {Button, Table} from "@navikt/ds-react";
-import {Link} from "@remix-run/react";
+import {Button, Modal, Table} from "@navikt/ds-react";
+import {Link, useFetcher} from "@remix-run/react";
 import {PencilIcon} from '@navikt/aksel-icons';
-import CustomFormModal from "~/components/contact-form";
+import ContactForm from "~/components/contact-form";
 import type {IContact} from '~/api/types';
+import {defaultContact} from "~/api/types";
+import ContactApi from "~/api/contact-api";
+import {json} from "@remix-run/node";
+
 
 interface ContactTableProps {
     data: IContact[];
-    organizations: any[]; // Update the type according to your data structure
+    organizations: any[];
+    f: any;
 }
 
-const ContactTable = ({ data, organizations }: ContactTableProps) => {
+
+const ContactTable = ({ data, organizations, f }: ContactTableProps) => {
 
     const modalRef = useRef<HTMLDialogElement | null>(null);
     const [selectedContact, setSelectedContact] = useState<IContact | null>(null);
+    //const fetcher = useFetcher();
+
 
     const openEditModal = (contact: IContact) => {
         setSelectedContact(contact);
         modalRef.current?.showModal();
     };
-
-    const handleFormClose = () => {
-        //todo:  Handle form submission logic
-        console.log("closing the contact modal from the table");
-
-        modalRef.current?.close();
-    };
-
 
     const getTechnicalContact = (technicalDN: string) => {
         const technicalContact = organizations.find((org) => org.dn === technicalDN);
@@ -86,18 +86,23 @@ const ContactTable = ({ data, organizations }: ContactTableProps) => {
                                 size="xsmall"
                             />
 
-
                         </Table.DataCell>
                     </Table.ExpandableRow>
                 ))}
             </Table.Body>
         </Table>
-        <CustomFormModal
-            ref={modalRef}
-            headerText="Edit Contact Form"
-            onClose={handleFormClose}
-            selectedContact={selectedContact}
-        />
+
+            <Modal ref={modalRef} header={{ heading: "Edit Contact" }} width={400}>
+                <Modal.Body>
+                    <ContactForm
+                        selectedContact={selectedContact?selectedContact:defaultContact}
+                        f={f}
+                        r={modalRef}
+                    />
+                </Modal.Body>
+            </Modal>
+
+
         </>
     );
 };

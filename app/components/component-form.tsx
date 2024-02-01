@@ -64,7 +64,7 @@ const ComponentForm = ({ selectedComponent = defaultComponent, f, r }) => {
             r.current.close();
         }
     };
-
+//TODO: clear form after submit
     return (
         <f.Form method="post" >
             {selectedComponent.dn && (

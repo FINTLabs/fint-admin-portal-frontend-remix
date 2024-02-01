@@ -1,13 +1,14 @@
 import React, {useRef, useState} from "react";
-import {InternalHeader, Search, Spacer} from "@navikt/ds-react";
+import {InternalHeader, Modal, Search, Spacer} from "@navikt/ds-react";
 import OrganizationApi from "~/api/organization-api";
 import OrganizationTable from "~/components/organization-table";
 import {PersonPlusIcon} from "@navikt/aksel-icons";
-import CustomFormModal from "~/components/organization-add";
+import OrganizationForm from "~/components/organization-form";
 import type {IOrganization} from "~/api/types";
 import type {LoaderFunction} from "@remix-run/router";
 import {json} from "@remix-run/node";
-import {useLoaderData} from "@remix-run/react";
+import {useFetcher, useLoaderData} from "@remix-run/react";
+import ComponentForm from "~/components/component-form";
 
 export const loader: LoaderFunction = async () => {
     try {
@@ -25,7 +26,7 @@ export default function OrganizationPage() {
     const [search, setSearch] = useState<string>("");
     const loaderData = useLoaderData();
     const organizations = loaderData ? loaderData.organizationsData : [];
-
+    const fetcher = useFetcher();
 
     const handleSearchInput = (input: any) => {
         setSearch(input);
@@ -46,7 +47,14 @@ export default function OrganizationPage() {
 
     return (
         <div style={{ fontFamily: "system-ui, sans-serif", lineHeight: "1.8" }}>
-            <CustomFormModal
+
+            <Modal ref={organizationEditRef} header={{ heading: "Add New Component" }} width={400}>
+                <Modal.Body>
+                    <OrganizationForm f={fetcher} r={organizationEditRef}/>
+                </Modal.Body>
+            </Modal>
+
+            <OrganizationForm
                 ref={organizationEditRef}
                 headerText="Add New organization Form"
                 onClose={handleFormClose}

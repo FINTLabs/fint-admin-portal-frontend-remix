@@ -1,106 +1,255 @@
-import type {ChangeEvent, ForwardedRef} from "react";
-import React, { forwardRef, useEffect, useState} from "react";
-import {Button, Modal, TextField} from "@navikt/ds-react";
+import type {ChangeEvent} from "react";
+import React, {useEffect, useState} from "react";
+import {Box, Button, HGrid, TextField} from "@navikt/ds-react";
 import type {IContact} from "~/api/types";
-import {defaultContact} from "~/api/types";
+import {FloppydiskIcon, TrashIcon} from "@navikt/aksel-icons";
 
-interface ContactFormProps {
-    headerText: string;
-    selectedContact: IContact | null;
-    onClose: () => void;
-}
+const ContactForm = ({selectedContact, f, r}) => {
+    const [formData, setFormData] = useState<IContact>(selectedContact);
+    const [errors, setErrors] = useState({});
+    const [confirmDelete, setConfirmDelete] = useState(false);
+    const [actionType, setActionType] = useState("unknown");
 
-const ContactForm = forwardRef((props: ContactFormProps, ref: ForwardedRef<HTMLDialogElement>) => {
-    const { headerText, selectedContact, onClose } = props;
-    const [formValues, setFormValues] = useState<IContact>(selectedContact || defaultContact);
 
-    // const [formValues, setFormValues] = useState({
-    //     firstName: "",
-    //     lastName: "",
-    //     mail: "",
-    //     mobile: ""
-    // });
+    useEffect(() => {
+        setFormData(selectedContact);
+        setActionType(selectedContact.dn ? "update" : "create");
+    }, [selectedContact]);
 
-    // useEffect(() => {
-    //     if (selectedContact) {
-    //         setFormValues({
-    //             firstName: selectedContact.firstName || "",
-    //             lastName: selectedContact.lastName || "",
-    //             mail: selectedContact.mail || "",
-    //             mobile: selectedContact.mobile || ""
-    //         });
-    //     }
-    // }, [selectedContact]);
-
-    function onChange(e: ChangeEvent<HTMLInputElement>) {
+    function handleInputChange(e: ChangeEvent<HTMLInputElement>) {
         let name = e.target.name;
         let value = e.target.value;
 
-        setFormValues((prevValues) => ({
+        setFormData((prevValues) => ({
             ...prevValues,
             [name]: value,
         }));
     }
 
-    // function resetFormValues() {
-    //         setFormValues({
-    //             firstName: selectedContact?.firstName,
-    //             lastName: selectedContact?.lastName,
-    //             mail: selectedContact?.mail,
-    //             mobile: selectedContact?.mobile
-    //         });
-    //     }
+    const handleInputBlur = (e: ChangeEvent<HTMLInputElement>) => {
+        let fieldName = e.target.name;
+        let value = e.target.value;
 
-    function handleCancelClick() {
-        // resetFormValues()
-        onClose();
+        if (fieldName === 'firstName' || fieldName === 'lastName') {
+
+            let nameValidator = new RegExp("^[a-zA-Z ]+$");
+            let valid = nameValidator.test(value);
+
+            if (valid) {
+                removeError(fieldName); // Adjusted to use fieldName dynamically
+            } else {
+                setErrors(prevErrors => ({
+                    ...prevErrors,
+                    [fieldName]: "Navnet kan bare inneholde a-z og mellomrom" // Adjusted error message
+                }));
+            }
+        } else if (fieldName === 'mail') {
+
+            let emailValidator = new RegExp("^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$");
+            let valid = emailValidator.test(value);
+
+            if (valid) {
+                removeError('mail');
+            } else {
+                setErrors(prevErrors => ({
+                    ...prevErrors,
+                    ["mail"]: "Ugyldig e-postadresse" // Error message for invalid email
+                }));
+            }
+        } else if (fieldName === 'nin') {
+
+            let ninValidator = new RegExp("^\\d{11}$");
+            let valid = ninValidator.test(value);
+
+            if (valid) {
+                removeError('nin');
+            } else {
+                setErrors(prevErrors => ({
+                    ...prevErrors,
+                    ["nin"]: "Ugyldig Fødselsnummer"
+                }));
+            }
+        }
+
+    };
+
+    const removeError = (fieldName) => {
+        setErrors(prevErrors => {
+            const newErrors = { ...prevErrors };
+            delete newErrors[fieldName];
+            return newErrors;
+        });
+    };
+
+    function validateForm() {
+        return (
+            Object.keys(errors).length === 0
+            && formData.firstName.length > 0
+            && formData.lastName.length > 0
+            && formData.mail.length > 0
+        );
     }
 
-    return (
-        <Modal ref={ref} header={{ heading: headerText }} width={400}>
-            <Modal.Body>
-                <form method="dialog" id="skjema" onSubmit={() => alert("onSubmit")}>
-                    <TextField
-                        label={"Fornavn"}
-                        value={formValues.firstName}
-                        error={formValues.firstName.length < 1? "Required":""}
-                        onChange={onChange}
-                        name="firstName"
-                    />
-                    <TextField
-                        label={"Etternavn"}
-                        value={formValues.lastName}
-                        error={formValues.lastName.length < 1? "Required":""}
-                        onChange={onChange}
-                        name="lastName"
-                    />
-                    <TextField
-                        label={"E-post"}
-                        value={formValues.mail}
-                        error={formValues.mail.length < 1? "Required":""}
-                        onChange={onChange}
-                        name="mail"
-                    />
-                    <TextField
-                        label={"Mobil"}
-                        value={formValues.mobile}
-                        error={formValues.mobile.length < 1? "Required":""}
-                        onChange={onChange}
-                        name="mobile"
-                    />
-                </form>
-            </Modal.Body>
-            <Modal.Footer>
-                <Button form="skjema" type="submit">
-                    Send
-                </Button>
-                <Button type="button" variant="secondary" onClick={handleCancelClick}>
-                    Avbryt
-                </Button>
-            </Modal.Footer>
-        </Modal>
-    );
-});
+    const handleSubmit = () => {
+       console.log("action type", actionType);
+        if (confirmDelete) {
+            console.log("Deleting contact...");
+            // setConfirmDelete(false);
+            setActionType("delete");
+        }
+        if (r && r.current) {
+            console.log("close the modal", r);
+            r.current.close();
+        }
+    };
+//TODO: change button to a submit button and add a form action of delete
+    function handleDelete() {
+        console.log("Delete Confirmation");
 
-// ContactForm.displayName = 'ContactForm';
+        // if (confirmDelete) {
+        //     console.log("Deleting contact...");
+        //
+        //     if (r && r.current) {
+        //         console.log("close the modal", r);
+        //         r.current.close();
+        //     }
+        //     setConfirmDelete(false);
+        // } else {
+            setActionType("delete");
+            setConfirmDelete(true);
+        // }
+    }
+
+    const handleCancelDelete = () => {
+        setConfirmDelete(false);
+        setActionType(selectedContact.dn ? "update" : "create");
+    };
+
+//TODO: clear form after submit
+    return (
+
+        <f.Form method="post" >
+            <input
+                type="hidden"
+                name="actionType"
+                value={actionType}
+            />
+
+            {selectedContact.dn && (
+                <input
+                    type="hidden"
+                    name="dn"
+                    value={formData.dn}
+                />
+            )}
+
+            {selectedContact.dn && (
+                <input
+                    type="hidden"
+                    name="nin"
+                    value={formData.nin}
+                />
+            )}
+
+            <TextField
+                label="Fødselsnummer"
+                value={formData.nin}
+                name={"nin"}
+                onChange={(e) => handleInputChange(e)}
+                error={errors['nin'] || ''}
+                onBlur={(e) => handleInputBlur(e)}
+                disabled={!!selectedContact.dn}
+            />
+
+            <TextField
+                label={"Fornavn"}
+                value={formData.firstName}
+                onChange={(e) => handleInputChange(e)}
+                error={errors['firstName'] || ''}
+                onBlur={(e) => handleInputBlur(e)}
+                name="firstName"
+            />
+            <TextField
+                label={"Etternavn"}
+                value={formData.lastName}
+                name="lastName"
+                onChange={(e) => handleInputChange(e)}
+                error={errors['lastName'] || ''}
+                onBlur={(e) => handleInputBlur(e)}
+            />
+            <TextField
+                label={"Epost"}
+                value={formData.mail}
+                name="mail"
+                onChange={(e) => handleInputChange(e)}
+                error={errors['mail'] || ''}
+                onBlur={(e) => handleInputBlur(e)}
+            />
+
+            <TextField
+                label={"Mobil"}
+                value={formData.mobile}
+                name="mobile"
+                onChange={(e) => handleInputChange(e)}
+                error={errors['mobile'] || ''}
+                onBlur={(e) => handleInputBlur(e)}
+            />
+
+            <Box padding={"4"} display="flex" gap="4">
+                <Button
+                    icon={<FloppydiskIcon aria-hidden />}
+                    disabled={!validateForm()}
+                    type={"submit"}
+                    onClick={handleSubmit}
+                >
+                    Save
+                </Button>
+            </Box>
+            <HGrid gap="6" columns={2}>
+                {selectedContact.dn && (
+                    <>
+                    {!confirmDelete && (
+                        <Button
+                            variant="danger"
+                            icon={<TrashIcon aria-hidden />}
+                            onClick={handleDelete}
+                            type={"button"}
+                            size="xsmall"
+                        >
+                            Slett contact
+                        </Button>
+                    )}
+                        {confirmDelete && (
+                            <>
+                                <Button
+                                    variant="danger"
+                                    icon={<TrashIcon aria-hidden />}
+                                    onClick={handleDelete}
+                                    size="xsmall"
+                                    onClick={handleSubmit}
+                                >
+                                    Er du sikker?
+                                </Button>
+                                <Button
+                                    variant="secondary"
+                                    onClick={handleCancelDelete}
+                                    size="xsmall"
+                                    type={"button"}
+                                >
+                                    Avbryt
+                                </Button>
+                            </>
+
+                        )}
+
+
+                    </>
+                )}
+            </HGrid>
+
+        </f.Form>
+
+
+    );
+}
 export default ContactForm;
