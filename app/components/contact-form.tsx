@@ -3,6 +3,7 @@ import React, {useEffect, useState} from "react";
 import {Box, Button, HGrid, TextField} from "@navikt/ds-react";
 import type {IContact} from "~/api/types";
 import {FloppydiskIcon, TrashIcon} from "@navikt/aksel-icons";
+import {defaultContact} from "~/api/types";
 
 const ContactForm = ({selectedContact, f, r}) => {
     const [formData, setFormData] = useState<IContact>(selectedContact);
@@ -10,11 +11,19 @@ const ContactForm = ({selectedContact, f, r}) => {
     const [confirmDelete, setConfirmDelete] = useState(false);
     const [actionType, setActionType] = useState("unknown");
 
+    // useEffect(() => {
+    //     if(f.state === "submitting" && f.data.action === "create") {
+    //         console.log("ContactForm: useEffect: action: ", f.data.action);
+    //         setFormData(defaultContact)
+    //     }
+    // }, [f.state]);
 
     useEffect(() => {
         setFormData(selectedContact);
+        setConfirmDelete(false);
         setActionType(selectedContact.dn ? "update" : "create");
     }, [selectedContact]);
+
 
     function handleInputChange(e: ChangeEvent<HTMLInputElement>) {
         let name = e.target.name;
@@ -97,27 +106,18 @@ const ContactForm = ({selectedContact, f, r}) => {
             // setConfirmDelete(false);
             setActionType("delete");
         }
+
         if (r && r.current) {
             console.log("close the modal", r);
             r.current.close();
         }
     };
+
 //TODO: change button to a submit button and add a form action of delete
     function handleDelete() {
         console.log("Delete Confirmation");
-
-        // if (confirmDelete) {
-        //     console.log("Deleting contact...");
-        //
-        //     if (r && r.current) {
-        //         console.log("close the modal", r);
-        //         r.current.close();
-        //     }
-        //     setConfirmDelete(false);
-        // } else {
-            setActionType("delete");
-            setConfirmDelete(true);
-        // }
+        setActionType("delete");
+        setConfirmDelete(true);
     }
 
     const handleCancelDelete = () => {
@@ -222,6 +222,14 @@ const ContactForm = ({selectedContact, f, r}) => {
                         {confirmDelete && (
                             <>
                                 <Button
+                                    variant="secondary"
+                                    onClick={handleCancelDelete}
+                                    size="xsmall"
+                                    type={"button"}
+                                >
+                                    Avbryt
+                                </Button>
+                                <Button
                                     variant="danger"
                                     icon={<TrashIcon aria-hidden />}
                                     onClick={handleDelete}
@@ -229,14 +237,6 @@ const ContactForm = ({selectedContact, f, r}) => {
                                     onClick={handleSubmit}
                                 >
                                     Er du sikker?
-                                </Button>
-                                <Button
-                                    variant="secondary"
-                                    onClick={handleCancelDelete}
-                                    size="xsmall"
-                                    type={"button"}
-                                >
-                                    Avbryt
                                 </Button>
                             </>
 

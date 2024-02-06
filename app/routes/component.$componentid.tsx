@@ -1,16 +1,15 @@
 //component.$componentid.tsx
-import React from "react";
+import React, {useEffect} from "react";
 import type {LoaderFunction} from "@remix-run/node";
-import {json} from "@remix-run/node";
-import {isRouteErrorResponse, Link, useFetcher, useLoaderData, useRouteError} from "@remix-run/react";
-import {Alert, Box, Heading, HGrid, LinkPanel, Tabs, Tag} from "@navikt/ds-react";
-import {Buldings3Icon, PencilIcon, TenancyIcon, TokenIcon} from '@navikt/aksel-icons';
+import {isRouteErrorResponse, Link, useFetcher, useLoaderData, useNavigate, useRouteError} from "@remix-run/react";
+import {Alert, Box, Button, Heading, HGrid, LinkPanel, Tabs, Tag} from "@navikt/ds-react";
+import {TokenIcon, TenancyIcon, Buldings3Icon, PencilIcon, InformationSquareIcon} from '@navikt/aksel-icons';
 import OrganizationTable from "~/components/organization-table";
 import ComponentApi from "~/api/component-api";
 import OrganizationApi from "~/api/organization-api";
 import ComponentForm from "~/components/component-form";
 import ComponentDelete from "~/components/component-delete";
-import {AlertWithCloseButton} from "~/components/alert-with-close";
+import {json} from "@remix-run/node";
 
 export const loader: LoaderFunction = async ({ params }) => {
     const componentName = params.componentid;
@@ -72,7 +71,13 @@ export async function action({ request }) {
 export default function ComponentPage() {
 
     const { selectedComponent, associatedOrganizations } = useLoaderData();
+    const [show, setShow] = React.useState(false);
+
     const fetcher = useFetcher();
+
+    useEffect(() => {
+        setShow(true);
+    }, [fetcher.state]);
 
     return (
         <div style={{ fontFamily: "system-ui, sans-serif", lineHeight: "1.8" }}>
@@ -206,10 +211,10 @@ export default function ComponentPage() {
 
                 <Tabs.Panel value="edit" className="h-24  w-full bg-gray-50 p-4">
 
-                    {fetcher.data && fetcher.data.show && (
-                        <AlertWithCloseButton variant={fetcher.data && fetcher.data.variant}>
-                            {fetcher.data && fetcher.data.message}
-                        </AlertWithCloseButton>
+                    {fetcher.data && show && (
+                        <Alert variant={fetcher.data.variant} closeButton onClose={() => setShow(false)}>
+                            {(fetcher.data && fetcher.data.message) || "Content"}
+                        </Alert>
                     )}
 
                     <Box padding="8">

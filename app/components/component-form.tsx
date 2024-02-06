@@ -1,14 +1,19 @@
 // component-form.tsx
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Box, Button, Switch, TextField} from "@navikt/ds-react";
 import {FloppydiskIcon} from '@navikt/aksel-icons';
 import type {IComponent} from "~/api/types";
 import {defaultComponent} from "~/api/types";
 
-const ComponentForm = ({ selectedComponent = defaultComponent, f, r }) => {
+const ComponentForm = ({ selectedComponent, f, r }) => {
 
     const [formData, setFormData] = useState<IComponent>(selectedComponent);
     const [errors, setErrors] = useState({});
+
+    // useEffect(() => {
+    //     //console.log("ComponentForm: useEffect: f.state: ", f.data.action);
+    //     if(f.state === "submitting" && f.data.actionType === "create") setFormData(defaultComponent);
+    // }, [f.state]);
 
     const handleInputChange = (fieldName, value) => {
         setFormData((prevData) => ({
@@ -64,7 +69,7 @@ const ComponentForm = ({ selectedComponent = defaultComponent, f, r }) => {
             r.current.close();
         }
     };
-//TODO: clear form after submit
+
     return (
         <f.Form method="post" >
             {selectedComponent.dn && (
@@ -126,6 +131,7 @@ const ComponentForm = ({ selectedComponent = defaultComponent, f, r }) => {
                 size="small"
                 name={"common"}
                 checked={formData.common}
+                value={formData.common}
                 onChange={(e) => handleSwitchChange('common', e.target.checked)}
             >
                 Felles
@@ -134,6 +140,7 @@ const ComponentForm = ({ selectedComponent = defaultComponent, f, r }) => {
                 size="small"
                 name={"core"}
                 value={formData.core}
+                checked={formData.core}
                 onChange={(e) => handleSwitchChange('core', e.target.checked)}
             >
                 FINT Core
@@ -144,6 +151,7 @@ const ComponentForm = ({ selectedComponent = defaultComponent, f, r }) => {
                 size="small"
                 name={"inPlayWithFint"}
                 value={formData.inPlayWithFint}
+                checked={formData.inPlayWithFint}
                 onChange={(e) => handleSwitchChange('inPlayWithFint', e.target.checked)}
             >
                 Play With Fint
@@ -152,6 +160,7 @@ const ComponentForm = ({ selectedComponent = defaultComponent, f, r }) => {
                 size="small"
                 name={"inBeta"}
                 value={formData.inBeta}
+                checked={formData.inBeta}
                 onChange={(e) => handleSwitchChange('inBeta', e.target.checked)}
             >
                 Beta
@@ -160,6 +169,7 @@ const ComponentForm = ({ selectedComponent = defaultComponent, f, r }) => {
                 size="small"
                 name={"inProduction"}
                 value={formData.inProduction}
+                checked={formData.inProduction}
                 onChange={(e) => handleSwitchChange('inProduction', e.target.checked)}
             >
                 API (Production)

@@ -1,6 +1,6 @@
 import {useLocation} from "react-router";
 import {Link} from "@remix-run/react";
-import { ChevronRightIcon } from '@navikt/aksel-icons';
+import {ChevronRightIcon, HouseIcon} from '@navikt/aksel-icons';
 import styled from "styled-components";
 
 const StyledChevronRightIcon = styled(ChevronRightIcon)`
@@ -24,7 +24,7 @@ export default function Breadcrumbs(){
                 // <div className='crumb' key='crumb' >
 
                   <Link to={currentLink} style={linkStyle} key={currentLink}>
-                      <StyledChevronRightIcon title="Skriv ut dokument" />
+                      <StyledChevronRightIcon title="Spacer" />
                       {crumb}
                   </Link>
                 // </div>
@@ -33,7 +33,9 @@ export default function Breadcrumbs(){
 
     return(
         <div className='breadcrumbs'>
-            <Link to={homeLink} style={linkStyle}>{'Dashboard'}</Link>
+            <Link to={homeLink} style={linkStyle}>
+                {'Dashboard'}
+            </Link>
             {crumbs}
         </div>
     )

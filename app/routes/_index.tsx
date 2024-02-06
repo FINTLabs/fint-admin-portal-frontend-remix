@@ -19,15 +19,15 @@ import {
 } from "@navikt/aksel-icons";
 import {Link} from "@remix-run/react";
 
-export const meta: MetaFunction = () => {
-    return [
-        {title: "Admin Portal Dashboard"},
-        {name: "description", content: "Welcome to Remix!"},
-    ];
-};
-export const links: LinksFunction = () => [
-    {rel: "stylesheet", href: navStyles}
-];
+// export const meta: MetaFunction = () => {
+//     return [
+//         {title: "Admin Portal Dashboard"},
+//         {name: "description", content: "Welcome to Remix!"},
+//     ];
+// };
+// export const links: LinksFunction = () => [
+//     {rel: "stylesheet", href: navStyles}
+// ];
 
 export default function Dashboard() {
     const links = [

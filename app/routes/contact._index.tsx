@@ -1,5 +1,5 @@
-import React, {useRef, useState} from "react";
-import {InternalHeader, Modal, Search, Spacer,} from "@navikt/ds-react";
+import React, {useEffect, useRef, useState} from "react";
+import {Alert, InternalHeader, Modal, Search, Spacer,} from "@navikt/ds-react";
 import ContactTable from "~/components/contacts-table";
 import {PersonPlusIcon} from '@navikt/aksel-icons';
 import type {IContact} from '~/api/types'
@@ -10,7 +10,6 @@ import {useFetcher, useLoaderData} from "@remix-run/react";
 import OrganizationApi from "~/api/organization-api";
 import ContactForm from "~/components/contact-form";
 import {defaultContact} from "~/api/types";
-import {AlertWithCloseButton} from "~/components/alert-with-close";
 
 
 export const loader: LoaderFunction = async () => {
@@ -70,7 +69,12 @@ export default function ContactPage() {
     const contactEditRef = useRef<HTMLDialogElement>(null!);
     const { contactsData, organizationsData } = useLoaderData();
     const [search, setSearch] = useState<string>("");
+    const [show, setShow] = React.useState(false);
     const fetcher = useFetcher();
+
+    useEffect(() => {
+        setShow(true);
+    }, [fetcher.state]);
 
     const handleSearchInputChange = (input: any) => {
         setSearch(input);
@@ -90,10 +94,10 @@ export default function ContactPage() {
                 </Modal.Body>
             </Modal>
 
-            {fetcher.data && fetcher.data.show && (
-                <AlertWithCloseButton variant={fetcher.data && fetcher.data.variant}>
-                    {fetcher.data && fetcher.data.message}
-                </AlertWithCloseButton>
+            {fetcher.data && show && (
+                <Alert variant={fetcher.data.variant} closeButton onClose={() => setShow(false)}>
+                    {(fetcher.data && fetcher.data.message) || "Content"}
+                </Alert>
             )}
 
             <InternalHeader>

@@ -1,13 +1,13 @@
 // component._index.tsx
-import React, {useRef, useState} from 'react';
-import {InternalHeader, Modal, Search, Spacer} from "@navikt/ds-react";
+import React, {useEffect, useRef, useState} from 'react';
+import {Alert, InternalHeader, Modal, Search, Spacer} from "@navikt/ds-react";
 import {ComponentIcon} from "@navikt/aksel-icons";
 import ComponentsTable from "~/components/components-table";
 import {useFetcher, useLoaderData} from "@remix-run/react";
 import ComponentApi from "~/api/component-api";
 import {json} from "@remix-run/node";
 import ComponentForm from "~/components/component-form";
-import {AlertWithCloseButton} from '~/components/alert-with-close';
+import {defaultComponent} from "~/api/types";
 
 export const loader = async () => {
 
@@ -46,8 +46,13 @@ export default function ComponentPage ()  {
     const [search, setSearch] = useState("");
     const loaderData = useLoaderData();
     const componentsData = loaderData ? loaderData.componentsData : [];
+    const [show, setShow] = React.useState(false);
 
     const fetcher = useFetcher();
+
+    useEffect(() => {
+        setShow(true);
+    }, [fetcher.state]);
 
     const handleSearchInput = (input:any) => {
         setSearch(input);
@@ -64,14 +69,18 @@ export default function ComponentPage ()  {
 
             <Modal ref={componentEditRef} header={{ heading: "Add New Component" }} width={400}>
                 <Modal.Body>
-                    <ComponentForm f={fetcher} r={componentEditRef}/>
+                    <ComponentForm
+                        selectedComponent={defaultComponent}
+                        f={fetcher}
+                        r={componentEditRef}
+                    />
                 </Modal.Body>
             </Modal>
 
-            {fetcher.data && fetcher.data.show && (
-                <AlertWithCloseButton variant={fetcher.data && fetcher.data.variant}>
-                    {fetcher.data && fetcher.data.message}
-                </AlertWithCloseButton>
+            {fetcher.data && show && (
+                <Alert variant={fetcher.data.variant} closeButton onClose={() => setShow(false)}>
+                    {(fetcher.data && fetcher.data.message) || "Content"}
+                </Alert>
             )}
 
             <InternalHeader>

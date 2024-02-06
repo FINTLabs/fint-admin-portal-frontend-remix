@@ -1,10 +1,11 @@
 import React from "react";
 import { cssBundleHref } from "@remix-run/css-bundle";
-import type { LinksFunction } from "@remix-run/node";
+import type { LinksFunction , MetaFunction} from "@remix-run/node";
 import navStyles from "@navikt/ds-css/dist/index.css";
 import {LayoutAppbar} from '~/components/layout-appbar';
 import { Box, Page, BodyShort } from "@navikt/ds-react";
-
+import MeApi from "~/api/me-api";
+import {json} from "@remix-run/node";
 import {
     Links,
     LiveReload,
@@ -15,11 +16,15 @@ import {
     Link,
     useRouteError
 } from "@remix-run/react";
-import MeApi from "~/api/me-api";
-import {json} from "@remix-run/node";
+
+// export const links: LinksFunction = () => [
+//     ...(cssBundleHref
+//         ? [{ rel: "stylesheet", href: cssBundleHref },
+//         { rel: "stylesheet", href: navStyles }] : []),
+// ];
 
 export const links: LinksFunction = () => [
-    ...(cssBundleHref ? [{ rel: "stylesheet", href: cssBundleHref }, { rel: "stylesheet", href: navStyles }] : []),
+    { rel: "stylesheet", href: navStyles }
 ];
 
 export async function loader(){
@@ -27,6 +32,12 @@ export async function loader(){
     return json({ displayName });
 }
 
+export const meta: MetaFunction = () => {
+    return [
+        { title: "Admin Portal Dashboard :)" },
+        { name: "description", content: "here is a description of my admin portal thing" },
+    ];
+};
 
 export function ErrorBoundary() {
     const error = useRouteError();
@@ -47,7 +58,7 @@ export function ErrorBoundary() {
 }
 
 export default function App() {
-    // const { displayName } = useLoaderData();
+
   return (
     <html lang="en">
       <head>

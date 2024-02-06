@@ -95,7 +95,7 @@ const ContactTable = ({ data, organizations, f }: ContactTableProps) => {
             <Modal ref={modalRef} header={{ heading: "Edit Contact" }} width={400}>
                 <Modal.Body>
                     <ContactForm
-                        selectedContact={selectedContact?selectedContact:defaultContact}
+                        selectedContact={selectedContact || defaultContact}
                         f={f}
                         r={modalRef}
                     />

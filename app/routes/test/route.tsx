@@ -69,29 +69,7 @@ export default function Component() {
                 <Page.Block gutters width="lg">
 
                     <div className="py-16">
-                        <Button onClick={() => ref.current?.showModal()}>Åpne modal</Button>
-
-                        <Modal ref={ref} header={{ heading: "Overskrift" }}>
-                            <Modal.Body>
-                                <BodyLong>
-                                    <ComponentForm f={fetcher}/>
-                                </BodyLong>
-                            </Modal.Body>
-                            <Modal.Footer>
-                                <Button type="button" onClick={() => ref.current?.close()}>
-                                    Primær
-                                </Button>
-                            </Modal.Footer>
-                        </Modal>
-                    </div>
-
-                    <Heading size={"xsmall"}>Test Page {data ? data.message : "Waiting..."}</Heading>
-
-
-                    <div>
-                        {fetcher.data && <p>Server says: {fetcher.data.message}</p>}
-
-
+                        <Heading size={"xsmall"} >Hello from route</Heading>
                     </div>
                 </Page.Block>
             </Box>
