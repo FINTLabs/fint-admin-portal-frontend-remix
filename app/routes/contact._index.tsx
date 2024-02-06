@@ -16,7 +16,7 @@ export const loader: LoaderFunction = async () => {
     try {
         const [contactsData, organizationsData] = await Promise.all([
             ContactApi.fetchContacts(),
-            OrganizationApi.fetchOrganizations() // Adjust this call as needed
+            OrganizationApi.fetchOrganizations()
         ]);
         return json({ contactsData, organizationsData });
     } catch (error) {

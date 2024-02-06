@@ -1,19 +1,18 @@
+import {throwError} from "rxjs";
+
 const API_URL = process.env.API_URL;
 
 class OrganizationApi {
     static async fetchOrganizations() {
-        try {
+
             const response = await fetch(`${API_URL}/api/organisations`);
             if (response.ok) {
                 return await response.json();
             } else {
                 console.error("Error fetching organizations");
-                return null;
+                throw(new Error("Error fetching organizations") );
             }
-        } catch (error) {
-            console.error("Error fetching organizations", error);
-            return null;
-        }
+
     }
 
     static async fetchOrganizationsByName(name) {

@@ -8,7 +8,6 @@ import type {IOrganization} from "~/api/types";
 import type {LoaderFunction} from "@remix-run/router";
 import {json} from "@remix-run/node";
 import {useFetcher, useLoaderData} from "@remix-run/react";
-import ComponentForm from "~/components/component-form";
 
 export const loader: LoaderFunction = async () => {
     try {
@@ -87,5 +86,19 @@ export default function OrganizationPage() {
 
             <OrganizationTable data={search!= ""? filteredData:organizations} />
         </div>
+    );
+}
+
+export function ErrorBoundary({ error }: { error: Error }) {
+    return (
+        <html>
+        <head>
+            <title>Oh no!</title>
+        </head>
+        <body>
+        Something went wrong.
+        {error?.message}
+        </body>
+        </html>
     );
 }

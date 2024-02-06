@@ -10,10 +10,14 @@ const ComponentForm = ({ selectedComponent, f, r }) => {
     const [formData, setFormData] = useState<IComponent>(selectedComponent);
     const [errors, setErrors] = useState({});
 
-    // useEffect(() => {
-    //     //console.log("ComponentForm: useEffect: f.state: ", f.data.action);
-    //     if(f.state === "submitting" && f.data.actionType === "create") setFormData(defaultComponent);
-    // }, [f.state]);
+    useEffect(() => {
+
+        console.log("change form data?", f.state)
+        if(f.state === "loading" && !selectedComponent.dn) {
+            setFormData(defaultComponent);
+        }
+    }, [f.state]);
+
 
     const handleInputChange = (fieldName, value) => {
         setFormData((prevData) => ({

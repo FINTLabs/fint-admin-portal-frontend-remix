@@ -11,12 +11,12 @@ const ContactForm = ({selectedContact, f, r}) => {
     const [confirmDelete, setConfirmDelete] = useState(false);
     const [actionType, setActionType] = useState("unknown");
 
-    // useEffect(() => {
-    //     if(f.state === "submitting" && f.data.action === "create") {
-    //         console.log("ContactForm: useEffect: action: ", f.data.action);
-    //         setFormData(defaultContact)
-    //     }
-    // }, [f.state]);
+    useEffect(() => {
+
+        if(f.state === "loading" && !selectedContact.dn) {
+            setFormData(defaultContact);
+        }
+    }, [f.state]);
 
     useEffect(() => {
         setFormData(selectedContact);

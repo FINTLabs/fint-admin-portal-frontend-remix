@@ -7,17 +7,6 @@ import {Buldings3Icon} from "@navikt/aksel-icons";
 import {Outlet} from "@remix-run/react";
 import Breadcrumbs from "~/components/breadcrumbs";
 
-
-export const meta: MetaFunction = () => {
-    return [
-        { title: "Admin Portal Dashboard" },
-        { name: "description", content: "Welcome to Remix!" },
-    ];
-};
-export const links: LinksFunction = () => [
-    { rel: "stylesheet", href: navStyles }
-];
-
 export default function Index() {
     return (
 
