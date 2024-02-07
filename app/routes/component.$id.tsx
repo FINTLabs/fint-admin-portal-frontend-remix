@@ -1,18 +1,18 @@
 //component.$componentid.tsx
 import React, {useEffect} from "react";
 import type {LoaderFunction} from "@remix-run/node";
-import {isRouteErrorResponse, Link, useFetcher, useLoaderData, useNavigate, useRouteError} from "@remix-run/react";
-import {Alert, Box, Button, Heading, HGrid, LinkPanel, Tabs, Tag} from "@navikt/ds-react";
-import {TokenIcon, TenancyIcon, Buldings3Icon, PencilIcon, InformationSquareIcon} from '@navikt/aksel-icons';
+import {json} from "@remix-run/node";
+import {isRouteErrorResponse, Link, useFetcher, useLoaderData, useRouteError} from "@remix-run/react";
+import {Alert, Box, Heading, HGrid, LinkPanel, Tabs, Tag} from "@navikt/ds-react";
+import {Buldings3Icon, PencilIcon, TenancyIcon, TokenIcon} from '@navikt/aksel-icons';
 import OrganizationTable from "~/components/organization-table";
 import ComponentApi from "~/api/component-api";
 import OrganizationApi from "~/api/organization-api";
 import ComponentForm from "~/components/component-form";
 import ComponentDelete from "~/components/component-delete";
-import {json} from "@remix-run/node";
 
 export const loader: LoaderFunction = async ({ params }) => {
-    const componentName = params.componentid;
+    const componentName = params.id;
 
     try {
         const componentsPromise = ComponentApi.fetchComponentsByName(componentName);

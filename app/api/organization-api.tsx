@@ -1,5 +1,3 @@
-import {throwError} from "rxjs";
-
 const API_URL = process.env.API_URL;
 
 class OrganizationApi {
@@ -62,6 +60,26 @@ class OrganizationApi {
             // Handle fetch error
             console.error("Error fetching legal contact:", error);
             return null;
+        }
+    }
+
+    static async create(organisation) {
+        const url = `${API_URL}/api/organisations`;
+        const response = await fetch(url, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                name: organisation.name,
+                orgNumber: organisation.orgNumber,
+                displayName: organisation.displayName,
+            }),
+        });
+        if(response.ok) {
+            return { message: "Organization ble opprettet", variant: "success" };
+        } else {
+            throw new Error("Error creating organization");
         }
     }
 }

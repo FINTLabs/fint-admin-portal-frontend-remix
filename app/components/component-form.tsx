@@ -10,9 +10,8 @@ const ComponentForm = ({ selectedComponent, f, r }) => {
     const [formData, setFormData] = useState<IComponent>(selectedComponent);
     const [errors, setErrors] = useState({});
 
+    console.log("selectedComponent", selectedComponent);
     useEffect(() => {
-
-        console.log("change form data?", f.state)
         if(f.state === "loading" && !selectedComponent.dn) {
             setFormData(defaultComponent);
         }
@@ -27,7 +26,6 @@ const ComponentForm = ({ selectedComponent, f, r }) => {
     };
 
     const handleSwitchChange = (fieldName, checked) => {
-
         setFormData((prevData) => ({
             ...prevData,
             [fieldName]: checked,

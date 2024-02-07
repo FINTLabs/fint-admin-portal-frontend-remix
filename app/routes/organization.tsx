@@ -1,7 +1,5 @@
 import React from "react";
-import type {LinksFunction, MetaFunction} from "@remix-run/node";
 import {Box, Page} from "@navikt/ds-react";
-import navStyles from "@navikt/ds-css/dist/index.css";
 import LayoutHeader from "~/components/layout-header";
 import {Buldings3Icon} from "@navikt/aksel-icons";
 import {Outlet} from "@remix-run/react";

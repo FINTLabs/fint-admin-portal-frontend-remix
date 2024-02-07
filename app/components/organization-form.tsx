@@ -1,95 +1,109 @@
-import type {ChangeEvent, ForwardedRef} from "react";
-import React, {forwardRef, useEffect, useState} from "react";
-import {Button, Modal, TextField} from "@navikt/ds-react";
+import React, {useEffect, useState} from 'react';
+import {Box, Button,  TextField} from "@navikt/ds-react";
+import {FloppydiskIcon} from '@navikt/aksel-icons';
 import type {IOrganization} from "~/api/types";
+import {defaultOrganization} from "~/api/types";
 
+const OrganizationForm = ({ selected, f, r }) => {
 
-interface OrganizationFormProps {
-    headerText: string;
-    selectedOrganization: IOrganization | null;
-    onClose: () => void;
-}
-
-const OrganizationForm = forwardRef((props: OrganizationFormProps, ref: ForwardedRef<HTMLDialogElement>) => {
-    const {headerText, selectedOrganization, onClose} = props;
-
-    const [formValues, setFormValues] = useState({
-        name: "",
-        displayName: "",
-        orgNumber: "",
-    });
+    const [formData, setFormData] = useState<IOrganization>(selected);
+    const [errors, setErrors] = useState({});
 
     useEffect(() => {
-        if (selectedOrganization) {
-            setFormValues({
-                name: selectedOrganization.name || "",
-                displayName: selectedOrganization.displayName || "",
-                orgNumber: selectedOrganization.orgNumber || "",
-            });
+        if(f.state === "loading" && !selected.dn) {
+            setFormData(defaultOrganization);
         }
-    }, [selectedOrganization]);
+    }, [f.state]);
 
-    function onChange(e: ChangeEvent<HTMLInputElement>) {
-        let name = e.target.name;
-        let value = e.target.value;
 
-        setFormValues((prevValues) => ({
-            ...prevValues,
-            [name]: value,
+    const handleInputChange = (fieldName, value) => {
+        setFormData((prevData) => ({
+            ...prevData,
+            [fieldName]: value,
         }));
-    }
+    };
 
-    function resetFormValues() {
-        setFormValues({
-            name: selectedOrganization?.name,
-            displayName: selectedOrganization?.displayName,
-            orgNumber: selectedOrganization?.orgNumber,
+    const handleInputBlur = (fieldName, value) => {
+            if (value && value.length > 0) {
+                removeError(fieldName);
+            } else {
+                setErrors(prevErrors => ({
+                    ...prevErrors,
+                    [fieldName]: "Required"
+                }));
+            }
+    };
+
+    const removeError = (fieldName) => {
+        setErrors(prevErrors => {
+            const newErrors = { ...prevErrors };
+            delete newErrors[fieldName];
+            return newErrors;
         });
+    };
+
+    function validateForm() {
+        return (
+            Object.keys(errors).length === 0
+            && formData.displayName.length > 0
+            && formData.name.length > 0
+            && formData.orgNumber.length > 0
+        );
     }
 
-    function handleCancelClick() {
-        resetFormValues();
-        onClose();
-    }
+    const handleSubmit = () => {
+        // Close the modal if the ref is provided
+        if (r && r.current) {
+            r.current.close();
+        }
+    };
 
     return (
-        <Modal ref = {ref} header = {{ heading: headerText }} width = {400}>
-            <Modal.Body>
-            <form method = "dialog" id = "skjema" onSubmit = {() => alert("onSubmit")}>
-                <TextField
-                    label = {"Organisasjons navn"}
-                    value = {formValues.name}
-                    error = {formValues.name.length < 1 ? "Required" : ""}
-                    onChange = {onChange}
-                    name = "name"
-                    />
-                    <TextField
-                        label = {"Synlig navn"}
-                        value = {formValues.displayName}
-                        error = {formValues.displayName.length < 1 ? "Required" : ""}
-                        onChange = {onChange}
-                        name = "displayName"
-                    />
-                    <TextField
-                        label = {"Organisasjons nummer"}
-                        value = {formValues.orgNumber}
-                        error = {formValues.orgNumber.length < 1 ? "Required" : ""}
-                        onChange = {onChange}
-                        name = "orgNumber"
-                    />
-                </form>
-            </Modal.Body>
-            <Modal.Footer>
-                <Button form = "skjema" type = "submit" >
-                    Send
-                </Button>
-                <Button type = "button" variant = "secondary" onClick = {handleCancelClick} >
-                    Avbryt
-                </Button>
-                </Modal.Footer>
-        </Modal>
-    );
-});
+        <f.Form method="post" >
 
+            <input
+                type="hidden"
+                name="actionType"
+                // value={selectedOrganization.dn ? "update" : "create"}
+            />
+
+            <TextField
+                label="Domenenavn (f.eks. rfk.no)"
+                value={formData.displayName}
+                name={"displayName"}
+                onChange={(e) => handleInputChange('displayName', e.target.value)}
+                error={errors['displayName'] || ''}
+                onBlur={(e) => handleInputBlur('displayName', e.target.value)}
+                // disabled={!!selectedOrganization.displayName}
+            />
+            <TextField
+                label="Vist navn"
+                name={"name"}
+                value={formData.name}
+                error={errors['name'] || ''}
+                onChange={(e) => handleInputChange('name', e.target.value)}
+            />
+            <TextField
+                label="Organisasjonsnummer"
+                name={"orgNumber"}
+                value={formData.orgNumber}
+                error={errors['orgNumber'] || ''}
+                onChange={(e) => handleInputChange('orgNumber', e.target.value)}
+            />
+
+            <Box padding={"4"} >
+                <Button
+                    icon={<FloppydiskIcon aria-hidden />}
+                    disabled={!validateForm()}
+                    type={"submit"}
+                    onClick={handleSubmit}
+                >
+                    Save
+                </Button>
+            </Box>
+        </f.Form>
+
+    );
+};
 
 export default OrganizationForm;

@@ -1,31 +1,56 @@
-import React, {useRef, useState} from "react";
-import {InternalHeader, Modal, Search, Spacer} from "@navikt/ds-react";
+import React, {useEffect, useRef, useState} from "react";
+import {Alert, InternalHeader, Modal, Search, Spacer} from "@navikt/ds-react";
 import OrganizationApi from "~/api/organization-api";
 import OrganizationTable from "~/components/organization-table";
 import {PersonPlusIcon} from "@navikt/aksel-icons";
 import OrganizationForm from "~/components/organization-form";
 import type {IOrganization} from "~/api/types";
-import type {LoaderFunction} from "@remix-run/router";
 import {json} from "@remix-run/node";
 import {useFetcher, useLoaderData} from "@remix-run/react";
+import {defaultOrganization} from "~/api/types";
 
-export const loader: LoaderFunction = async () => {
+export const loader = async () => {
+
     try {
-        const organizationsData = await OrganizationApi.fetchOrganizations();
-        return json({ organizationsData });
+        const data = await OrganizationApi.fetchOrganizations();
+        return json({ data });
     } catch (error) {
-        console.error("Error fetching organizations:", error);
-        throw new Response("Not Found", { status: 404 });
+        throw new Error("Error fetching organizations");
     }
+
 };
+
+export async function action({ request }) {
+
+    const formData = await request.formData();
+    const formValues = {};
+
+    for (const [key, value] of formData) {
+        formValues[key] = value;
+    }
+    console.log("formValues", formValues);
+
+    // try {
+        const response = await OrganizationApi.create(formValues);
+        return json({ show: true, message: response.message, variant: response.variant });
+    // } catch (error) {
+    //     return json({ show: true, message: error.message, variant: 'error' });
+    // }
+
+}
 
 export default function OrganizationPage() {
     const organizationEditRef = useRef<HTMLDialogElement>(null!);
     const [filteredData, setFilteredData] = useState<IOrganization[]>([]);
     const [search, setSearch] = useState<string>("");
     const loaderData = useLoaderData();
-    const organizations = loaderData ? loaderData.organizationsData : [];
+    const organizations = loaderData ? loaderData.data : [];
+    const [show, setShow] = React.useState(false);
     const fetcher = useFetcher();
+
+    useEffect(() => {
+        setShow(true);
+    }, [fetcher.state]);
 
     const handleSearchInput = (input: any) => {
         setSearch(input);
@@ -38,27 +63,30 @@ export default function OrganizationPage() {
         setFilteredData(filtered);
     };
 
-    const handleFormClose = () => {
-        // todo: Handle form submission logic
-        console.log("closing the organization add form inside index");
-        organizationEditRef.current?.close();
-    };
+    // const handleFormClose = () => {
+    //     // todo: Handle form submission logic
+    //     console.log("closing the organization add form inside index");
+    //     organizationEditRef.current?.close();
+    // };
 
     return (
         <div style={{ fontFamily: "system-ui, sans-serif", lineHeight: "1.8" }}>
 
-            <Modal ref={organizationEditRef} header={{ heading: "Add New Component" }} width={400}>
+            <Modal ref={organizationEditRef} header={{ heading: "Add New Organization" }} width={400}>
                 <Modal.Body>
-                    <OrganizationForm f={fetcher} r={organizationEditRef}/>
+                    <OrganizationForm
+                        selected={defaultOrganization}
+                        f={fetcher}
+                        r={organizationEditRef}
+                    />
                 </Modal.Body>
             </Modal>
 
-            <OrganizationForm
-                ref={organizationEditRef}
-                headerText="Add New organization Form"
-                onClose={handleFormClose}
-                selectedOrganization={null}
-            />
+            {fetcher.data && show && (
+                <Alert variant={fetcher.data.variant} closeButton onClose={() => setShow(false)}>
+                    {(fetcher.data && fetcher.data.message) || "Content"}
+                </Alert>
+            )}
 
             <InternalHeader>
                 <InternalHeader.Button onClick={() => organizationEditRef.current?.showModal()}>
@@ -91,14 +119,9 @@ export default function OrganizationPage() {
 
 export function ErrorBoundary({ error }: { error: Error }) {
     return (
-        <html>
-        <head>
-            <title>Oh no!</title>
-        </head>
-        <body>
-        Something went wrong.
-        {error?.message}
-        </body>
-        </html>
+        <>
+            <p>Something went wrong.</p>
+            <p>{error?.message}</p>
+        </>
     );
 }

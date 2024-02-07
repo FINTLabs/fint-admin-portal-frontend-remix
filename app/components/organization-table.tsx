@@ -1,9 +1,8 @@
-import React, {useRef, useState} from 'react';
-import {Button, Table} from "@navikt/ds-react";
+import React, {useState} from 'react';
+import {Table} from "@navikt/ds-react";
 import {Link} from "@remix-run/react";
-import {InformationSquareIcon, PencilIcon} from "@navikt/aksel-icons";
+import {ChevronDownDoubleIcon, InformationSquareIcon} from "@navikt/aksel-icons";
 import type {IOrganization} from "~/api/types";
-import CustomFormModal from "~/components/organization-form";
 
 interface OrganizationTableProps {
     data: IOrganization[];
@@ -11,42 +10,47 @@ interface OrganizationTableProps {
 
 const OrganizationTable = ({ data } : OrganizationTableProps) => {
 
-    const modalRef = useRef<HTMLDialogElement>(null);
-    const [selectedOrganization, setSelectedOrganization] = useState<IOrganization | null>(null);
+    const [sortColumn, setSortColumn] = useState<'displayName' | 'primaryAssetId'>('displayName');
 
-    const openEditModal = (organization: IOrganization) => {
-        setSelectedOrganization(organization);
-        modalRef.current?.showModal();
+    const sortData = (data: IOrganization[]) => {
+        return [...data].sort((a, b) => {
+            if (sortColumn === 'displayName') {
+                return a.displayName.localeCompare(b.displayName);
+            } else if (sortColumn === 'primaryAssetId') {
+                // Assuming primaryAssetId is always a string. Adjust comparison logic if it's not.
+                return (a.primaryAssetId ?? '').localeCompare(b.primaryAssetId ?? '');
+            }
+            return 0;
+        });
     };
 
-    const handleFormClose = () => {
-        //Handle form submisson logic
-        console.log("closing the organization modal from the table");
-
-        modalRef.current?.close();
-    };
-
+    const sortedData = sortData(data);
 
     return (
         <Table zebraStripes>
             <Table.Header>
                 <Table.Row>
-                    <Table.HeaderCell scope="col">Navn</Table.HeaderCell>
-                    <Table.HeaderCell scope="col">Asset Id</Table.HeaderCell>
-                    <Table.HeaderCell scope="col">Org Number</Table.HeaderCell>
+                    <Table.HeaderCell scope="col">
+                        <div style={{ cursor: 'pointer' }} onClick={() => setSortColumn('displayName')}>
+                            Navn {sortColumn === 'displayName' && <ChevronDownDoubleIcon  />}
+                        </div>
+                    </Table.HeaderCell>
+                    <Table.HeaderCell scope="col" style={{ cursor: 'pointer' }} onClick={() => setSortColumn('primaryAssetId')}>
+                        Asset Id {sortColumn === 'primaryAssetId' && <ChevronDownDoubleIcon  />}
+                    </Table.HeaderCell>
                     <Table.HeaderCell style={{ fontWeight: 'bold' }}>View</Table.HeaderCell>
                 </Table.Row>
             </Table.Header>
             <Table.Body>
-                {data.map((row, index) => (
+                {sortedData.map((row, index) => (
                     <Table.Row key={index}>
                         <Table.DataCell scope="row">{row.displayName}</Table.DataCell>
                         <Table.DataCell>{row.primaryAssetId}</Table.DataCell>
-                        <Table.DataCell>{row.orgNumber}</Table.DataCell>
                         <Table.DataCell>
                             <Link to={`/organization/${row.orgNumber}`}>
                                 <InformationSquareIcon title="a11y-title" fontSize="1.5rem" />
                             </Link>
+
                         </Table.DataCell>
                     </Table.Row>
                 ))}

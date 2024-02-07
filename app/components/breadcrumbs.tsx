@@ -21,20 +21,17 @@ export default function Breadcrumbs(){
             currentLink += `/${crumb}`
 
             return(
-                // <div className='crumb' key='crumb' >
-
                   <Link to={currentLink} style={linkStyle} key={currentLink}>
                       <StyledChevronRightIcon title="Spacer" />
                       {crumb}
                   </Link>
-                // </div>
             )
         })
 
     return(
         <div className='breadcrumbs'>
             <Link to={homeLink} style={linkStyle}>
-                {'Dashboard'}
+                <HouseIcon title="a11y-title" />{'Dashboard'}
             </Link>
             {crumbs}
         </div>

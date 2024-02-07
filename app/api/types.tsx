@@ -63,6 +63,19 @@ export interface IOrganization {
     primaryAssetId: string;
 }
 
+export const defaultOrganization: IOrganization = {
+    dn: "",
+    name: "",
+    orgNumber: "",
+    displayName: "",
+    components: [],
+    legalContact: "",
+    techicalContacts: [],
+    k8sSize: null,
+    customer: false,
+    primaryAssetId: "",
+};
+
 export interface Template {
     dn: string;
     self: string;
