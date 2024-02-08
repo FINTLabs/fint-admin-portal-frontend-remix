@@ -3,13 +3,13 @@ import React, {useEffect} from "react";
 import type {LoaderFunction} from "@remix-run/node";
 import {json} from "@remix-run/node";
 import {isRouteErrorResponse, Link, useFetcher, useLoaderData, useRouteError} from "@remix-run/react";
-import {Alert, Box, Heading, HGrid, LinkPanel, Tabs, Tag} from "@navikt/ds-react";
+import {Alert, Box, Heading, HGrid, LinkPanel, Tabs, Tag, VStack} from "@navikt/ds-react";
 import {Buldings3Icon, PencilIcon, TenancyIcon, TokenIcon} from '@navikt/aksel-icons';
 import OrganizationTable from "~/components/organization-table";
 import ComponentApi from "~/api/component-api";
 import OrganizationApi from "~/api/organization-api";
 import ComponentForm from "~/components/component-form";
-import ComponentDelete from "~/components/component-delete";
+import DeleteConfirm from "~/components/delete-confirm";
 
 export const loader: LoaderFunction = async ({ params }) => {
     const componentName = params.id;
@@ -17,7 +17,7 @@ export const loader: LoaderFunction = async ({ params }) => {
     try {
         const componentsPromise = ComponentApi.fetchComponentsByName(componentName);
 
-        const organizationsPromise = OrganizationApi.fetchOrganizations();
+        const organizationsPromise = OrganizationApi.fetch();
 
         const [selectedComponent, organizations] = await Promise.all([componentsPromise, organizationsPromise]);
 
@@ -46,14 +46,14 @@ export async function action({ request }) {
 
     // try {
         if (actionType === "delete") {
-            const componentName = formData.get("componentName");
-            const response = await ComponentApi.deleteComponent(componentName);
+            const componentName = formData.get("deleteName");
+            const response = await ComponentApi.delete(componentName);
             return json({ show: true, message: response.message, variant: response.variant });
         }
 
         if(actionType === "update") {
             try {
-                const response = await ComponentApi.updateComponent(formValues);
+                const response = await ComponentApi.update(formValues);
                 console.log("response from API", response);
                 return json({ show: true, message: response.message, variant: response.variant });
             } catch (error) {
@@ -72,7 +72,6 @@ export default function ComponentPage() {
 
     const { selectedComponent, associatedOrganizations } = useLoaderData();
     const [show, setShow] = React.useState(false);
-
     const fetcher = useFetcher();
 
     useEffect(() => {
@@ -217,7 +216,7 @@ export default function ComponentPage() {
                         </Alert>
                     )}
 
-                    <Box padding="8">
+                    <VStack gap="4">
 
                         <Box
                             background="surface-subtle"
@@ -232,16 +231,22 @@ export default function ComponentPage() {
                             />
                         </Box>
 
-                        <Box padding={"5"}>
+                        <Box
+                            background="surface-subtle"
+                            borderColor="border-alt-3"
+                            padding="4"
+                            borderWidth="2"
+                            borderRadius="xlarge"
+                        >
 
-                            <ComponentDelete
-                                componentName={selectedComponent.name}
+                            <DeleteConfirm
+                                deleteName={selectedComponent.name}
                                 f={fetcher}
                             />
 
                         </Box>
 
-                    </Box>
+                    </VStack>
 
                 </Tabs.Panel>
             </Tabs>

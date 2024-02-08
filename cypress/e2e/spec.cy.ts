@@ -12,11 +12,14 @@ describe('My First Test', () => {
     cy.get('img').should('be.visible');
     cy.get('.grid > .navds-stack > :nth-child(1)').should('be.visible');
     cy.get(':nth-child(1) > .navds-label').should('contain', 'Meny');
+    cy.wait(1000);
     cy.get('.grid > .navds-stack > :nth-child(2)').should('be.visible');
     cy.get('.grid > .navds-stack > :nth-child(3)').should('be.visible');
     cy.get('.navds-stack > [href="/contact"] > .navds-link-panel__content > .navds-link-panel__title').should('contain', 'Contacts');
 
+
     cy.get('.navds-stack > [href="/contact"]').click();
+
   });
 });
 

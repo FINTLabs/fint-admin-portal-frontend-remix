@@ -139,7 +139,7 @@ const ContactForm = ({selectedContact, f, r}) => {
                 <input
                     type="hidden"
                     name="dn"
-                    value={formData.dn}
+                    value={selectedContact.dn}
                 />
             )}
 

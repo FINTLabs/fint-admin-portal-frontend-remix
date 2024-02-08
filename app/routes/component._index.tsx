@@ -12,7 +12,7 @@ import {defaultComponent} from "~/api/types";
 export const loader = async () => {
 
     try {
-        const componentsData = await ComponentApi.fetchComponents();
+        const componentsData = await ComponentApi.fetch();
         return json({ componentsData });
     } catch (error) {
         throw new Error("Error fetching components");
@@ -31,7 +31,7 @@ export async function action({ request }) {
     console.log("formValues", formValues);
 
     try {
-        const response = await ComponentApi.createComponent(formValues);
+        const response = await ComponentApi.create(formValues);
         return json({ show: true, message: response.message, variant: response.variant });
     } catch (error) {
         return json({ show: true, message: error.message, variant: 'error' });

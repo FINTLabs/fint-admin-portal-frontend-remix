@@ -4,7 +4,7 @@ const API_URL = process.env.API_URL;
 
 class ContactApi {
 
-    static async fetchContacts() {
+    static async fetch() {
         try {
             const response = await fetch(`${API_URL}/api/contacts`);
             if (response.ok) {
@@ -21,7 +21,7 @@ class ContactApi {
         }
     }
 
-    static async createContact(contactData) {
+    static async create(contactData) {
 
         try {
             const response = await fetch(`${API_URL}/api/contacts`, {
@@ -51,7 +51,7 @@ class ContactApi {
 
     static async fetchTechnicalContactsByOrganization(organization: IOrganization) {
         try {
-            const contacts = await this.fetchContacts();
+            const contacts = await this.fetch();
             if (contacts && organization) {
                 return contacts.filter((contact) =>
                     organization.techicalContacts.includes(contact.dn)
@@ -65,7 +65,7 @@ class ContactApi {
         }
     }
 
-    static async updateContact(contactData) {
+    static async update(contactData) {
         try {
             const response = await fetch(`${API_URL}/api/contacts/${contactData.nin}`, {
                 method: 'PUT',
@@ -91,7 +91,7 @@ class ContactApi {
         }
     }
 
-    static async deleteContact(contactData) {
+    static async delete(contactData) {
         try {
             const response = await fetch(`${API_URL}/api/contacts/${contactData.nin}`, {
                 method: 'DELETE',

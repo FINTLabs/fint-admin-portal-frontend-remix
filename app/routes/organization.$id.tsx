@@ -1,8 +1,8 @@
-import React, {useState} from "react";
+import React, {useEffect} from "react";
 import type {LoaderFunction} from "@remix-run/node";
 import {json} from "@remix-run/node";
-import {useFetcher, useLoaderData} from "@remix-run/react";
-import {BodyLong, Box, Button, ConfirmationPanel, Heading, HGrid, Link, Select, Tabs, VStack} from "@navikt/ds-react";
+import {isRouteErrorResponse, useFetcher, useLoaderData, useRouteError, Link} from "@remix-run/react";
+import {Alert, BodyLong, Box, Button, Heading, HGrid, Select, Tabs, VStack} from "@navikt/ds-react";
 import {ComponentIcon, PencilIcon, PersonGavelIcon, PersonGroupIcon} from '@navikt/aksel-icons';
 import ComponentsTable from "~/components/components-table";
 import ContactTable from "~/components/contacts-table";
@@ -11,6 +11,7 @@ import OrganizationApi from "~/api/organization-api";
 import ComponentApi from "~/api/component-api";
 import OrganizationForm from "~/components/organization-form";
 import type {IContact} from "~/api/types";
+import DeleteConfirm from "~/components/delete-confirm";
 
 export const loader: LoaderFunction = async ({params}) => {
     const orgNumber = params.id;
@@ -24,7 +25,7 @@ export const loader: LoaderFunction = async ({params}) => {
             components,
             contacts
         ] = await Promise.all([
-            OrganizationApi.fetchOrganizations(),
+            OrganizationApi.fetch(),
             OrganizationApi.fetchLegalContact(selectedOrganisation),
             ComponentApi.fetchComponentsByOrganization(selectedOrganisation),
             ContactApi.fetchTechnicalContactsByOrganization(selectedOrganisation)
@@ -43,6 +44,48 @@ export const loader: LoaderFunction = async ({params}) => {
     }
 };
 
+export async function action({ request }) {
+    const formData = await request.formData();
+    const formValues = {};
+
+    for (const [key, value] of formData) {
+        formValues[key] = value;
+    }
+    const actionType = formData.get("actionType");
+
+    console.log("organization actionType:", actionType);
+
+    if (actionType === "delete") {
+        const orgName = formData.get("deleteName");
+        const response = await OrganizationApi.delete(orgName);
+        console.log("delete response:", response);
+        return json({ show: true, message: response.message, variant: response.variant });
+    }
+
+    if(actionType === "update") {
+        try {
+            const response = await OrganizationApi.update(formValues);
+            return json({ show: true, message: response.message, variant: response.variant });
+        } catch (error) {
+            return json({ show: true, message: error.message, variant: "error" });
+        }
+    }
+
+    if(actionType === "setLegalContact") {
+        try {
+            const orgNumber = formData.get("orgNumber");
+            const contactNin = formData.get("contactNin");
+
+            const response = await OrganizationApi.setLegalContact(orgNumber, contactNin);
+            return json({ show: true, message: response.message, variant: response.variant });
+        } catch (error) {
+            return json({ show: true, message: error.message, variant: "error" });
+        }
+    }
+
+    return json({ show: true, message: "Unknown action type", variant: "error" });
+}
+
 export default function OrganizationDetailsPage() {
 
     const {
@@ -54,7 +97,12 @@ export default function OrganizationDetailsPage() {
     } = useLoaderData();
     const fetcher = useFetcher();
     const hasLegalContact = legalContact && legalContact.firstName && legalContact.firstName.trim() !== '';
-    const [confirmDelete, setConfirmDelete] = useState(false);
+    const [show, setShow] = React.useState(false);
+
+    useEffect(() => {
+        setShow(true);
+        console.log("fetcher state:", fetcher.state);
+    }, [fetcher.state]);
 
     return (
         <div style={{fontFamily: "system-ui, sans-serif", lineHeight: "1.8"}}>
@@ -75,10 +123,8 @@ export default function OrganizationDetailsPage() {
                         </BodyLong>
                     ) : (
                         <BodyLong>
-                            <Link href="#">
                                 Legal Contact Missing
                                 <PersonGavelIcon title="Add legal contact"/>
-                            </Link>
                         </BodyLong>
                     )}
 
@@ -125,6 +171,11 @@ export default function OrganizationDetailsPage() {
                 </Tabs.Panel>
 
                 <Tabs.Panel value="edit" className="h-24 w-full bg-gray-50 p-4">
+                    {fetcher.data && show && (
+                        <Alert variant={fetcher.data.variant} closeButton onClose={() => setShow(false)}>
+                            {(fetcher.data && fetcher.data.message) || "Content"}
+                        </Alert>
+                    )}
                     <VStack gap="4">
 
                         <Box
@@ -150,9 +201,11 @@ export default function OrganizationDetailsPage() {
                             <Select
                                 label="Update legal contact"
                                 description="Select a contact from the list"
+                                placeholder="Select a contact"
+                                name={"contactNin"}
                             >
                                 {contacts.map((row: IContact, index: number) => (
-                                    <option key={index} value={row.dn}>
+                                    <option key={index} value={row.nin}>
                                         {row.firstName} {row.lastName}
                                     </option>
                                 ))}
@@ -175,29 +228,45 @@ export default function OrganizationDetailsPage() {
                             borderWidth="2"
                             borderRadius="xlarge"
                         >
-                        <ConfirmationPanel
-                            checked={confirmDelete}
-                            label="I am really sure I want to delete this organization. This action cannot be undone."
-                            onChange={() => setConfirmDelete((x) => !x)}
-                        >
-                            <Heading level="2" size="xsmall">
-                                Delete Organization
-                            </Heading>
-                        </ConfirmationPanel>
-                            <Button
-                                variant="danger"
-                                size="xsmall"
-                                onClick={() => setConfirmDelete(true)}
-                                disabled={!confirmDelete}
-                            >
-                                Delete Organization
-                            </Button>
+                            <DeleteConfirm
+                                deleteName={selectedOrganisation.name}
+                                f={fetcher}
+                            />
                         </Box>
                     </VStack>
                 </Tabs.Panel>
-
             </Tabs>
-
         </div>
+    );
+}
+
+export function ErrorBoundary() {
+    const error = useRouteError();
+
+    return (
+        <Box padding="4">
+            <Alert variant="info">
+                <h1 style={{ fontSize: "24px", fontWeight: "bold" }}>Notice!</h1>
+                {isRouteErrorResponse(error) ? (
+                    <>
+                        {error.status === 200 ? (
+                            <p>
+                                <p>{error.data}</p>
+                            </p>
+                        ) : (
+                            <>
+                                <p>Error: {error.status} - {error.statusText}</p>
+                                <p>{error.data}</p>
+                            </>
+                        )}
+                    </>
+                ) : (
+                    <p>{error?.message || "Unknown Error"}</p>
+                )}
+                <Link to={`/organization/`} style={{ marginTop: "20px" }}>
+                    View a list of organizations
+                </Link>
+            </Alert>
+        </Box>
     );
 }

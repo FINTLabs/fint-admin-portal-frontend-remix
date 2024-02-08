@@ -15,8 +15,8 @@ import {defaultContact} from "~/api/types";
 export const loader: LoaderFunction = async () => {
     try {
         const [contactsData, organizationsData] = await Promise.all([
-            ContactApi.fetchContacts(),
-            OrganizationApi.fetchOrganizations()
+            ContactApi.fetch(),
+            OrganizationApi.fetch()
         ]);
         return json({ contactsData, organizationsData });
     } catch (error) {
@@ -38,7 +38,7 @@ export async function action({ request }) {
 
     if(actionType === "create") {
         try {
-            const response = await ContactApi.createContact(formValues);
+            const response = await ContactApi.create(formValues);
             return json({ show: true, message: response?.message, variant: response?.variant });
         } catch (error) {
             // Handle any errors here
@@ -46,14 +46,14 @@ export async function action({ request }) {
         }
     } else if(actionType === "update") {
         try {
-            const response = await ContactApi.updateContact(formValues);
+            const response = await ContactApi.update(formValues);
             return json({ show: true, message: response.message, variant: response.variant });
         } catch (error) {
             return json({ show: true, message: error.message, variant: "error" });
         }
     } else if(actionType === "delete") {
         try {
-            const response = await ContactApi.deleteContact(formValues);
+            const response = await ContactApi.delete(formValues);
             return json({ show: true, message: response.message, variant: response.variant });
         } catch (error) {
             return json({ show: true, message: error.message, variant: "error" });

@@ -1,9 +1,8 @@
-//component-delete.tsx
+//delete-confirm.tsx
 import { useState } from "react";
-import {BodyLong, Button, Modal} from "@navikt/ds-react";
-import {Form} from "@remix-run/react";
+import {Button, Modal, Heading} from "@navikt/ds-react";
 
-const ComponentDelete = ({ componentName,f }) => {
+const DeleteConfirm = ({ deleteName, f }) => {
     const [open, setOpen] = useState(false);
 
     const handleClose = (isConfirmed) => {
@@ -18,28 +17,28 @@ const ComponentDelete = ({ componentName,f }) => {
                 size="xsmall"
                 onClick={() => setOpen(true)}
             >
-                Delete Component
+                Delete {deleteName}
             </Button>
 
             <Modal
                 open={open}
                 header={{
-                    heading: "Er du sikker?",
+                    heading: "Confirmation",
                     size: "small",
-                    closeButton: false,
                 }}
                 width="small"
             >
                 <Modal.Body>
-                    <BodyLong>
-                        Are you really sure you want to delete this component:
-                        {componentName}
-                    </BodyLong>
+                    <Heading size="small">Er du sikker på at du vil fjerne: </Heading>
+
+                    <Heading size="medium" spacing>
+                        {deleteName}
+                    </Heading>
                 </Modal.Body>
                 <Modal.Footer>
                     <f.Form method="post">
                         <input type="hidden" name="actionType" value="delete" />
-                        <input type="hidden" name="componentName" value={componentName} />
+                        <input type="hidden" name="deleteName" value={deleteName} />
                     <Button
                         type="submit"
                         variant="danger"
@@ -63,4 +62,4 @@ const ComponentDelete = ({ componentName,f }) => {
     );
 };
 
-export default ComponentDelete;
+export default DeleteConfirm;

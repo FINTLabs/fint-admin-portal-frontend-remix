@@ -1,7 +1,7 @@
 const API_URL = process.env.API_URL;
 
 class ComponentApi {
-    static async fetchComponents() {
+    static async fetch() {
         try {
             const response = await fetch(`${API_URL}/api/components/`);
             if (response.ok) {
@@ -20,7 +20,7 @@ class ComponentApi {
 
     static async fetchComponentsByOrganization(selectedOrganisation) {
         try {
-            const components = await this.fetchComponents();
+            const components = await this.fetch();
 
             if (components && selectedOrganisation) {
                 return components.filter((component) =>
@@ -46,7 +46,7 @@ class ComponentApi {
         }
     }
 
-    static async createComponent(componentData) {
+    static async create(componentData) {
         console.log("component Data to add:", JSON.stringify(componentData));
         try {
             const response = await fetch(`${API_URL}/api/components`, {
@@ -74,7 +74,7 @@ class ComponentApi {
         }
     }
 
-    static async updateComponent(componentData) {
+    static async update(componentData) {
         const url = `${API_URL}/api/components/${componentData.name}`;
 
         const request = new Request(url, {
@@ -96,9 +96,8 @@ class ComponentApi {
         });
     }
 
-    static async deleteComponent(componentName) {
+    static async delete(componentName) {
         const url = `${API_URL}/api/components/${componentName}`;
-        console.log("url: ", url);
         const request = new Request(url, {
             method: 'DELETE',
             credentials: 'same-origin'
@@ -107,7 +106,6 @@ class ComponentApi {
         const response = await fetch(request);
         if (response.ok) {
             throw new Response("Component successfully removed", 410 );
-
         } else {
             return { message: "Det oppsto en feil ved sletting av komponenten.", variant: "error" };
         }

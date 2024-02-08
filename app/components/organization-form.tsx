@@ -64,8 +64,16 @@ const OrganizationForm = ({ selected, f, r }) => {
             <input
                 type="hidden"
                 name="actionType"
-                // value={selectedOrganization.dn ? "update" : "create"}
+                value={selected.dn ? "update" : "create"}
             />
+
+            {selected.dn && (
+                <input
+                    type="hidden"
+                    name="dn"
+                    value={selected.dn}
+                />
+            )}
 
             <TextField
                 label="Domenenavn (f.eks. rfk.no)"

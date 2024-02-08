@@ -12,7 +12,7 @@ import {defaultOrganization} from "~/api/types";
 export const loader = async () => {
 
     try {
-        const data = await OrganizationApi.fetchOrganizations();
+        const data = await OrganizationApi.fetch();
         return json({ data });
     } catch (error) {
         throw new Error("Error fetching organizations");
