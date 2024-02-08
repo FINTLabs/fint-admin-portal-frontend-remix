@@ -32,7 +32,6 @@ describe('My First Test', () => {
     cy.get('.grid > .navds-stack > :nth-child(3)').should('be.visible');
     cy.get('.navds-stack > [href="/contact"] > .navds-link-panel__content > .navds-link-panel__title').should('contain', 'Contacts');
 
-
     cy.get('.navds-stack > [href="/contact"]').click();
 
   });
