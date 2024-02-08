@@ -1,7 +1,7 @@
-import {Box, Detail, Heading, Hide, HStack, VStack,} from "@navikt/ds-react";
+import {Box, Heading, Hide, HStack, VStack,} from "@navikt/ds-react";
 
 
-const LayoutHeader = ({ icon: IconComponent, title, breadcrumbs }) => {
+const LayoutHeader = ({ icon: IconComponent, title }) => {
     return (
 
         <Box
@@ -13,12 +13,6 @@ const LayoutHeader = ({ icon: IconComponent, title, breadcrumbs }) => {
             <div className="max-w-5xl">
                 <Box paddingInline="4" paddingBlock="0 6">
                     <VStack gap={"3"}>
-                        <HStack gap={"5"}>
-                            {breadcrumbs?.map((detail, index) => (
-                                <Detail key={index}>{detail}</Detail>
-                            ))}
-                        </HStack>
-
                         <HStack align="start" gap="8">
                             <Hide below="md">
                                 {IconComponent && <IconComponent title="a11y-title" fontSize="3.5rem" />}

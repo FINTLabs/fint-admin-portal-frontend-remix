@@ -2,7 +2,6 @@ const API_URL = process.env.API_URL;
 
 class OrganizationApi {
     static async fetch() {
-
             const response = await fetch(`${API_URL}/api/organisations`);
             if (response.ok) {
                 return await response.json();
@@ -10,7 +9,6 @@ class OrganizationApi {
                 console.error("Error fetching organizations");
                 throw(new Error("Error fetching organizations") );
             }
-
     }
 
     static async fetchOrganizationsByName(name) {
@@ -85,6 +83,8 @@ class OrganizationApi {
 
     static async update(organisation) {
         const url = `${API_URL}/api/organisations/${organisation.name}`;
+        console.log("update org url", url);
+
         const response = await fetch(url, {
             method: "PUT",
             headers: {

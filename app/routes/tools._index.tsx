@@ -1,5 +1,5 @@
 import JSONPretty from 'react-json-pretty';
-import {Box, Button, Heading, HGrid, Loader, VStack} from "@navikt/ds-react";
+import {Button, Heading, HGrid, Loader, VStack} from "@navikt/ds-react";
 import React, {useEffect, useState} from "react";
 import {Buldings3Icon, ComponentIcon, PersonGroupIcon} from "@navikt/aksel-icons";
 import {json} from "@remix-run/node";

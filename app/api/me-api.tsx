@@ -5,8 +5,7 @@ class MeApi {
         try {
             const response = await fetch(`${API_URL}/api/me`);
             if (response.ok) {
-                const data = await response.json();
-                return data;
+                return await response.json();
             } else {
                 // Handle error response
                 console.error("Error fetching display name");
