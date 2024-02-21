@@ -16,7 +16,7 @@ import {
     Link,
     useRouteError
 } from "@remix-run/react";
-
+import styles from "~/styles/main.css";
 // export const links: LinksFunction = () => [
 //     ...(cssBundleHref
 //         ? [{ rel: "stylesheet", href: cssBundleHref },
@@ -24,7 +24,8 @@ import {
 // ];
 
 export const links: LinksFunction = () => [
-    { rel: "stylesheet", href: navStyles }
+    { rel: "stylesheet", href: navStyles },
+    {rel: 'stylesheet', href: styles},
 ];
 
 export async function loader(){
