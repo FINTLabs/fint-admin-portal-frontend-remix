@@ -32,19 +32,19 @@ const OrganizationTable = ({ data } : OrganizationTableProps) => {
                 <Table.Row>
                     <Table.HeaderCell scope="col">
                         <div style={{ cursor: 'pointer' }} onClick={() => setSortColumn('displayName')}>
-                            Navn {sortColumn === 'displayName' && <ChevronDownDoubleIcon  />}
+                            Navn {sortColumn === 'displayName' && <ChevronDownDoubleIcon title="Sort by name" />}
                         </div>
                     </Table.HeaderCell>
                     <Table.HeaderCell scope="col" style={{ cursor: 'pointer' }} onClick={() => setSortColumn('primaryAssetId')}>
-                        Asset Id {sortColumn === 'primaryAssetId' && <ChevronDownDoubleIcon  />}
+                        Asset Id {sortColumn === 'primaryAssetId' && <ChevronDownDoubleIcon title="Sort by asset id" />}
                     </Table.HeaderCell>
-                    <Table.HeaderCell style={{ fontWeight: 'bold' }}>View</Table.HeaderCell>
+                    <Table.HeaderCell scope="col" style={{ fontWeight: 'bold' }}>View</Table.HeaderCell>
                 </Table.Row>
             </Table.Header>
             <Table.Body>
                 {sortedData.map((row, index) => (
                     <Table.Row key={index}>
-                        <Table.DataCell scope="row">{row.displayName}</Table.DataCell>
+                        <Table.DataCell>{row.displayName}</Table.DataCell>
                         <Table.DataCell>{row.primaryAssetId}</Table.DataCell>
                         <Table.DataCell>
                             <Link to={`/organization/${row.orgNumber}`}>

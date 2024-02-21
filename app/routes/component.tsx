@@ -18,7 +18,6 @@ export default function Index() {
                 // background="surface-alt-4-moderate"
                 padding="8"
                 paddingBlock="16"
-                as="main"
             >
                 <Page.Block gutters width="lg">
                     <Outlet />

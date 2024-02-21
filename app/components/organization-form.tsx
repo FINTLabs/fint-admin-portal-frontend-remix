@@ -67,21 +67,38 @@ const OrganizationForm = ({ selected, f, r }) => {
                 value={selected.dn ? "update" : "create"}
             />
 
+            {selected.dn && (
+                <input
+                    type="hidden"
+                    name="dn"
+                    value={selected.dn}
+                />
+            )}
+
+            {selected.dn && (
+                <input
+                    type="hidden"
+                    name="name"
+                    value={selected.name}
+                />
+            )}
+
+
             <TextField
                 label="Domenenavn (f.eks. rfk.no)"
-                value={formData.displayName}
-                name={"displayName"}
-                onChange={(e) => handleInputChange('displayName', e.target.value)}
-                error={errors['displayName'] || ''}
-                onBlur={(e) => handleInputBlur('displayName', e.target.value)}
-                // disabled={!!selectedOrganization.displayName}
+                value={formData.name}
+                name={"name"}
+                onChange={(e) => handleInputChange('name', e.target.value)}
+                error={errors['name'] || ''}
+                onBlur={(e) => handleInputBlur('name', e.target.value)}
+                disabled={!!selected.name}
             />
             <TextField
                 label="Vist navn"
-                name={"name"}
-                value={formData.name}
-                error={errors['name'] || ''}
-                onChange={(e) => handleInputChange('name', e.target.value)}
+                name={"displayName"}
+                value={formData.displayName}
+                error={errors['displayName'] || ''}
+                onChange={(e) => handleInputChange('displayName', e.target.value)}
             />
             <TextField
                 label="Organisasjonsnummer"

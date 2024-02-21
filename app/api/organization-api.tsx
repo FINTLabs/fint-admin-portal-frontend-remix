@@ -77,13 +77,14 @@ class OrganizationApi {
         if(response.ok) {
             return { message: "Organization ble opprettet", variant: "success" };
         } else {
-            throw new Error("Error creating organization");
+            throw new Error("Det oppsto en feil ved opprettelse av organisation." + response.status + " " + response.statusText);
         }
     }
 
     static async update(organisation) {
         const url = `${API_URL}/api/organisations/${organisation.name}`;
         console.log("update org url", url);
+        console.log("update org", JSON.stringify(organisation));
 
         const response = await fetch(url, {
             method: "PUT",
@@ -95,7 +96,7 @@ class OrganizationApi {
         if(response.ok) {
             return { message: "Organization ble oppdatert", variant: "success" };
         } else {
-            return { message: "Det oppsto en feil ved oppdatering av organisations.", variant: "error" };
+            return { message: "Det oppsto en feil ved oppdatering av organisations."+ response.status + " " + response.statusText, variant: "error" };
         }
     }
 

@@ -152,7 +152,7 @@ const ContactForm = ({selectedContact, f, r}) => {
             )}
 
             <TextField
-                label="Fødselsnummer"
+                label={"Fødselsnummer"}
                 value={formData.nin}
                 name={"nin"}
                 onChange={(e) => handleInputChange(e)}
@@ -234,7 +234,6 @@ const ContactForm = ({selectedContact, f, r}) => {
                                     icon={<TrashIcon aria-hidden />}
                                     onClick={handleDelete}
                                     size="xsmall"
-                                    onClick={handleSubmit}
                                 >
                                     Er du sikker?
                                 </Button>

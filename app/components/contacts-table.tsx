@@ -84,7 +84,7 @@ const ContactTable = ({ data, organizations, f, editable = true, legalContactDn 
                                 <Table.DataCell>
                                     <Button
                                         onClick={() => openEditModal(row)}
-                                        icon={<PencilIcon aria-hidden />}
+                                        icon={<PencilIcon title="Rediger" />}
                                         size="xsmall"
                                     />
                                 </Table.DataCell>
