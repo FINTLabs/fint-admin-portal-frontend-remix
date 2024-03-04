@@ -1,4 +1,4 @@
-import React, { useEffect, useState, FormEvent, ChangeEvent, RefObject } from 'react';
+import React, { useEffect, useState, FormEvent, ChangeEvent } from 'react';
 import { Box, Button, TextField } from "@navikt/ds-react";
 import { FloppydiskIcon } from '@navikt/aksel-icons';
 import type { IOrganization, IErrorState } from "~/api/types";
@@ -7,7 +7,7 @@ import { defaultOrganization } from "~/api/types";
 interface OrganizationFormProps {
     selected: IOrganization;
     f: any; // Replace `any` with the actual type
-    r?: RefObject<HTMLFormElement>;
+    r?: any;
 }
 
 const OrganizationForm: React.FC<OrganizationFormProps> = ({ selected, f, r }) => {

@@ -22,7 +22,7 @@ export const handlers = [
         } );
     }),
 
-    http.get('http://localhost:8081/api/organisations', () => {
+    http.get(`${API_URL}/api/organizations/`, () => {
         return HttpResponse.json(organizations);
     }),
 

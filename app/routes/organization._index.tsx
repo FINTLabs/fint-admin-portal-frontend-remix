@@ -4,7 +4,7 @@ import OrganizationApi from "~/api/organization-api";
 import OrganizationTable from "~/components/organization-table";
 import {PersonPlusIcon} from "@navikt/aksel-icons";
 import OrganizationForm from "~/components/organization-form";
-import {IComponent, IOrganization} from "~/api/types";
+import {IOrganization} from "~/api/types";
 import {type ActionFunctionArgs, json} from "@remix-run/node";
 import {useActionData, useFetcher, useLoaderData} from "@remix-run/react";
 import {defaultOrganization} from "~/api/types";
@@ -12,8 +12,8 @@ import {defaultOrganization} from "~/api/types";
 export const loader = async () => {
 
     try {
-        const data = await OrganizationApi.fetch();
-        return json({ data });
+        const organizationData = await OrganizationApi.fetch();
+        return json({ organizationData });
     } catch (error) {
         throw new Error("Error fetching organizations");
     }
@@ -37,7 +37,7 @@ export async function action({request}: ActionFunctionArgs) {
 }
 
 interface LoaderData {
-    organizations: IOrganization[];
+    organizationData: IOrganization[];
 }
 
 export default function OrganizationPage() {
@@ -45,7 +45,7 @@ export default function OrganizationPage() {
     const [filteredData, setFilteredData] = useState<IOrganization[]>([]);
     const [search, setSearch] = useState<string>("");
     const loaderData = useLoaderData<LoaderData>();
-    const organizations = loaderData.organizations;
+    const organizations = loaderData.organizationData;
     const [show, setShow] = React.useState(false);
     const fetcher = useFetcher();
     const actionData = useActionData<typeof action>();

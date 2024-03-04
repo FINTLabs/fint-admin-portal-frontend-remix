@@ -1,5 +1,5 @@
 // component._index.tsx
-import React, {ChangeEvent, useEffect, useRef, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {Alert, InternalHeader, Modal, Search, Spacer} from "@navikt/ds-react";
 import {ComponentIcon} from "@navikt/aksel-icons";
 import ComponentsTable from "~/components/components-table";
@@ -61,9 +61,9 @@ export default function ComponentPage ()  {
     const componentEditRef = useRef<HTMLDialogElement>(null!);
     const [filteredData, setFilteredData] = useState<IComponent[]>(initialComponentArray);
     const [search, setSearch] = useState("");
+    const [show, setShow] = React.useState(false);
     const loaderData = useLoaderData<LoaderData>();
     const componentsData = loaderData.componentsData;
-    const [show, setShow] = React.useState(false);
     const fetcher = useFetcher();
     const actionData = useActionData<typeof action>();
 

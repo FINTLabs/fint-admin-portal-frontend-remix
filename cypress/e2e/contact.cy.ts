@@ -1,13 +1,3 @@
-// // cypress/integration/example_spec.js
-// Cypress.on('uncaught:exception', (err) => {
-//   // return false to prevent the error from failing this test
-//   if (err.message.includes('Hydration')) {
-//     return false;
-//   }
-// });
-
-import button from "@navikt/ds-react/src/button/Button";
-import {wait} from "@testing-library/user-event/dist/types/utils";
 
 Cypress.on("uncaught:exception", (err) => {
     // Cypress and React Hydrating the document don't get along
