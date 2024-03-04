@@ -10,8 +10,8 @@ import ContactApi from "~/api/contact-api";
 import OrganizationApi from "~/api/organization-api";
 import ComponentApi from "~/api/component-api";
 import OrganizationForm from "~/components/organization-form";
-import type {IContact} from "~/api/types";
 import DeleteConfirm from "~/components/delete-confirm";
+import ConfirmAction from "~/components/confirm-action";
 
 export const loader: LoaderFunction = async ({params}) => {
     const orgNumber = params.id;
@@ -73,10 +73,10 @@ export async function action({ request }) {
 
     if(actionType === "setLegalContact") {
         try {
-            const orgNumber = formData.get("orgNumber");
+            const orgName = formData.get("orgName");
             const contactNin = formData.get("contactNin");
 
-            const response = await OrganizationApi.setLegalContact(orgNumber, contactNin);
+            const response = await OrganizationApi.setLegalContact(orgName, contactNin);
             return json({ show: true, message: response.message, variant: response.variant });
         } catch (error) {
             return json({ show: true, message: error.message, variant: "error" });
@@ -98,6 +98,8 @@ export default function OrganizationDetailsPage() {
     const fetcher = useFetcher();
     const hasLegalContact = legalContact && legalContact.firstName && legalContact.firstName.trim() !== '';
     const [show, setShow] = React.useState(false);
+    const [newLegalContact, setNewLegalContact] = React.useState({ nin: '', fullName: '' });
+
 
     useEffect(() => {
         setShow(true);
@@ -179,7 +181,7 @@ export default function OrganizationDetailsPage() {
                     <VStack gap="4">
 
                         <Box
-                            background="surface-subtle"
+                            className={"inputForm"}
                             borderColor="border-alt-3"
                             padding="4"
                             borderWidth="2"
@@ -192,37 +194,51 @@ export default function OrganizationDetailsPage() {
                         </Box>
 
                         <Box
-                            background="surface-subtle"
+                            className={"inputForm"}
                             borderColor="border-alt-3"
                             padding="4"
                             borderWidth="2"
                             borderRadius="xlarge"
                         >
                             <Select
-                                label="Update legal contact"
-                                description="Select a contact from the list"
-                                placeholder="Select a contact"
+                                label="Oppdater juridisk kontakt"
+                                description="Velg en kontakt fra listen"
+                                placeholder="Velg en kontakt"
                                 name={"contactNin"}
+                                onChange={(e) => {
+                                    const selectedOption = e.target.options[e.target.selectedIndex];
+                                    const fullName = selectedOption.text;
+                                    const nin = e.target.value;
+                                    setNewLegalContact({ nin, fullName });
+                                }}
                             >
-                                {contacts.map((row: IContact, index: number) => (
+                                <option key={0} value={""} />
+                                {contacts.map((row, index) => (
                                     <option key={index} value={row.nin}>
                                         {row.firstName} {row.lastName}
                                     </option>
                                 ))}
-
                             </Select>
+
                             <Box padding={"4"} >
-                                <Button
-                                    icon={<PencilIcon aria-hidden />}
-                                    size="xsmall"
-                                >
-                                    Rediger
-                                </Button>
+                                <ConfirmAction
+                                    actionText="Rediger"
+                                    targetName={newLegalContact.fullName}
+                                    f={fetcher}
+                                    actionType="setLegalContact"
+                                    confirmationText={`Sette ny juridisk kontakt til:`}
+                                    additionalInputs={[
+                                        { name: "orgName", value: selectedOrganisation.name },
+                                        { name: "contactNin", value: newLegalContact.nin }
+                                    ]}
+                                />
                             </Box>
+
+
                         </Box>
 
                         <Box
-                            background="surface-subtle"
+                            className={"inputForm"}
                             borderColor="border-alt-3"
                             padding="4"
                             borderWidth="2"

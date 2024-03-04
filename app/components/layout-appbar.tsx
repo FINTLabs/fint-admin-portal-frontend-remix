@@ -44,11 +44,13 @@ export function LayoutAppbar() {
                                 {/*    </Button>*/}
                                 {/*</Hide>*/}
                                 <Hide below="md" asChild>
-                                    <Button icon={<PersonIcon aria-hidden />} variant="tertiary">
-                                        <BodyShort weight="semibold" truncate className="max-w-[10vw]">
-                                            {displayName.fullName}
-                                        </BodyShort>
-                                    </Button>
+                                    <Link to="/profile">
+                                        <Button as="div" icon={<PersonIcon aria-hidden />} variant="tertiary">
+                                            <BodyShort weight="semibold" truncate className="max-w-[10vw]">
+                                                {displayName.fullName}
+                                            </BodyShort>
+                                        </Button>
+                                    </Link>
                                 </Hide>
                                 <Hide below="md" asChild>
                                     <Button icon={<LeaveIcon aria-hidden />} variant="tertiary">

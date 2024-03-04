@@ -76,7 +76,7 @@ export const defaultOrganization: IOrganization = {
     primaryAssetId: "",
 };
 
-export interface Template {
+export interface ITemplate {
     dn: string;
     self: string;
     name: string;
@@ -86,4 +86,11 @@ export interface Template {
     clients: string[];
     components: string[];
     description: string;
+}
+
+// export type ErrorState = {
+//     [key in keyof IComponent]?: string;
+// };
+export interface IErrorState {
+    [key: string]: string | undefined;
 }

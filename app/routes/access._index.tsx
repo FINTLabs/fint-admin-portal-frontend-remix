@@ -1,4 +1,3 @@
-// access_index.tsx
 import {LinkPanel, Box, VStack} from "@navikt/ds-react";
 import {TasklistIcon} from "@navikt/aksel-icons";
 import {useLoaderData} from "@remix-run/react";
@@ -6,28 +5,38 @@ import type { LoaderFunction} from "@remix-run/node";
 import {json} from "@remix-run/node";
 import AccessTemplateApi from "~/api/template-api";
 
-export const loader: LoaderFunction = async () => {
-        const templateData = await AccessTemplateApi.fetchAccessTemplates();
+// Define the interface for the data returned by the API
+interface TemplateData {
+    name: string;
+    // Add other properties as necessary
+}
 
-        if(!templateData) {
-            throw new Response(`No data found `, {
-                status: 404,
-            });
-        }
+// Define the type for the loader's return data for better type checking
+type LoaderData = {
+    templateData: TemplateData[];
+};
 
-        return json({ templateData });
+export const loader: LoaderFunction = async (): Promise<Response> => {
+    const templateData = await AccessTemplateApi.fetchAccessTemplates();
+
+    if (!templateData) {
+        throw new Response(`No data found`, {
+            status: 404,
+        });
+    }
+
+    return json({ templateData });
 };
 
 export default function AccessPage() {
-
-    const { templateData } = useLoaderData<typeof loader>();
+    // Use the LoaderData type to ensure type safety with useLoaderData
+    const { templateData } = useLoaderData<LoaderData>();
 
     return (
         <VStack gap="4">
-            {templateData.map((dataPoint, index) => (
+            {templateData.map((dataPoint: TemplateData, index: number) => (
                 <Box
                     key={index}
-                    // background="surface-subtle"
                     borderColor="border-alt-3"
                     padding="4"
                     borderWidth="2"
@@ -36,16 +45,13 @@ export default function AccessPage() {
                     <LinkPanel border={false} href={`/access/${dataPoint.name}`}>
                         <LinkPanel.Title><TasklistIcon title="a11y-title" fontSize="1.5rem" />{dataPoint.name}</LinkPanel.Title>
                     </LinkPanel>
-
                 </Box>
             ))}
-
         </VStack>
     );
 }
 
 export function ErrorBoundary({ error }: { error: Error }) {
     console.error(error);
-
     return <div>Uh oh. I did a whoopsies</div>;
 }

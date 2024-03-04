@@ -1,40 +1,46 @@
-import React, {useEffect, useState} from 'react';
-import {Box, Button,  TextField} from "@navikt/ds-react";
-import {FloppydiskIcon} from '@navikt/aksel-icons';
-import type {IOrganization} from "~/api/types";
-import {defaultOrganization} from "~/api/types";
+import React, { useEffect, useState, FormEvent, ChangeEvent, RefObject } from 'react';
+import { Box, Button, TextField } from "@navikt/ds-react";
+import { FloppydiskIcon } from '@navikt/aksel-icons';
+import type { IOrganization, IErrorState } from "~/api/types";
+import { defaultOrganization } from "~/api/types";
 
-const OrganizationForm = ({ selected, f, r }) => {
+interface OrganizationFormProps {
+    selected: IOrganization;
+    f: any; // Replace `any` with the actual type
+    r?: RefObject<HTMLFormElement>;
+}
 
-    const [formData, setFormData] = useState<IOrganization>(selected);
-    const [errors, setErrors] = useState({});
+const OrganizationForm: React.FC<OrganizationFormProps> = ({ selected, f, r }) => {
+    const [formData, setFormData] = useState<IOrganization>(selected || defaultOrganization);
+    const [errors, setErrors] = useState<IErrorState>({});
 
     useEffect(() => {
-        if(f.state === "loading" && !selected.dn) {
+        if (f.state === "loading" && !selected.dn) {
             setFormData(defaultOrganization);
         }
-    }, [f.state]);
+    }, [f.state, selected.dn]);
 
-
-    const handleInputChange = (fieldName, value) => {
+    const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
+        const { name, value } = e.target;
         setFormData((prevData) => ({
             ...prevData,
-            [fieldName]: value,
+            [name]: value,
         }));
     };
 
-    const handleInputBlur = (fieldName, value) => {
-            if (value && value.length > 0) {
-                removeError(fieldName);
-            } else {
-                setErrors(prevErrors => ({
-                    ...prevErrors,
-                    [fieldName]: "Required"
-                }));
-            }
+    const handleInputBlur = (e: ChangeEvent<HTMLInputElement>) => {
+        const { name, value } = e.target;
+        if (value && value.length > 0) {
+            removeError(name);
+        } else {
+            setErrors(prevErrors => ({
+                ...prevErrors,
+                [name]: "Required"
+            }));
+        }
     };
 
-    const removeError = (fieldName) => {
+    const removeError = (fieldName: string) => {
         setErrors(prevErrors => {
             const newErrors = { ...prevErrors };
             delete newErrors[fieldName];
@@ -44,14 +50,16 @@ const OrganizationForm = ({ selected, f, r }) => {
 
     function validateForm() {
         return (
-            Object.keys(errors).length === 0
-            && formData.displayName.length > 0
-            && formData.name.length > 0
-            && formData.orgNumber.length > 0
+            Object.keys(errors).length === 0 &&
+            formData.displayName.length > 0 &&
+            formData.name.length > 0 &&
+            formData.orgNumber.length > 0
         );
     }
 
-    const handleSubmit = () => {
+    const handleSubmit = (e: FormEvent) => {
+        e.preventDefault(); // Prevent default form submission
+        console.log("Form data on submit", formData);
         // Close the modal if the ref is provided
         if (r && r.current) {
             r.current.close();
@@ -59,7 +67,7 @@ const OrganizationForm = ({ selected, f, r }) => {
     };
 
     return (
-        <f.Form method="post" >
+        <f.Form method="post" onSubmit={handleSubmit}>
 
             <input
                 type="hidden"
@@ -88,9 +96,9 @@ const OrganizationForm = ({ selected, f, r }) => {
                 label="Domenenavn (f.eks. rfk.no)"
                 value={formData.name}
                 name={"name"}
-                onChange={(e) => handleInputChange('name', e.target.value)}
+                onChange={(e) => handleInputChange(e)}
                 error={errors['name'] || ''}
-                onBlur={(e) => handleInputBlur('name', e.target.value)}
+                onBlur={(e) => handleInputBlur(e)}
                 disabled={!!selected.name}
             />
             <TextField
@@ -98,14 +106,14 @@ const OrganizationForm = ({ selected, f, r }) => {
                 name={"displayName"}
                 value={formData.displayName}
                 error={errors['displayName'] || ''}
-                onChange={(e) => handleInputChange('displayName', e.target.value)}
+                onChange={(e) => handleInputChange(e)}
             />
             <TextField
                 label="Organisasjonsnummer"
                 name={"orgNumber"}
                 value={formData.orgNumber}
                 error={errors['orgNumber'] || ''}
-                onChange={(e) => handleInputChange('orgNumber', e.target.value)}
+                onChange={(e) => handleInputChange(e)}
             />
 
             <Box padding={"4"} >

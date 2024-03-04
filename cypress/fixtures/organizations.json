@@ -1,0 +1,85 @@
+[
+  {
+    "dn": "ou=corellia_docks,ou=organisations,o=fint",
+    "name": "Corellia_Starship_Manufacturing",
+    "orgNumber": "112233",
+    "displayName": "Corellia Shipyards",
+    "components": [
+      "ou=starship_design,ou=components,o=fint",
+      "ou=starship_production,ou=components,o=fint"
+    ],
+    "legalContact": "cn=7bd1c386-fbe8-4f90-8d2e-22f2075a8b50,ou=contacts,o=galaxy",
+    "techicalContacts": [
+      "cn=7bd1c386-fbe8-4f90-8d2e-22f2075a8b50,ou=contacts,o=galaxy"
+    ],
+    "k8sSize": "large",
+    "customer": true,
+    "primaryAssetId": "corellia.shipyards"
+  },
+  {
+    "dn": "ou=rebels_alliance,ou=organisations,o=fint",
+    "name": "Rebel Alliance",
+    "orgNumber": "445566",
+    "displayName": "Alliance to Restore the Republic",
+    "components": [
+      "ou=intelligence,ou=components,o=fint",
+      "ou=starfighter_corps,ou=components,o=fint",
+      "ou=support_services,ou=components,o=fint"
+    ],
+    "legalContact": "cn=leia_organa,ou=contacts,o=fint",
+    "techicalContacts": [
+      "cn=luke_skywalker,ou=contacts,o=fint",
+      "cn=wedge_antilles,ou=contacts,o=fint"
+    ],
+    "k8sSize": "medium",
+    "customer": true,
+    "primaryAssetId": "rebel.alliance"
+  },
+  {
+    "dn": "ou=galactic_empire,ou=organisations,o=fint",
+    "name": "Galactic Empire",
+    "orgNumber": "778899",
+    "displayName": "Imperial Forces",
+    "components": [
+      "ou=death_star_development,ou=components,o=fint",
+      "ou=stormtrooper_divisions,ou=components,o=fint"
+    ],
+    "legalContact": "cn=darth_vader,ou=contacts,o=fint",
+    "techicalContacts": [
+      "cn=emperor_palpatine,ou=contacts,o=fint"
+    ],
+    "k8sSize": "extra-large",
+    "customer": false,
+    "primaryAssetId": "galactic.empire"
+  },
+  {
+    "dn": "ou=cloud_city,ou=organisations,o=fint",
+    "name": "Cloud City",
+    "orgNumber": "223344",
+    "displayName": "Bespin Gas Mining",
+    "components": [],
+    "legalContact": "cn=lando_calrissian,ou=contacts,o=fint",
+    "techicalContacts": [],
+    "k8sSize": "small",
+    "customer": true,
+    "primaryAssetId": "cloud.city"
+  },
+  {
+    "dn": "ou=jedi_order,ou=organisations,o=fint",
+    "name": "Jedi Order",
+    "orgNumber": "556677",
+    "displayName": "Jedi Archives",
+    "components": [
+      "ou=holocron_storage,ou=components,o=fint",
+      "ou=lightsaber_crafting,ou=components,o=fint"
+    ],
+    "legalContact": "cn=yoda,ou=contacts,o=fint",
+    "techicalContacts": [
+      "cn=mace_windu,ou=contacts,o=fint",
+      "cn=obi_wan_kenobi,ou=contacts,o=fint"
+    ],
+    "k8sSize": "medium",
+    "customer": false,
+    "primaryAssetId": "jedi.order"
+  }
+]

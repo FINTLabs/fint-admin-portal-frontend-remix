@@ -35,7 +35,7 @@ export async function loader(){
 
 export const meta: MetaFunction = () => {
     return [
-        { title: "Admin Portal Dashboard :)" },
+        { title: "Admin Portal Dashboard" },
         { name: "description", content: "here is a description of my admin portal thing" },
     ];
 };
@@ -72,7 +72,7 @@ export default function App() {
 
       <Page
           footer={
-              <Box background="grayalpha-100" padding="8" as="footer">
+              <Box padding="8" as="footer" className={"footer"}>
                   <Page.Block gutters width="lg">
                       <BodyShort><Link to={'#'}>Til Toppen</Link></BodyShort>
                       Footer from root
@@ -81,7 +81,7 @@ export default function App() {
           }
       >
           <Box
-              background="grayalpha-100"
+              className={"appbar"}
               padding="8"
               as="header"
           >

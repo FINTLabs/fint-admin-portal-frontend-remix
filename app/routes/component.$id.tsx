@@ -1,8 +1,8 @@
 //component.$componentid.tsx
 import React, {useEffect} from "react";
-import type {LoaderFunction} from "@remix-run/node";
+import type {ActionFunctionArgs, LoaderFunction} from "@remix-run/node";
 import {json} from "@remix-run/node";
-import {isRouteErrorResponse, Link, useFetcher, useLoaderData, useRouteError} from "@remix-run/react";
+import {isRouteErrorResponse, Link, useActionData, useFetcher, useLoaderData, useRouteError} from "@remix-run/react";
 import {Alert, Box, Heading, HGrid, LinkPanel, Tabs, Tag, VStack} from "@navikt/ds-react";
 import {Buldings3Icon, PencilIcon, TenancyIcon, TokenIcon} from '@navikt/aksel-icons';
 import OrganizationTable from "~/components/organization-table";
@@ -21,9 +21,9 @@ export const loader: LoaderFunction = async ({ params }) => {
 
         const [selectedComponent, organizations] = await Promise.all([componentsPromise, organizationsPromise]);
 
-        // Filter organizations if selectedComponent is not null and has 'organisations'
+        // Filter organizations if selectedComponent is not null and has 'organizations'
         const associatedOrganizations = selectedComponent && selectedComponent.organisations
-            ? organizations.filter(org => selectedComponent.organisations.includes(org.dn))
+            ? organizations.filter((org: { dn: string; }) => selectedComponent.organisations.includes(org.dn))
             : [];
 
         return json({ selectedComponent, organizations, associatedOrganizations });
@@ -33,10 +33,14 @@ export const loader: LoaderFunction = async ({ params }) => {
     }
 };
 
-export async function action({ request }) {
+function isErrorWithMessage(error: unknown): error is { message: string } {
+    return typeof error === "object" && error !== null && "message" in error;
+}
+
+export async function action({request}: ActionFunctionArgs) {
 
     const formData = await request.formData();
-    const formValues = {};
+    const formValues: Record<string, FormDataEntryValue> = {};
 
     for (const [key, value] of formData) {
         formValues[key] = value;
@@ -44,23 +48,28 @@ export async function action({ request }) {
     const actionType = formData.get("actionType");
     console.log("actionType", actionType);
 
-    // try {
-        if (actionType === "delete") {
-            const componentName = formData.get("deleteName");
-            const response = await ComponentApi.delete(componentName);
-            return json({ show: true, message: response.message, variant: response.variant });
-        }
+    if (actionType === "delete") {
+        const componentName = formData.get("deleteName");
+        const response = await ComponentApi.delete(componentName);
+        return json({ show: true, message: response.message, variant: response.variant });
+    }
 
-        if(actionType === "update") {
-            try {
-                const response = await ComponentApi.update(formValues);
-                console.log("response from API", response);
-                return json({ show: true, message: response.message, variant: response.variant });
-            } catch (error) {
-                // Handle any errors here
+    if(actionType === "update") {
+        try {
+            const response = await ComponentApi.update(formValues);
+            console.log("response from API", response);
+            return json({ show: true, message: response.message, variant: response.variant });
+        } catch (error) {
+            // Handle any errors here
+            if (isErrorWithMessage(error)) {
+                // Now TypeScript knows error has a message property
                 return json({ show: true, message: error.message, variant: "error" });
+            } else {
+                // Handle the case where the error does not have a message property
+                return json({ show: true, message: "An unknown error occurred", variant: "error" });
             }
         }
+    }
 
     return json({ show: true, message: "Unknown action type", variant: "error" });
 
@@ -70,9 +79,10 @@ export async function action({ request }) {
 
 export default function ComponentPage() {
 
-    const { selectedComponent, associatedOrganizations } = useLoaderData();
+    const { selectedComponent, associatedOrganizations } = useLoaderData<typeof loader>();
     const [show, setShow] = React.useState(false);
     const fetcher = useFetcher();
+    const actionData = useActionData<typeof action>();
 
     useEffect(() => {
         setShow(true);
@@ -210,9 +220,9 @@ export default function ComponentPage() {
 
                 <Tabs.Panel value="edit" className="h-24  w-full bg-gray-50 p-4">
 
-                    {fetcher.data && show && (
-                        <Alert variant={fetcher.data.variant} closeButton onClose={() => setShow(false)}>
-                            {(fetcher.data && fetcher.data.message) || "Content"}
+                    {actionData && show && (
+                        <Alert variant={actionData.variant as "error" | "info" | "warning" | "success"} closeButton onClose={() => setShow(false)}>
+                            {actionData.message || "Content"}
                         </Alert>
                     )}
 
@@ -259,30 +269,30 @@ export default function ComponentPage() {
 export function ErrorBoundary() {
     const error = useRouteError();
 
-    return (
-        <Box padding="4">
-            <Alert variant="info">
-                <h1 style={{ fontSize: "24px", fontWeight: "bold" }}>Notice!</h1>
-                {isRouteErrorResponse(error) ? (
-                    <>
-                        {error.status === 200 ? (
-                            <p>
-                                <p>{error.data}</p>
-                            </p>
-                        ) : (
-                            <>
-                                <p>Error: {error.status} - {error.statusText}</p>
-                                <p>{error.data}</p>
-                            </>
-                        )}
-                    </>
-                ) : (
-                    <p>{error?.message || "Unknown Error"}</p>
-                )}
-                <Link to={`/component/`} style={{ marginTop: "20px" }}>
-                    View a list of components
-                </Link>
-            </Alert>
-        </Box>
-    );
+    // Handle route-specific errors
+    if (isRouteErrorResponse(error)) {
+        return (
+            <div>
+                <h1>
+                    {error.status} {error.statusText}
+                </h1>
+                {/* Ensure error.data is displayed correctly, might need JSON.stringify if it's an object */}
+                <p>{typeof error.data === 'string' ? error.data : JSON.stringify(error.data)}</p>
+            </div>
+        );
+    } else if (error instanceof Error) {
+        // Handle generic JavaScript errors
+        return (
+            <div>
+                <h1>Error</h1>
+                <p>{error.message}</p>
+                <p>The stack trace is:</p>
+                {/* Ensure stack is a string or provide a default message */}
+                <pre>{error.stack || 'No stack trace available'}</pre>
+            </div>
+        );
+    } else {
+        // Fallback for unknown error types
+        return <h1>Unknown Error</h1>;
+    }
 }

@@ -11,24 +11,6 @@ class OrganizationApi {
             }
     }
 
-    static async fetchOrganizationsByName(name) {
-        try {
-            const url = `${API_URL}/api/organisations/${name}`;
-            const response = await fetch(url);
-            if (response.ok) {
-                return await response.json();
-            } else {
-                // Handle error response
-                console.error("Error fetching organization by name");
-                return null;
-            }
-        } catch (error) {
-            // Handle fetch error
-            console.error("Error fetching organization by name:", error);
-            return null;
-        }
-    }
-
     static async fetchOrganizationByOrgNumber(orgNumber) {
         try {
             const organizations = await this.fetch();
@@ -118,12 +100,15 @@ class OrganizationApi {
     }
 
     static async setLegalContact(orgName, contactNin) {
-        const url = `/api/organisations/${orgName}/contacts/legal/${contactNin}`;
+        const url = `${API_URL}/api/organisations/${orgName}/contacts/legal/${contactNin}`;
+        console.log("setLegalContact url", url);
+
         const response = await fetch(url, {
-            method: "POST",
+            method: "PUT",
             credentials: 'same-origin'
         });
 
+        console.log("setLegalContact response", response);
         if(response.ok) {
             return {message: "Legal contact ble satt", variant: "success"};
         } else {

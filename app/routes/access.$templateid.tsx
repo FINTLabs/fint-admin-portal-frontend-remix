@@ -2,17 +2,23 @@ import React from "react";
 import {Heading, Table} from "@navikt/ds-react";
 import templateApi from "~/api/template-api";
 import {useLoaderData} from "@remix-run/react";
+import {ITemplate} from "~/api/types";
 
-export async function loader({ params }: { params: { templateid: string } }) {
+interface DataWithPermissions {
+    collectionPath: string;
+    hasReadPermission: boolean;
+    hasWritePermission: boolean;
+}
+
+export async function loader({ params }: { params: { templateid: string } }): Promise<{ selectedTemplate: ITemplate; dataWithPermissions: DataWithPermissions[] }> {
     const templateName = params.templateid;
+    const selectedTemplate: ITemplate = await templateApi.fetchTemplateByName(templateName);
 
-    const selectedTemplate = await templateApi.fetchTemplateByName(templateName);
-
-    const checkPermission = (collectionPath, permissionList) => {
+    const checkPermission = (collectionPath: string, permissionList: string[]): boolean => {
         return permissionList.includes(collectionPath);
     };
 
-    const dataWithPermissions = selectedTemplate.collection.map(collection => {
+    const dataWithPermissions: DataWithPermissions[] = selectedTemplate.collection.map(collection => {
         return {
             collectionPath: collection,
             hasReadPermission: checkPermission(collection, selectedTemplate.read),
@@ -24,7 +30,7 @@ export async function loader({ params }: { params: { templateid: string } }) {
 }
 
 const AccessTemplatePage = () => {
-    const { selectedTemplate, dataWithPermissions } = useLoaderData<typeof loader>();
+    const { selectedTemplate, dataWithPermissions } = useLoaderData<{ selectedTemplate: ITemplate; dataWithPermissions: DataWithPermissions[] }>();
 
     return (
         <>

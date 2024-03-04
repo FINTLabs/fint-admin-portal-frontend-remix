@@ -50,7 +50,14 @@ table {
 }
 
 .footer {
-    background-color: var(--a-blue-50);
+    background-color: var(--a-gray-100);
+}
+
+.appbar {
+    background-color: var(--a-gray-100);
+}
+.inputForm {
+    background-color: var(--a-gray-50);
 }
 
 .WelcomeSection {

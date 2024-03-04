@@ -1,13 +1,18 @@
 import type {ChangeEvent} from "react";
 import React, {useEffect, useState} from "react";
 import {Box, Button, HGrid, TextField} from "@navikt/ds-react";
-import type {IContact} from "~/api/types";
+import type {IContact, IErrorState} from "~/api/types";
 import {FloppydiskIcon, TrashIcon} from "@navikt/aksel-icons";
 import {defaultContact} from "~/api/types";
 
-const ContactForm = ({selectedContact, f, r}) => {
+interface ContactFormProps {
+    selectedContact: IContact;
+    f: any; // Replace `any` with the actual type
+    r?: any;
+}
+const ContactForm: React.FC<ContactFormProps> = ({ selectedContact, f, r }) => {
     const [formData, setFormData] = useState<IContact>(selectedContact);
-    const [errors, setErrors] = useState({});
+    const [errors, setErrors] = useState<IErrorState>({});
     const [confirmDelete, setConfirmDelete] = useState(false);
     const [actionType, setActionType] = useState("unknown");
 
@@ -25,15 +30,19 @@ const ContactForm = ({selectedContact, f, r}) => {
     }, [selectedContact]);
 
 
-    function handleInputChange(e: ChangeEvent<HTMLInputElement>) {
-        let name = e.target.name;
-        let value = e.target.value;
-
-        setFormData((prevValues) => ({
-            ...prevValues,
-            [name]: value,
-        }));
-    }
+    // function handleInputChange(e: ChangeEvent<HTMLInputElement>) {
+    //     let name = e.target.name;
+    //     let value = e.target.value;
+    //
+    //     setFormData((prevValues) => ({
+    //         ...prevValues,
+    //         [name]: value,
+    //     }));
+    // }
+    const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
+        const { name, value } = e.target;
+        setFormData(prev => ({ ...prev, [name]: value }));
+    };
 
     const handleInputBlur = (e: ChangeEvent<HTMLInputElement>) => {
         let fieldName = e.target.name;
@@ -82,8 +91,8 @@ const ContactForm = ({selectedContact, f, r}) => {
 
     };
 
-    const removeError = (fieldName) => {
-        setErrors(prevErrors => {
+    const removeError = (fieldName: keyof IErrorState) => {
+        setErrors((prevErrors: IErrorState) => {
             const newErrors = { ...prevErrors };
             delete newErrors[fieldName];
             return newErrors;

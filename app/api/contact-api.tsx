@@ -1,4 +1,4 @@
-import type {IOrganization} from "~/api/types";
+import type {IContact, IOrganization} from "~/api/types";
 
 const API_URL = process.env.API_URL;
 
@@ -21,8 +21,7 @@ class ContactApi {
         }
     }
 
-    static async create(contactData) {
-
+    static async create(contactData: IContact) {
         try {
             const response = await fetch(`${API_URL}/api/contacts`, {
                 method: 'POST',
@@ -35,25 +34,20 @@ class ContactApi {
             console.log("sent to api:", JSON.stringify(contactData));
 
             if (response.ok) {
-                console.log("response ok", response.statusText);
                 return {message: "Contact created!", variant: "success"};
             } else {
-                console.log("response ok", response.statusText);
                 return {message: "Error creating contact", variant: "error"};
             }
-
         } catch (error) {
-            console.error("Error creating contact:", error);
             return null;
         }
-
     }
 
     static async fetchTechnicalContactsByOrganization(organization: IOrganization) {
         try {
             const contacts = await this.fetch();
             if (contacts && organization) {
-                return contacts.filter((contact) =>
+                return contacts.filter((contact: IContact) =>
                     organization.techicalContacts.includes(contact.dn)
                 );
             } else {
@@ -65,7 +59,7 @@ class ContactApi {
         }
     }
 
-    static async update(contactData) {
+    static async update(contactData: IContact) {
         try {
             const response = await fetch(`${API_URL}/api/contacts/${contactData.nin}`, {
                 method: 'PUT',
@@ -91,7 +85,7 @@ class ContactApi {
         }
     }
 
-    static async delete(contactData) {
+    static async delete(contactData: IContact) {
         try {
             const response = await fetch(`${API_URL}/api/contacts/${contactData.nin}`, {
                 method: 'DELETE',

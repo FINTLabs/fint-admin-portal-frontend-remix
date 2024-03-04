@@ -4,9 +4,9 @@ import OrganizationApi from "~/api/organization-api";
 import OrganizationTable from "~/components/organization-table";
 import {PersonPlusIcon} from "@navikt/aksel-icons";
 import OrganizationForm from "~/components/organization-form";
-import type {IOrganization} from "~/api/types";
-import {json} from "@remix-run/node";
-import {useFetcher, useLoaderData} from "@remix-run/react";
+import {IComponent, IOrganization} from "~/api/types";
+import {type ActionFunctionArgs, json} from "@remix-run/node";
+import {useActionData, useFetcher, useLoaderData} from "@remix-run/react";
 import {defaultOrganization} from "~/api/types";
 
 export const loader = async () => {
@@ -20,33 +20,35 @@ export const loader = async () => {
 
 };
 
-export async function action({ request }) {
+export async function action({request}: ActionFunctionArgs) {
 
     const formData = await request.formData();
-    const formValues = {};
+    const formValues: Record<string, FormDataEntryValue> = {};
 
     for (const [key, value] of formData) {
         formValues[key] = value;
     }
     console.log("formValues", formValues);
 
-    // try {
-        const response = await OrganizationApi.create(formValues);
-        return json({ show: true, message: response.message, variant: response.variant });
-    // } catch (error) {
-    //     return json({ show: true, message: error.message, variant: 'error' });
-    // }
+    const response = await OrganizationApi.create(formValues);
+    return json({ show: true, message: response.message, variant: response.variant });
 
+
+}
+
+interface LoaderData {
+    organizations: IOrganization[];
 }
 
 export default function OrganizationPage() {
     const organizationEditRef = useRef<HTMLDialogElement>(null!);
     const [filteredData, setFilteredData] = useState<IOrganization[]>([]);
     const [search, setSearch] = useState<string>("");
-    const loaderData = useLoaderData();
-    const organizations = loaderData ? loaderData.data : [];
+    const loaderData = useLoaderData<LoaderData>();
+    const organizations = loaderData.organizations;
     const [show, setShow] = React.useState(false);
     const fetcher = useFetcher();
+    const actionData = useActionData<typeof action>();
 
     useEffect(() => {
         setShow(true);
@@ -63,12 +65,6 @@ export default function OrganizationPage() {
         setFilteredData(filtered);
     };
 
-    // const handleFormClose = () => {
-    //     // todo: Handle form submission logic
-    //     console.log("closing the organization add form inside index");
-    //     organizationEditRef.current?.close();
-    // };
-
     return (
         <div style={{ fontFamily: "system-ui, sans-serif", lineHeight: "1.8" }}>
 
@@ -82,9 +78,9 @@ export default function OrganizationPage() {
                 </Modal.Body>
             </Modal>
 
-            {fetcher.data && show && (
-                <Alert variant={fetcher.data.variant} closeButton onClose={() => setShow(false)}>
-                    {(fetcher.data && fetcher.data.message) || "Content"}
+            {actionData && show && (
+                <Alert variant={actionData.variant as "error" | "info" | "warning" | "success"} closeButton onClose={() => setShow(false)}>
+                    {actionData.message || "Content"}
                 </Alert>
             )}
 

@@ -2,10 +2,14 @@
 import { useState } from "react";
 import {Button, Modal, Heading} from "@navikt/ds-react";
 
-const DeleteConfirm = ({ deleteName, f }) => {
+interface DeleteConfirmProps {
+    deleteName: string;
+    f: any;
+}
+const DeleteConfirm: React.FC<DeleteConfirmProps> = ({ deleteName, f }) => {
     const [open, setOpen] = useState(false);
 
-    const handleClose = (isConfirmed) => {
+    const handleClose = (isConfirmed: boolean) => {
         console.log("delete confirmed: ", isConfirmed);
         setOpen(false);
     };

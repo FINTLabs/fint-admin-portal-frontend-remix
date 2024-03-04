@@ -1,39 +1,45 @@
-import {useLocation} from "react-router";
-import {Link} from "@remix-run/react";
-import {ChevronRightIcon, HouseIcon} from '@navikt/aksel-icons';
+import React from "react";
+import { Link } from "@remix-run/react";
+import { ChevronRightIcon, HouseIcon } from '@navikt/aksel-icons';
 import styled from "styled-components";
 
+interface BreadcrumbItem {
+    name: string;
+    link: string;
+}
+
+interface BreadcrumbsProps {
+    breadcrumbs: BreadcrumbItem[];
+}
+
 const StyledChevronRightIcon = styled(ChevronRightIcon)`
-  vertical-align: middle;
+    vertical-align: middle;
 `;
 
-export default function Breadcrumbs(){
-    const location = useLocation();
+export default function Breadcrumbs({ breadcrumbs }: BreadcrumbsProps) {
+    const homeLink = '/';
+    const linkStyle = { textDecoration: 'none' };
 
-    let currentLink = ''
-    const homeLink = '/'
-    const linkStyle = {textDecoration: 'none'}
+    const translateNameToNorwegian = (name: string): string => {
+        const translations: Record<string, string> = {
+            'Dashboard': 'Dashbord',
+        };
+        return translations[name] || name;
+    };
 
-    const crumbs = location.pathname.split('/')
-        .filter(crumb => crumb !== '')
-        .map(crumb => {
+    const crumbs = breadcrumbs.map(({ name, link }) => (
+        <Link to={link} style={linkStyle} key={link}>
+            <StyledChevronRightIcon title="Spacer" />
+            {translateNameToNorwegian(name)}
+        </Link>
+    ));
 
-            currentLink += `/${crumb}`
-
-            return(
-                  <Link to={currentLink} style={linkStyle} key={currentLink}>
-                      <StyledChevronRightIcon title="Spacer" />
-                      {crumb}
-                  </Link>
-            )
-        })
-
-    return(
+    return (
         <div className='breadcrumbs'>
             <Link to={homeLink} style={linkStyle}>
-                <HouseIcon title="a11y-title" />{'Dashboard'}
+                <HouseIcon title="a11y-title" />{translateNameToNorwegian('Dashboard')}
             </Link>
             {crumbs}
         </div>
-    )
+    );
 }

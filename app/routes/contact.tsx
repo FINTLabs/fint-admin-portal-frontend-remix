@@ -6,11 +6,15 @@ import React from "react";
 import Breadcrumbs from "~/components/breadcrumbs";
 
 export default function Index() {
+    const breadcrumbs = [
+        { name: 'Kontakter', link: '/contact' },
+    ];
+
     return (
 
 <>
-    <Breadcrumbs />
-    <LayoutHeader title={"Contacts"} icon={PersonGroupIcon}/>
+    <Breadcrumbs breadcrumbs={breadcrumbs} />
+    <LayoutHeader title={"Kontakter"} icon={PersonGroupIcon}/>
             <Box
                 // background="surface-alt-4-moderate"
                 padding="8"

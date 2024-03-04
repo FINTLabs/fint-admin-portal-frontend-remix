@@ -18,12 +18,12 @@ class ComponentApi {
         }
     }
 
-    static async fetchComponentsByOrganization(selectedOrganisation) {
+    static async fetchComponentsByOrganization(selectedOrganisation: { dn: string; }) {
         try {
             const components = await this.fetch();
 
             if (components && selectedOrganisation) {
-                return components.filter((component) =>
+                return components.filter((component: { organisations: string | string[]; }) =>
                     component.organisations.includes(selectedOrganisation.dn)
                 );
             } else {
@@ -35,7 +35,7 @@ class ComponentApi {
         }
     }
 
-    static async fetchComponentsByName(name) {
+    static async fetchComponentsByName(name: string | undefined) {
         const url = `${API_URL}/api/components/${name}`;
         const response = await fetch(url);
         if (response.ok) {
@@ -46,7 +46,7 @@ class ComponentApi {
         }
     }
 
-    static async create(componentData) {
+    static async create(componentData: {}) {
         console.log("component Data to add:", JSON.stringify(componentData));
         try {
             const response = await fetch(`${API_URL}/api/components`, {
@@ -74,7 +74,7 @@ class ComponentApi {
         }
     }
 
-    static async update(componentData) {
+    static async update(componentData: { name?: any; }) {
         const url = `${API_URL}/api/components/${componentData.name}`;
 
         const request = new Request(url, {
@@ -96,7 +96,7 @@ class ComponentApi {
         });
     }
 
-    static async delete(componentName) {
+    static async delete(componentName: any) {
         const url = `${API_URL}/api/components/${componentName}`;
         const request = new Request(url, {
             method: 'DELETE',
@@ -105,10 +105,17 @@ class ComponentApi {
 
         const response = await fetch(request);
         if (response.ok) {
-            throw new Response("Component successfully removed", 410 );
+            throw new Response("Component successfully removed", {
+                status: 410,
+                headers: {
+                    'Content-Type': 'text/plain',
+                },
+            });
         } else {
+            // If the condition is not met, return an object with an error message and variant
             return { message: "Det oppsto en feil ved sletting av komponenten.", variant: "error" };
         }
+
 
     }
 }

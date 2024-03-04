@@ -7,10 +7,14 @@ import Breadcrumbs from "~/components/breadcrumbs";
 
 
 export default function Index() {
+    const breadcrumbs = [
+        { name: 'Tools', link: '/tools' },
+    ];
+
     return (
 
         <>
-            <Breadcrumbs />
+            <Breadcrumbs breadcrumbs={breadcrumbs} />
             <LayoutHeader title={"Tools"} icon={WrenchIcon}/>
             <Box
                 // background="surface-alt-4-moderate"

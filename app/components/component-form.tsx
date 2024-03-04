@@ -2,37 +2,41 @@
 import React, {useEffect, useState} from 'react';
 import {Box, Button, Switch, TextField} from "@navikt/ds-react";
 import {FloppydiskIcon} from '@navikt/aksel-icons';
-import type {IComponent} from "~/api/types";
+import type {IErrorState, IComponent} from "~/api/types";
 import {defaultComponent} from "~/api/types";
 
-const ComponentForm = ({ selectedComponent, f, r }) => {
+interface ComponentFormProps {
+    selectedComponent: any; // Replace `any` with the actual type
+    f: any; // Replace `any` with the actual type
+    r?: any; // Make `r` optional and replace `any` with the actual type if needed
+}
+
+const ComponentForm = ({ selectedComponent, f, r }: ComponentFormProps) => {
 
     const [formData, setFormData] = useState<IComponent>(selectedComponent);
-    const [errors, setErrors] = useState({});
+    const [errors, setErrors] = useState<IErrorState>({});
 
-    console.log("selectedComponent", selectedComponent);
     useEffect(() => {
         if(f.state === "loading" && !selectedComponent.dn) {
             setFormData(defaultComponent);
         }
     }, [f.state]);
 
-
-    const handleInputChange = (fieldName, value) => {
+    const handleInputChange = (fieldName: keyof IComponent, value: string | boolean) => {
         setFormData((prevData) => ({
             ...prevData,
             [fieldName]: value,
         }));
     };
 
-    const handleSwitchChange = (fieldName, checked) => {
+    const handleSwitchChange = (fieldName: keyof IComponent, checked: boolean) => {
         setFormData((prevData) => ({
             ...prevData,
             [fieldName]: checked,
         }));
     };
 
-    const handleInputBlur = (fieldName, value) => {
+    const handleInputBlur = (fieldName: keyof IComponent, value: string) => {
         if (fieldName === 'name') {
             let usernameValidator = new RegExp("^[a-zA-Z0-9_-]{3,128}$");
             let valid = usernameValidator.test(value);
@@ -48,8 +52,8 @@ const ComponentForm = ({ selectedComponent, f, r }) => {
         }
     };
 
-    const removeError = (fieldName) => {
-        setErrors(prevErrors => {
+    const removeError = (fieldName: keyof IErrorState) => {
+        setErrors((prevErrors: IErrorState) => {
             const newErrors = { ...prevErrors };
             delete newErrors[fieldName];
             return newErrors;
@@ -124,7 +128,7 @@ const ComponentForm = ({ selectedComponent, f, r }) => {
                 size="small"
                 name={"openData"}
                 checked={formData.openData}
-                value={formData.openData}
+                // value={formData.openData}
                 onChange={(e) => handleSwitchChange('openData', e.target.checked)}
             >
                 Open
@@ -133,7 +137,7 @@ const ComponentForm = ({ selectedComponent, f, r }) => {
                 size="small"
                 name={"common"}
                 checked={formData.common}
-                value={formData.common}
+                // value={formData.common}
                 onChange={(e) => handleSwitchChange('common', e.target.checked)}
             >
                 Felles
@@ -141,7 +145,7 @@ const ComponentForm = ({ selectedComponent, f, r }) => {
             <Switch
                 size="small"
                 name={"core"}
-                value={formData.core}
+                // value={formData.core}
                 checked={formData.core}
                 onChange={(e) => handleSwitchChange('core', e.target.checked)}
             >
@@ -152,7 +156,7 @@ const ComponentForm = ({ selectedComponent, f, r }) => {
             <Switch
                 size="small"
                 name={"inPlayWithFint"}
-                value={formData.inPlayWithFint}
+                // value={formData.inPlayWithFint}
                 checked={formData.inPlayWithFint}
                 onChange={(e) => handleSwitchChange('inPlayWithFint', e.target.checked)}
             >
@@ -161,7 +165,7 @@ const ComponentForm = ({ selectedComponent, f, r }) => {
             <Switch
                 size="small"
                 name={"inBeta"}
-                value={formData.inBeta}
+                // value={formData.inBeta}
                 checked={formData.inBeta}
                 onChange={(e) => handleSwitchChange('inBeta', e.target.checked)}
             >
@@ -170,7 +174,7 @@ const ComponentForm = ({ selectedComponent, f, r }) => {
             <Switch
                 size="small"
                 name={"inProduction"}
-                value={formData.inProduction}
+                // value={formData.inProduction}
                 checked={formData.inProduction}
                 onChange={(e) => handleSwitchChange('inProduction', e.target.checked)}
             >
