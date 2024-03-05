@@ -38,7 +38,7 @@ const OrganizationTable = ({ data } : OrganizationTableProps) => {
                     <Table.HeaderCell scope="col" style={{ cursor: 'pointer' }} onClick={() => setSortColumn('primaryAssetId')}>
                         Asset Id {sortColumn === 'primaryAssetId' && <ChevronDownDoubleIcon title="Sort by asset id" />}
                     </Table.HeaderCell>
-                    <Table.HeaderCell scope="col" style={{ fontWeight: 'bold' }}>View</Table.HeaderCell>
+                    <Table.HeaderCell style={{ fontWeight: 'bold' }} />
                 </Table.Row>
             </Table.Header>
             <Table.Body>
@@ -46,11 +46,10 @@ const OrganizationTable = ({ data } : OrganizationTableProps) => {
                     <Table.Row key={index}>
                         <Table.DataCell>{row.displayName}</Table.DataCell>
                         <Table.DataCell>{row.primaryAssetId}</Table.DataCell>
-                        <Table.DataCell>
+                        <Table.DataCell id={'info'}>
                             <Link to={`/organization/${row.orgNumber}`}>
                                 <InformationSquareIcon title="a11y-title" fontSize="1.5rem" />
                             </Link>
-
                         </Table.DataCell>
                     </Table.Row>
                 ))}

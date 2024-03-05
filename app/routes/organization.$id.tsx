@@ -1,8 +1,8 @@
 import React, {useEffect} from "react";
-import type {LoaderFunction} from "@remix-run/node";
+import type {ActionFunctionArgs, LoaderFunction} from "@remix-run/node";
 import {json} from "@remix-run/node";
-import {isRouteErrorResponse, useFetcher, useLoaderData, useRouteError, Link} from "@remix-run/react";
-import {Alert, BodyLong, Box, Button, Heading, HGrid, Select, Tabs, VStack} from "@navikt/ds-react";
+import {isRouteErrorResponse, useFetcher, useLoaderData, useRouteError} from "@remix-run/react";
+import {Alert, BodyLong, Box, Heading, HGrid, Select, Tabs, VStack} from "@navikt/ds-react";
 import {ComponentIcon, PencilIcon, PersonGavelIcon, PersonGroupIcon} from '@navikt/aksel-icons';
 import ComponentsTable from "~/components/components-table";
 import ContactTable from "~/components/contacts-table";
@@ -12,6 +12,7 @@ import ComponentApi from "~/api/component-api";
 import OrganizationForm from "~/components/organization-form";
 import DeleteConfirm from "~/components/delete-confirm";
 import ConfirmAction from "~/components/confirm-action";
+import {IContact, IFetcherResponseData} from "~/api/types";
 
 export const loader: LoaderFunction = async ({params}) => {
     const orgNumber = params.id;
@@ -44,48 +45,32 @@ export const loader: LoaderFunction = async ({params}) => {
     }
 };
 
-export async function action({ request }) {
+export async function action({request}: ActionFunctionArgs) {
     const formData = await request.formData();
-    const formValues = {};
+    const formValues: Record<string, FormDataEntryValue> = {};
 
     for (const [key, value] of formData) {
         formValues[key] = value;
     }
     const actionType = formData.get("actionType");
 
-    console.log("organization actionType:", actionType);
-
-    if (actionType === "delete") {
-        const orgName = formData.get("deleteName");
-        const response = await OrganizationApi.delete(orgName);
-        console.log("delete response:", response);
-        return json({ show: true, message: response.message, variant: response.variant });
+    let response;
+    switch (actionType) {
+        case "update":
+            response = await OrganizationApi.update(formValues);
+            break;
+        case "delete":
+            response = await OrganizationApi.delete(formValues);
+            break;
+        case "setLegalContact":
+            response = await OrganizationApi.setLegalContact(formData.get("orgName"), formData.get("nin"));
+            break;
+        default:
+            return json({show: true, message: "Unknown action type", variant: "error"});
     }
 
-    if(actionType === "update") {
-        try {
-            const response = await OrganizationApi.update(formValues);
-            return json({ show: true, message: response.message, variant: response.variant });
-        } catch (error) {
-            return json({ show: true, message: error.message, variant: "error" });
-        }
-    }
-
-    if(actionType === "setLegalContact") {
-        try {
-            const orgName = formData.get("orgName");
-            const contactNin = formData.get("contactNin");
-
-            const response = await OrganizationApi.setLegalContact(orgName, contactNin);
-            return json({ show: true, message: response.message, variant: response.variant });
-        } catch (error) {
-            return json({ show: true, message: error.message, variant: "error" });
-        }
-    }
-
-    return json({ show: true, message: "Unknown action type", variant: "error" });
+    return json({show: true, message: response?.message, variant: response?.variant});
 }
-
 export default function OrganizationDetailsPage() {
 
     const {
@@ -94,12 +79,12 @@ export default function OrganizationDetailsPage() {
         legalContact,
         components,
         contacts
-    } = useLoaderData();
+    } = useLoaderData<typeof loader>();
     const fetcher = useFetcher();
     const hasLegalContact = legalContact && legalContact.firstName && legalContact.firstName.trim() !== '';
     const [show, setShow] = React.useState(false);
     const [newLegalContact, setNewLegalContact] = React.useState({ nin: '', fullName: '' });
-
+    const actionData = fetcher.data as IFetcherResponseData;
 
     useEffect(() => {
         setShow(true);
@@ -160,6 +145,7 @@ export default function OrganizationDetailsPage() {
                             organizations={organizations}
                             editable={false}
                             legalContactDn={legalContact?.dn}
+                            f={null}
                         />
                     ) : (
                         <p>No contacts</p>
@@ -173,9 +159,9 @@ export default function OrganizationDetailsPage() {
                 </Tabs.Panel>
 
                 <Tabs.Panel value="edit" className="h-24 w-full bg-gray-50 p-4">
-                    {fetcher.data && show && (
-                        <Alert variant={fetcher.data.variant} closeButton onClose={() => setShow(false)}>
-                            {(fetcher.data && fetcher.data.message) || "Content"}
+                    {actionData && show && (
+                        <Alert variant={actionData.variant as "error" | "info" | "warning" | "success"} closeButton onClose={() => setShow(false)}>
+                            {actionData.message || "Content"}
                         </Alert>
                     )}
                     <VStack gap="4">
@@ -213,7 +199,7 @@ export default function OrganizationDetailsPage() {
                                 }}
                             >
                                 <option key={0} value={""} />
-                                {contacts.map((row, index) => (
+                                {contacts.map((row:IContact, index:any) => (
                                     <option key={index} value={row.nin}>
                                         {row.firstName} {row.lastName}
                                     </option>
@@ -259,30 +245,30 @@ export default function OrganizationDetailsPage() {
 export function ErrorBoundary() {
     const error = useRouteError();
 
-    return (
-        <Box padding="4">
-            <Alert variant="info">
-                <h1 style={{ fontSize: "24px", fontWeight: "bold" }}>Notice!</h1>
-                {isRouteErrorResponse(error) ? (
-                    <>
-                        {error.status === 200 ? (
-                            <p>
-                                <p>{error.data}</p>
-                            </p>
-                        ) : (
-                            <>
-                                <p>Error: {error.status} - {error.statusText}</p>
-                                <p>{error.data}</p>
-                            </>
-                        )}
-                    </>
-                ) : (
-                    <p>{error?.message || "Unknown Error"}</p>
-                )}
-                <Link to={`/organization/`} style={{ marginTop: "20px" }}>
-                    View a list of organizations
-                </Link>
-            </Alert>
-        </Box>
-    );
+    // Handle route-specific errors
+    if (isRouteErrorResponse(error)) {
+        return (
+            <div>
+                <h1>
+                    {error.status} {error.statusText}
+                </h1>
+                {/* Ensure error.data is displayed correctly, might need JSON.stringify if it's an object */}
+                <p>{typeof error.data === 'string' ? error.data : JSON.stringify(error.data)}</p>
+            </div>
+        );
+    } else if (error instanceof Error) {
+        // Handle generic JavaScript errors
+        return (
+            <div>
+                <h1>Error</h1>
+                <p>{error.message}</p>
+                <p>The stack trace is:</p>
+                {/* Ensure stack is a string or provide a default message */}
+                <pre>{error.stack || 'No stack trace available'}</pre>
+            </div>
+        );
+    } else {
+        // Fallback for unknown error types
+        return <h1>Unknown Error</h1>;
+    }
 }

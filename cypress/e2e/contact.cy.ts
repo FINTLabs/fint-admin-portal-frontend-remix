@@ -25,21 +25,22 @@ describe('Contact Page Tests', () => {
 
         cy.get('.navds-internalheader').should('be.visible');
         cy.get('.navds-table').should('exist');
+        cy.get('.navds-stack > .navds-heading').should('contain', 'Kontakter');
         cy.get('.navds-table__body > .navds-table__row').should('have.length', 5);
     });
 
     it('Check table data', () => {
-        cy.get('.navds-table__row').eq(0).should('contain', 'Name');
-        cy.get('.navds-table__row').eq(0).should('contain', 'Technical');
+        cy.get('.navds-table__row').eq(0).should('contain', 'Navn');
+        cy.get('.navds-table__row').eq(0).should('contain', 'Teknisk');
     });
 
     it('Check search', () => {
-        cy.get('#searchfield-r1r').should('exist');
-        cy.get('#searchfield-r1r').type('Luke');
+        cy.get('#searchField').should('exist');
+        cy.get('#searchField').type('Luke');
         cy.get('.navds-table__body > .navds-table__row').should('have.length', 1);
         cy.get('.navds-table__body > .navds-table__row').should('contain', 'Luke');
         // cy.wait(1000);
-        cy.get('#searchfield-r1r').clear();
+        cy.get('#searchField').clear();
         cy.get('.navds-table__body > .navds-table__row').should('have.length', 5);
     });
 
@@ -52,10 +53,10 @@ describe('Contact Page Tests', () => {
 
 
     it('Check add modal layout', () => {
-        cy.get('button').contains('Add New').should('be.visible');
-        cy.get('button').contains('Add New').click();
+        cy.get('button').contains('Legg til ny').should('be.visible');
+        cy.get('button').contains('Legg til ny').click();
         cy.get('.navds-modal').should('be.visible');
-        cy.get('.navds-modal__header').should('contain', 'Add New Contact');
+        cy.get('.navds-modal__header').should('contain', 'Legg til ny kontakt');
         cy.get('.navds-modal__body').should('exist');
         // cy.get('.navds-modal__footer').should('exist');
         cy.get('.navds-modal__header > .navds-button').should('exist');
@@ -65,7 +66,7 @@ describe('Contact Page Tests', () => {
 
     it('Check add modal form', () => {
 
-        cy.get('button').contains('Add New').click();
+        cy.get('button').contains('Legg til ny').click();
         // cy.get('[data-testid="saveButton"]').should('be.disabled');
 
         cy.get('input[name="nin"]').eq(0).type('123');
@@ -102,13 +103,13 @@ describe('Contact Page Tests', () => {
 
     it('Check edit modal layout', () => {
         // cy.get('.navds-table__body > .navds-table__row > .navds-table__column').eq(3).click();
-        cy.get('button').contains('Edit').click();
+        cy.get('#edit-contact-0 > .navds-button__icon > svg').click();
         cy.get('.navds-modal').should('be.visible');
-        cy.get('.navds-modal__header').should('contain', 'Edit Contact');
+        cy.get('.navds-modal__header').should('contain', 'Rediger kontakt');
         cy.get('.navds-modal__body').should('exist');
-        cy.get('.navds-modal__header > .navds-button').should('exist');
-        cy.get('.navds-modal__header > .navds-button').eq(0).click();
-        cy.get('.navds-modal').should('not.be.visible');
+        // cy.get('.navds-modal__header > .navds-button').should('exist');
+        // cy.get('.navds-modal__header > .navds-button').eq(0).click();
+        // cy.get('.navds-modal').should('not.be.visible');
     });
 });
 

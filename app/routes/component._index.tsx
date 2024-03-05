@@ -3,15 +3,11 @@ import React, {useEffect, useRef, useState} from 'react';
 import {Alert, InternalHeader, Modal, Search, Spacer} from "@navikt/ds-react";
 import {ComponentIcon} from "@navikt/aksel-icons";
 import ComponentsTable from "~/components/components-table";
-import {useActionData, useFetcher, useLoaderData} from "@remix-run/react";
+import {useFetcher, useLoaderData} from "@remix-run/react";
 import ComponentApi from "~/api/component-api";
 import {type ActionFunctionArgs, json} from "@remix-run/node";
 import ComponentForm from "~/components/component-form";
-import {defaultComponent, IComponent} from "~/api/types";
-
-function isErrorWithMessage(error: unknown): error is { message: string } {
-    return typeof error === "object" && error !== null && "message" in error;
-}
+import {defaultComponent, IComponent, IFetcherResponseData} from "~/api/types";
 
 export const loader = async () => {
 
@@ -34,24 +30,9 @@ export async function action({request}: ActionFunctionArgs) {
     }
     console.log("formValues", formValues);
 
-    try {
-        const response = await ComponentApi.create(formValues);
-        return json({ show: true, message: response.message, variant: response.variant });
-    } catch (error) {
-        // Handle any errors here
-        if (isErrorWithMessage(error)) {
-            // Now TypeScript knows error has a message property
-            return json({ show: true, message: error.message, variant: "error" });
-        } else {
-            // Handle the case where the error does not have a message property
-            return json({ show: true, message: "An unknown error occurred", variant: "error" });
-        }
-    }
+    const response = await ComponentApi.create(formValues);
+    return json({ show: true, message: response.message, variant: response.variant });
 
-}
-
-interface LoaderData {
-    componentsData: IComponent[];
 }
 
 const initialComponentArray: IComponent[] = [];
@@ -62,19 +43,23 @@ export default function ComponentPage ()  {
     const [filteredData, setFilteredData] = useState<IComponent[]>(initialComponentArray);
     const [search, setSearch] = useState("");
     const [show, setShow] = React.useState(false);
-    const loaderData = useLoaderData<LoaderData>();
+    const loaderData = useLoaderData<typeof loader>();
     const componentsData = loaderData.componentsData;
     const fetcher = useFetcher();
-    const actionData = useActionData<typeof action>();
+    const actionData = fetcher.data as IFetcherResponseData;
 
     useEffect(() => {
-        setShow(true);
-    }, [fetcher.state]);
+        if (actionData && actionData.show) {
+            setShow(true);
+        } else {
+            setShow(false);
+        }
+    }, [fetcher.data]);
 
     const handleSearchInput = (input: string) => {
         setSearch(input);
         const filtered = componentsData.filter(
-            (component) =>
+            (component: { name: string; description: string; }) =>
                 component.name.toLowerCase().includes(input.toLowerCase()) ||
                 component.description.toLowerCase().includes(input.toLowerCase())
         );
@@ -84,7 +69,7 @@ export default function ComponentPage ()  {
     return (
         <div style={{ fontFamily: "system-ui, sans-serif", lineHeight: "1.8" }}>
 
-            <Modal ref={componentEditRef} header={{ heading: "Add New Component" }} width={400}>
+            <Modal ref={componentEditRef} header={{ heading: "Legg til ny komponent" }} width={400}>
                 <Modal.Body>
                     <ComponentForm
                         selectedComponent={defaultComponent}
@@ -103,7 +88,7 @@ export default function ComponentPage ()  {
             <InternalHeader>
 
                 <InternalHeader.Button onClick={() => componentEditRef.current?.showModal()}>
-                    <ComponentIcon title="a11y-title" fontSize="1.5rem"/>Add New
+                    <ComponentIcon title="a11y-title" fontSize="1.5rem"/>Legg til ny
                 </InternalHeader.Button>
 
                 <Spacer/>
@@ -116,6 +101,7 @@ export default function ComponentPage ()  {
                     }}
                 >
                     <Search
+                        id={"searchField"}
                         label="InternalHeader søk"
                         size="medium"
                         variant="simple"

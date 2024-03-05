@@ -88,9 +88,12 @@ export interface ITemplate {
     description: string;
 }
 
-// export type ErrorState = {
-//     [key in keyof IComponent]?: string;
-// };
 export interface IErrorState {
     [key: string]: string | undefined;
+}
+
+export interface IFetcherResponseData {
+    show: boolean;
+    message: string;
+    variant: "error" | "info" | "warning" | "success";
 }

@@ -1,9 +1,8 @@
-import React, { useEffect, useState, FormEvent, ChangeEvent } from 'react';
+import React, { useEffect, useState, ChangeEvent } from 'react';
 import { Box, Button, TextField } from "@navikt/ds-react";
 import { FloppydiskIcon } from '@navikt/aksel-icons';
 import type { IOrganization, IErrorState } from "~/api/types";
 import { defaultOrganization } from "~/api/types";
-
 interface OrganizationFormProps {
     selected: IOrganization;
     f: any; // Replace `any` with the actual type
@@ -56,18 +55,14 @@ const OrganizationForm: React.FC<OrganizationFormProps> = ({ selected, f, r }) =
             formData.orgNumber.length > 0
         );
     }
-
-    const handleSubmit = (e: FormEvent) => {
-        e.preventDefault(); // Prevent default form submission
-        console.log("Form data on submit", formData);
-        // Close the modal if the ref is provided
+    const handleSubmit = () => {
         if (r && r.current) {
             r.current.close();
         }
     };
 
     return (
-        <f.Form method="post" onSubmit={handleSubmit}>
+        <f.Form method="post">
 
             <input
                 type="hidden"

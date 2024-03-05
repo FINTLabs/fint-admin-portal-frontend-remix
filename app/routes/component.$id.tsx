@@ -2,7 +2,7 @@
 import React, {useEffect} from "react";
 import type {ActionFunctionArgs, LoaderFunction} from "@remix-run/node";
 import {json} from "@remix-run/node";
-import {isRouteErrorResponse, Link, useActionData, useFetcher, useLoaderData, useRouteError} from "@remix-run/react";
+import {isRouteErrorResponse, useFetcher, useLoaderData, useRouteError} from "@remix-run/react";
 import {Alert, Box, Heading, HGrid, LinkPanel, Tabs, Tag, VStack} from "@navikt/ds-react";
 import {Buldings3Icon, PencilIcon, TenancyIcon, TokenIcon} from '@navikt/aksel-icons';
 import OrganizationTable from "~/components/organization-table";
@@ -10,6 +10,7 @@ import ComponentApi from "~/api/component-api";
 import OrganizationApi from "~/api/organization-api";
 import ComponentForm from "~/components/component-form";
 import DeleteConfirm from "~/components/delete-confirm";
+import {IFetcherResponseData} from "~/api/types";
 
 export const loader: LoaderFunction = async ({ params }) => {
     const componentName = params.id;
@@ -33,10 +34,6 @@ export const loader: LoaderFunction = async ({ params }) => {
     }
 };
 
-function isErrorWithMessage(error: unknown): error is { message: string } {
-    return typeof error === "object" && error !== null && "message" in error;
-}
-
 export async function action({request}: ActionFunctionArgs) {
 
     const formData = await request.formData();
@@ -46,33 +43,20 @@ export async function action({request}: ActionFunctionArgs) {
         formValues[key] = value;
     }
     const actionType = formData.get("actionType");
-    console.log("actionType", actionType);
 
-    if (actionType === "delete") {
-        const componentName = formData.get("deleteName");
-        const response = await ComponentApi.delete(componentName);
-        return json({ show: true, message: response.message, variant: response.variant });
+    let response;
+    switch (actionType) {
+        case "update":
+            response = await ComponentApi.update(formValues);
+            break;
+        case "delete":
+            response = await ComponentApi.delete(formValues);
+            break;
+        default:
+            return json({show: true, message: "Unknown action type", variant: "error"});
     }
 
-    if(actionType === "update") {
-        try {
-            const response = await ComponentApi.update(formValues);
-            console.log("response from API", response);
-            return json({ show: true, message: response.message, variant: response.variant });
-        } catch (error) {
-            // Handle any errors here
-            if (isErrorWithMessage(error)) {
-                // Now TypeScript knows error has a message property
-                return json({ show: true, message: error.message, variant: "error" });
-            } else {
-                // Handle the case where the error does not have a message property
-                return json({ show: true, message: "An unknown error occurred", variant: "error" });
-            }
-        }
-    }
-
-    return json({ show: true, message: "Unknown action type", variant: "error" });
-
+    return json({show: true, message: response?.message, variant: response?.variant});
 }
 
 //TODO: Ask to save changes on tab change ?
@@ -82,7 +66,7 @@ export default function ComponentPage() {
     const { selectedComponent, associatedOrganizations } = useLoaderData<typeof loader>();
     const [show, setShow] = React.useState(false);
     const fetcher = useFetcher();
-    const actionData = useActionData<typeof action>();
+    const actionData = fetcher.data as IFetcherResponseData;
 
     useEffect(() => {
         setShow(true);
@@ -229,7 +213,7 @@ export default function ComponentPage() {
                     <VStack gap="4">
 
                         <Box
-                            background="surface-subtle"
+                            className={"inputForm"}
                             borderColor="border-alt-3"
                             padding="4"
                             borderWidth="2"
@@ -242,7 +226,7 @@ export default function ComponentPage() {
                         </Box>
 
                         <Box
-                            background="surface-subtle"
+                            className={"inputForm"}
                             borderColor="border-alt-3"
                             padding="4"
                             borderWidth="2"

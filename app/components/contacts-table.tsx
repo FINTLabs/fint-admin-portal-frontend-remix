@@ -9,7 +9,7 @@ import { defaultContact } from "~/api/types";
 interface ContactTableProps {
     data: IContact[];
     organizations: any[];
-    f: any;
+    f: any | null;
     editable?: boolean;
     legalContactDn?: string | null;
 }
@@ -45,8 +45,8 @@ const ContactTable = ({ data, organizations, f, editable = true, legalContactDn 
                         {legalContactDn && <Table.HeaderCell />}
 
                         <Table.HeaderCell />
-                        <Table.HeaderCell style={{ fontWeight: 'bold' }}>Name</Table.HeaderCell>
-                        <Table.HeaderCell style={{ fontWeight: 'bold' }}>Technical</Table.HeaderCell>
+                        <Table.HeaderCell style={{ fontWeight: 'bold' }}>Navn</Table.HeaderCell>
+                        <Table.HeaderCell style={{ fontWeight: 'bold' }}>Teknisk</Table.HeaderCell>
                         {editable && <Table.HeaderCell />}
                     </Table.Row>
                 </Table.Header>
@@ -86,6 +86,7 @@ const ContactTable = ({ data, organizations, f, editable = true, legalContactDn 
                                         onClick={() => openEditModal(row)}
                                         icon={<PencilIcon title="Rediger" />}
                                         size="xsmall"
+                                        id={`edit-contact-${index}`}
                                     />
                                 </Table.DataCell>
                             )}
@@ -95,7 +96,7 @@ const ContactTable = ({ data, organizations, f, editable = true, legalContactDn 
             </Table>
 
             {editable && (
-                <Modal ref={modalRef} header={{ heading: "Edit Contact" }} width={400}>
+                <Modal ref={modalRef} header={{ heading: "Rediger kontakt" }} width={400}>
                     <Modal.Body>
                         <ContactForm
                             selectedContact={selectedContact || defaultContact}

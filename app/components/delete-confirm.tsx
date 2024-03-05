@@ -26,12 +26,11 @@ const DeleteConfirm: React.FC<DeleteConfirmProps> = ({ deleteName, f }) => {
 
             <Modal
                 open={open}
-                header={{
-                    heading: "Confirmation",
-                    size: "small",
-                }}
                 width="small"
             >
+                <Modal.Header closeButton={false}>
+                    <Heading size="small">Confirmation</Heading>
+                </Modal.Header>
                 <Modal.Body>
                     <Heading size="small">Er du sikker på at du vil fjerne: </Heading>
 

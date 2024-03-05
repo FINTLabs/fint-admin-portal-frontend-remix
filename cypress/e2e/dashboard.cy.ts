@@ -35,15 +35,15 @@ describe('Dashboard Tests', () => {
 
   it('Boxes at top', () => {
     cy.visit('http://localhost:3000/');
-    cy.get('.navds-stack > [href="/contact"] > .navds-link-panel__content > .navds-link-panel__title').should('contain', 'Contacts');
+    cy.get('.navds-stack > [href="/contact"] > .navds-link-panel__content > .navds-link-panel__title').should('contain', 'Kontakter');
     cy.get('.navds-stack > [href="/contact"]').click();
 
     cy.visit('http://localhost:3000/');
-    cy.get('.navds-stack > [href="/organization"] > .navds-link-panel__content > .navds-link-panel__title').should('contain', 'Organizations');
+    cy.get('.navds-stack > [href="/organization"] > .navds-link-panel__content > .navds-link-panel__title').should('contain', 'Organisasjoner');
     cy.get('.navds-stack > [href="/organization"]').click();
 
     cy.visit('http://localhost:3000/');
-    cy.get('.navds-stack > [href="/component"] > .navds-link-panel__content > .navds-link-panel__title').should('contain', 'Components');
+    cy.get('.navds-stack > [href="/component"] > .navds-link-panel__content > .navds-link-panel__title').should('contain', 'Komponenter');
     cy.get('.navds-stack > [href="/component"]').click();
 
 

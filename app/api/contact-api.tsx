@@ -21,17 +21,17 @@ class ContactApi {
         }
     }
 
-    static async create(contactData: IContact) {
+    static async create(data: {}) {
         try {
             const response = await fetch(`${API_URL}/api/contacts`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify(contactData)
+                body: JSON.stringify(data)
             });
 
-            console.log("sent to api:", JSON.stringify(contactData));
+            console.log("sent to api:", JSON.stringify(data));
 
             if (response.ok) {
                 return {message: "Contact created!", variant: "success"};
@@ -59,17 +59,17 @@ class ContactApi {
         }
     }
 
-    static async update(contactData: IContact) {
+    static async update(data: {}, nin: string) {
         try {
-            const response = await fetch(`${API_URL}/api/contacts/${contactData.nin}`, {
+            const response = await fetch(`${API_URL}/api/contacts/${nin}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify(contactData)
+                body: JSON.stringify(data)
             });
 
-            console.log("sent to api:", JSON.stringify(contactData));
+            console.log("sent to api:", JSON.stringify(data));
 
             if (response.ok) {
                 console.log("response ok", response.statusText);
@@ -85,14 +85,14 @@ class ContactApi {
         }
     }
 
-    static async delete(contactData: IContact) {
+    static async delete(data: {}, nin: string) {
         try {
-            const response = await fetch(`${API_URL}/api/contacts/${contactData.nin}`, {
+            const response = await fetch(`${API_URL}/api/contacts/${nin}`, {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify(contactData)
+                body: JSON.stringify(data)
             });
 
             if (response.ok) {

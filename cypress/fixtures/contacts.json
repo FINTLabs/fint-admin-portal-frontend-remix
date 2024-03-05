@@ -1,7 +1,7 @@
 [
   {
     "dn": "cn=2d9b5ef8-3d9d-4f7a-8e5f-abc14fd72719,ou=contacts,o=galaxy",
-    "nin": "2d9b5ef8-3d9d-4f7a-8e5f-abc14fd72719",
+    "nin": "1",
     "firstName": "Luke",
     "lastName": "Skywalker",
     "mail": "luke.skywalker@rebelalliance.org",
@@ -13,7 +13,7 @@
   },
   {
     "dn": "cn=4e3f6c2d-6e8f-4e07-b2d5-df56c8a8a117,ou=contacts,o=galaxy",
-    "nin": "4e3f6c2d-6e8f-4e07-b2d5-df56c8a8a117",
+    "nin": "2",
     "firstName": "Leia",
     "lastName": "Organa",
     "mail": "leia.organa@rebelalliance.org",
@@ -25,7 +25,7 @@
   },
   {
     "dn": "cn=5a8d0e47-7e6d-4a83-9c8d-eda214f9d47b,ou=contacts,o=galaxy",
-    "nin": "5a8d0e47-7e6d-4a83-9c8d-eda214f9d47b",
+    "nin": "3",
     "firstName": "Han",
     "lastName": "Solo",
     "mail": "han.solo@millenniumfalcon.org",
@@ -37,7 +37,7 @@
   },
   {
     "dn": "cn=7bd1c386-fbe8-4f90-8d2e-22f2075a8b50,ou=contacts,o=galaxy",
-    "nin": "7bd1c386-fbe8-4f90-8d2e-22f2075a8b50",
+    "nin": "4",
     "firstName": "Chewbacca",
     "lastName": "",
     "mail": "chewbacca@kashyyyk.org",
@@ -49,7 +49,7 @@
   },
   {
     "dn": "cn=9f8b1c2e-f47d-4a4e-8cbe-df2c8a8d4557,ou=contacts,o=galaxy",
-    "nin": "9f8b1c2e-f47d-4a4e-8cbe-df2c8a8d4557",
+    "nin": "5",
     "firstName": "Obi-Wan",
     "lastName": "Kenobi",
     "mail": "obiwan.kenobi@jediorder.org",
@@ -58,71 +58,5 @@
     "legal": ["jedi"],
     "supportId": null,
     "roles": ["Jedi Master", "General"]
-  },
-  {
-    "dn": "cn=luke_skywalker,ou=contacts,o=fint",
-    "firstName": "Luke",
-    "lastName": "Skywalker",
-    "mail": "luke.skywalker@rebelalliance.org",
-    "mobile": "94736283",
-    "technical": ["pilot", "jedi"],
-    "legal": [],
-    "supportId": null,
-    "roles": ["Jedi Knight", "Commander"]
-  },
-  {
-    "dn": "cn=leia_organa,ou=contacts,o=fint",
-    "firstName": "Leia",
-    "lastName": "Organa",
-    "mail": "leia.organa@rebelalliance.org",
-    "mobile": "95847295",
-    "technical": ["diplomat", "leader"],
-    "legal": ["princess", "rebel"],
-    "supportId": null,
-    "roles": ["Princess", "General"]
-  },
-  {
-    "dn": "cn=darth_vader,ou=contacts,o=fint",
-    "firstName": "Darth",
-    "lastName": "Vader",
-    "mail": "darth.vader@empire.gov",
-    "mobile": "90000001",
-    "technical": ["sith lord", "pilot"],
-    "legal": ["sith"],
-    "supportId": null,
-    "roles": ["Sith Lord", "Commander"]
-  },
-  {
-    "dn": "cn=emperor_palpatine,ou=contacts,o=fint",
-    "firstName": "Emperor",
-    "lastName": "Palpatine",
-    "mail": "emperor.palpatine@empire.gov",
-    "mobile": "90000002",
-    "technical": ["sith lord"],
-    "legal": ["emperor"],
-    "supportId": null,
-    "roles": ["Emperor", "Sith Lord"]
-  },
-  {
-    "dn": "cn=wedge_antilles,ou=contacts,o=fint",
-    "firstName": "Wedge",
-    "lastName": "Antilles",
-    "mail": "wedge.antilles@rebelalliance.org",
-    "mobile": "94736284",
-    "technical": ["pilot"],
-    "legal": [],
-    "supportId": null,
-    "roles": ["Pilot"]
-  },
-  {
-    "dn": "cn=lando_calrissian,ou=contacts,o=fint",
-    "firstName": "Lando",
-    "lastName": "Calrissian",
-    "mail": "lando.calrissian@cloudcity.gov",
-    "mobile": "90000003",
-    "technical": ["administrator"],
-    "legal": ["administrator"],
-    "supportId": null,
-    "roles": ["Administrator"]
   }
 ]

@@ -4,10 +4,9 @@ import OrganizationApi from "~/api/organization-api";
 import OrganizationTable from "~/components/organization-table";
 import {PersonPlusIcon} from "@navikt/aksel-icons";
 import OrganizationForm from "~/components/organization-form";
-import {IOrganization} from "~/api/types";
+import {defaultOrganization, IFetcherResponseData, IOrganization} from "~/api/types";
 import {type ActionFunctionArgs, json} from "@remix-run/node";
-import {useActionData, useFetcher, useLoaderData} from "@remix-run/react";
-import {defaultOrganization} from "~/api/types";
+import {useFetcher, useLoaderData} from "@remix-run/react";
 
 export const loader = async () => {
 
@@ -33,7 +32,6 @@ export async function action({request}: ActionFunctionArgs) {
     const response = await OrganizationApi.create(formValues);
     return json({ show: true, message: response.message, variant: response.variant });
 
-
 }
 
 interface LoaderData {
@@ -48,11 +46,15 @@ export default function OrganizationPage() {
     const organizations = loaderData.organizationData;
     const [show, setShow] = React.useState(false);
     const fetcher = useFetcher();
-    const actionData = useActionData<typeof action>();
+    const actionData = fetcher.data as IFetcherResponseData;
 
     useEffect(() => {
-        setShow(true);
-    }, [fetcher.state]);
+        if (actionData && actionData.show) {
+            setShow(true);
+        } else {
+            setShow(false);
+        }
+    }, [fetcher.data]);
 
     const handleSearchInput = (input: any) => {
         setSearch(input);
@@ -68,7 +70,7 @@ export default function OrganizationPage() {
     return (
         <div style={{ fontFamily: "system-ui, sans-serif", lineHeight: "1.8" }}>
 
-            <Modal ref={organizationEditRef} header={{ heading: "Add New Organization" }} width={400}>
+            <Modal ref={organizationEditRef} header={{ heading: "Legg til ny organisasjon" }} width={400}>
                 <Modal.Body>
                     <OrganizationForm
                         selected={defaultOrganization}
@@ -87,7 +89,7 @@ export default function OrganizationPage() {
             <InternalHeader>
                 <InternalHeader.Button onClick={() => organizationEditRef.current?.showModal()}>
                     <PersonPlusIcon title="a11y-title" fontSize="1.5rem" />
-                    Add New
+                    Legg til ny
                 </InternalHeader.Button>
                 <Spacer />
 
@@ -99,6 +101,7 @@ export default function OrganizationPage() {
                     }}
                 >
                     <Search
+                        id={"searchField"}
                         label="InternalHeader søk"
                         size="medium"
                         variant="simple"
