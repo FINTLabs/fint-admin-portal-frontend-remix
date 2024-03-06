@@ -45,7 +45,6 @@ class OrganizationApi {
 
     static async create(data: {}) {
         const url = `${API_URL}/api/organisations`;
-        console.log("create org url", url);
         const response = await fetch(url, {
             method: "POST",
             headers: {

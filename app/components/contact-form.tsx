@@ -109,7 +109,6 @@ const ContactForm: React.FC<ContactFormProps> = ({ selectedContact, f, r }) => {
     }
 
     const handleSubmit = () => {
-       console.log("action type", actionType);
         if (confirmDelete) {
             console.log("Deleting contact...");
             // setConfirmDelete(false);

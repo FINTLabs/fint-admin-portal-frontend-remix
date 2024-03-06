@@ -6,7 +6,7 @@ import { Button, Heading, HGrid, Loader, VStack } from "@navikt/ds-react";
 import { Buildings3Icon, ComponentIcon, PersonGroupIcon } from "@navikt/aksel-icons";
 import MaintenanceApi from "~/api/maintenance-api";
 import JSONPretty from "react-json-pretty";
-import {ActionFunction, ActionFunctionArgs, json} from "@remix-run/node";
+import {ActionFunction, json} from "@remix-run/node";
 
 interface FetcherResponse {
     reportType?: string;
@@ -35,7 +35,7 @@ export const action: ActionFunction = async ({ request }: { request: Request }) 
             data = await MaintenanceApi.getAdapterConsistency();
             break;
         default:
-            console.log("Unknown report type");
+            console.info("Unknown report type");
             data = null;
     }
 

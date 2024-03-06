@@ -47,7 +47,6 @@ class ComponentApi {
     }
 
     static async create(componentData: {}) {
-        console.log("component Data to add:", JSON.stringify(componentData));
         try {
             const response = await fetch(`${API_URL}/api/components`, {
                 method: 'POST',

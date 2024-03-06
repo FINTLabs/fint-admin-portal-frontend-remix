@@ -10,7 +10,6 @@ const DeleteConfirm: React.FC<DeleteConfirmProps> = ({ deleteName, f }) => {
     const [open, setOpen] = useState(false);
 
     const handleClose = (isConfirmed: boolean) => {
-        console.log("delete confirmed: ", isConfirmed);
         setOpen(false);
     };
 

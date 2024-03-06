@@ -27,7 +27,6 @@ export async function action({request}: ActionFunctionArgs) {
     for (const [key, value] of formData) {
         formValues[key] = value;
     }
-    console.log("formValues", formValues);
 
     const response = await OrganizationApi.create(formValues);
     return json({ show: true, message: response.message, variant: response.variant });

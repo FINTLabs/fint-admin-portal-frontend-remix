@@ -31,8 +31,6 @@ class ContactApi {
                 body: JSON.stringify(data)
             });
 
-            console.log("sent to api:", JSON.stringify(data));
-
             if (response.ok) {
                 return {message: "Contact created!", variant: "success"};
             } else {
@@ -68,8 +66,6 @@ class ContactApi {
                 },
                 body: JSON.stringify(data)
             });
-
-            console.log("sent to api:", JSON.stringify(data));
 
             if (response.ok) {
                 console.log("response ok", response.statusText);
