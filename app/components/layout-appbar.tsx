@@ -13,12 +13,13 @@ import {
     XMarkIcon
 } from '@navikt/aksel-icons';
 import {Link, useLoaderData} from "@remix-run/react";
+import {ILoaderData} from "~/api/types";
 
 export function LayoutAppbar() {
 
     const buttonRef = useRef<HTMLButtonElement>(null);
     const [menuOpen, setMenuOpen] = useState(false);
-    const { displayName } = useLoaderData();
+    const { displayName } = useLoaderData<ILoaderData>();
 
     return (
 

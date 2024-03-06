@@ -28,6 +28,7 @@ const ConfirmAction: React.FC<ConfirmActionProps> = ({
     const handleClose = (isConfirmed: boolean) => {
         console.log(actionType + " confirmed: ", isConfirmed);
         setOpen(false);
+        //todo: the form is not closing after the action is confirmed
     };
 
     return (

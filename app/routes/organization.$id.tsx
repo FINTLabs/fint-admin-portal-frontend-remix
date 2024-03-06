@@ -10,7 +10,6 @@ import ContactApi from "~/api/contact-api";
 import OrganizationApi from "~/api/organization-api";
 import ComponentApi from "~/api/component-api";
 import OrganizationForm from "~/components/organization-form";
-import DeleteConfirm from "~/components/delete-confirm";
 import ConfirmAction from "~/components/confirm-action";
 import {IContact, IFetcherResponseData} from "~/api/types";
 
@@ -27,8 +26,8 @@ export const loader: LoaderFunction = async ({params}) => {
             contacts
         ] = await Promise.all([
             OrganizationApi.fetch(),
-            OrganizationApi.fetchLegalContact(selectedOrganisation),
-            ComponentApi.fetchComponentsByOrganization(selectedOrganisation),
+            OrganizationApi.fetchLegalContact(selectedOrganisation.name),
+            ComponentApi.fetchComponentsByOrganization(selectedOrganisation.dn),
             ContactApi.fetchTechnicalContactsByOrganization(selectedOrganisation)
         ]);
 
@@ -57,13 +56,13 @@ export async function action({request}: ActionFunctionArgs) {
     let response;
     switch (actionType) {
         case "update":
-            response = await OrganizationApi.update(formValues);
+            response = await OrganizationApi.update(formValues, formValues["name"] as string);
             break;
         case "delete":
-            response = await OrganizationApi.delete(formValues);
+            response = await OrganizationApi.delete(formData.get("deleteName") as string);
             break;
         case "setLegalContact":
-            response = await OrganizationApi.setLegalContact(formData.get("orgName"), formData.get("nin"));
+            response = await OrganizationApi.setLegalContact(formData.get("orgName") as string, formData.get("contactNin") as string);
             break;
         default:
             return json({show: true, message: "Unknown action type", variant: "error"});
@@ -230,9 +229,16 @@ export default function OrganizationDetailsPage() {
                             borderWidth="2"
                             borderRadius="xlarge"
                         >
-                            <DeleteConfirm
-                                deleteName={selectedOrganisation.name}
+                            <ConfirmAction
+                                actionText="Slett"
+                                targetName={selectedOrganisation.name}
                                 f={fetcher}
+                                actionType="delete"
+                                confirmationText={`Slette organisasjonen:`}
+                                additionalInputs={[
+                                    { name: "orgName", value: selectedOrganisation.displayName },
+                                    { name: "dn", value: selectedOrganisation.dn }
+                                ]}
                             />
                         </Box>
                     </VStack>

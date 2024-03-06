@@ -122,9 +122,7 @@ const ContactForm: React.FC<ContactFormProps> = ({ selectedContact, f, r }) => {
         }
     };
 
-//TODO: change button to a submit button and add a form action of delete
     function handleDelete() {
-        console.log("Delete Confirmation");
         setActionType("delete");
         setConfirmDelete(true);
     }
@@ -134,7 +132,6 @@ const ContactForm: React.FC<ContactFormProps> = ({ selectedContact, f, r }) => {
         setActionType(selectedContact.dn ? "update" : "create");
     };
 
-//TODO: clear form after submit
     return (
 
         <f.Form method="post" >
@@ -241,7 +238,7 @@ const ContactForm: React.FC<ContactFormProps> = ({ selectedContact, f, r }) => {
                                 <Button
                                     variant="danger"
                                     icon={<TrashIcon aria-hidden />}
-                                    onClick={handleDelete}
+                                    onClick={handleSubmit}
                                     size="xsmall"
                                 >
                                     Er du sikker?

@@ -111,5 +111,7 @@ describe('Contact Page Tests', () => {
         // cy.get('.navds-modal__header > .navds-button').eq(0).click();
         // cy.get('.navds-modal').should('not.be.visible');
     });
+
+    //todo: add test for delete modal
 });
 

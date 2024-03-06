@@ -11,11 +11,11 @@ class OrganizationApi {
             }
     }
 
-    static async fetchOrganizationByOrgNumber(orgNumber) {
+    static async fetchOrganizationByOrgNumber(orgNumber:String | undefined) {
         try {
             const organizations = await this.fetch();
             if (organizations) {
-                return organizations.find(org => org.orgNumber === orgNumber) || null;
+                return organizations.find((org: { orgNumber: String; }) => org.orgNumber === orgNumber) || null;
             } else {
                 return null;
             }
@@ -25,9 +25,9 @@ class OrganizationApi {
         }
     }
 
-    static async fetchLegalContact(organisation) {
+    static async fetchLegalContact(organisationName:String) {
         try {
-            const url = `${API_URL}/api/organisations/${organisation.name}/contacts/legal`;
+            const url = `${API_URL}/api/organisations/${organisationName}/contacts/legal`;
             const response = await fetch(url);
             if (response.ok) {
                 return await response.json();
@@ -43,18 +43,15 @@ class OrganizationApi {
         }
     }
 
-    static async create(organisation) {
+    static async create(data: {}) {
         const url = `${API_URL}/api/organisations`;
+        console.log("create org url", url);
         const response = await fetch(url, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify({
-                name: organisation.name,
-                orgNumber: organisation.orgNumber,
-                displayName: organisation.displayName,
-            }),
+            body: JSON.stringify(data)
         });
         if(response.ok) {
             return { message: "Organization ble opprettet", variant: "success" };
@@ -63,17 +60,15 @@ class OrganizationApi {
         }
     }
 
-    static async update(organisation) {
-        const url = `${API_URL}/api/organisations/${organisation.name}`;
-        console.log("update org url", url);
-        console.log("update org", JSON.stringify(organisation));
+    static async update(data: {}, orgName:String) {
+        const url = `${API_URL}/api/organisations/${orgName}`;
 
         const response = await fetch(url, {
             method: "PUT",
             headers: {
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify(organisation),
+            body: JSON.stringify(data),
         });
         if(response.ok) {
             return { message: "Organization ble oppdatert", variant: "success" };
@@ -82,7 +77,7 @@ class OrganizationApi {
         }
     }
 
-    static async delete(organisationName) {
+    static async delete(organisationName:String | undefined) {
         const url = `${API_URL}/api/organisations/${organisationName}`;
         console.log("delete org url", url);
 
@@ -92,14 +87,20 @@ class OrganizationApi {
         });
 
         if (response.ok) {
-            throw new Response("Organization successfully removed", 410 );
+            // @ts-ignore
+            throw new Response("Organization successfully removed", {
+                status: 410,
+                headers: {
+                    'Content-Type': 'text/plain',
+                },
+            });
 
         } else {
             return { message: "Det oppsto en feil ved sletting av organisation.", variant: "error" };
         }
     }
 
-    static async setLegalContact(orgName, contactNin) {
+    static async setLegalContact(orgName:String, contactNin:String) {
         const url = `${API_URL}/api/organisations/${orgName}/contacts/legal/${contactNin}`;
         console.log("setLegalContact url", url);
 

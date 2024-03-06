@@ -18,11 +18,11 @@ class AccessTemplateApi {
         }
     }
 
-    static async fetchTemplateByName(templateName) {
+    static async fetchTemplateByName(templateName: String) {
         try {
             const templates = await this.fetchAccessTemplates();
             if (templates) {
-                return templates.find((t) => t.name === templateName)
+                return templates.find((t: { name: String; }) => t.name === templateName)
             } else {
                 return null;
             }

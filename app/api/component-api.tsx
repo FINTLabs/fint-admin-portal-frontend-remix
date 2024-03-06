@@ -74,9 +74,9 @@ class ComponentApi {
         }
     }
 
-    static async update(componentData: { name?: any; }) {
-        const url = `${API_URL}/api/components/${componentData.name}`;
-
+    static async update(data: {}, name:String) {
+        const url = `${API_URL}/api/components/${name}`;
+        console.info("update component url", url, JSON.stringify(data));
         const request = new Request(url, {
             method: 'PUT',
             headers: {
@@ -84,20 +84,24 @@ class ComponentApi {
                 'Content-Type': 'application/json'
             },
             credentials: 'same-origin',
-            body: JSON.stringify(componentData)
+            body: JSON.stringify(data)
         });
 
-        return fetch(request).then(response => {
-            console.log("Updating a component: ", response);
-            return { message: "Komponenten er oppdatert", variant: "info" };
-        }).catch(error => {
+        try {
+            const response = await fetch(request);
+            if (response.ok) {
+                return { message: "Komponenten er oppdatert", variant: "info" };
+            }
+        }
+        catch(error) {
             console.error("Error updating component", error);
             return { message: "Det oppsto en feil ved oppdatering av komponenten.", variant: "error" };
-        });
+        }
     }
 
-    static async delete(componentName: any) {
+    static async delete(componentName: string) {
         const url = `${API_URL}/api/components/${componentName}`;
+        console.log("delete component url", url);
         const request = new Request(url, {
             method: 'DELETE',
             credentials: 'same-origin'

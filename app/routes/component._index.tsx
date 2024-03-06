@@ -23,12 +23,15 @@ export const loader = async () => {
 export async function action({request}: ActionFunctionArgs) {
 
     const formData = await request.formData();
-    const formValues: Record<string, FormDataEntryValue> = {};
+    const formValues: Record<string, string | boolean> = {};
 
     for (const [key, value] of formData) {
-        formValues[key] = value;
+        if(value === "on") {
+            formValues[key] = true;
+            continue;
+        }
+        formValues[key] = value as string;
     }
-    console.log("formValues", formValues);
 
     const response = await ComponentApi.create(formValues);
     return json({ show: true, message: response.message, variant: response.variant });

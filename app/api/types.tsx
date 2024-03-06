@@ -97,3 +97,9 @@ export interface IFetcherResponseData {
     message: string;
     variant: "error" | "info" | "warning" | "success";
 }
+
+export interface ILoaderData {
+    displayName: {
+        fullName: string;
+    };
+}

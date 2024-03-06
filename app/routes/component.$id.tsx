@@ -9,8 +9,8 @@ import OrganizationTable from "~/components/organization-table";
 import ComponentApi from "~/api/component-api";
 import OrganizationApi from "~/api/organization-api";
 import ComponentForm from "~/components/component-form";
-import DeleteConfirm from "~/components/delete-confirm";
 import {IFetcherResponseData} from "~/api/types";
+import ConfirmAction from "~/components/confirm-action";
 
 export const loader: LoaderFunction = async ({ params }) => {
     const componentName = params.id;
@@ -37,20 +37,25 @@ export const loader: LoaderFunction = async ({ params }) => {
 export async function action({request}: ActionFunctionArgs) {
 
     const formData = await request.formData();
-    const formValues: Record<string, FormDataEntryValue> = {};
+    const formValues: Record<string, string | boolean> = {};
 
     for (const [key, value] of formData) {
-        formValues[key] = value;
+        if(value === "on") {
+            formValues[key] = true;
+            continue;
+        }
+        formValues[key] = value as string;
     }
     const actionType = formData.get("actionType");
+
 
     let response;
     switch (actionType) {
         case "update":
-            response = await ComponentApi.update(formValues);
+            response = await ComponentApi.update(formValues, formValues["name"] as string);
             break;
         case "delete":
-            response = await ComponentApi.delete(formValues);
+            response = await ComponentApi.delete(formValues["deleteName"] as string);
             break;
         default:
             return json({show: true, message: "Unknown action type", variant: "error"});
@@ -233,9 +238,16 @@ export default function ComponentPage() {
                             borderRadius="xlarge"
                         >
 
-                            <DeleteConfirm
-                                deleteName={selectedComponent.name}
+                            <ConfirmAction
+                                actionText="Slett"
+                                targetName={selectedComponent.name}
                                 f={fetcher}
+                                actionType="delete"
+                                confirmationText={`Slette komponent:`}
+                                additionalInputs={[
+                                    { name: "componentName", value: selectedComponent.displayName },
+                                    { name: "dn", value: selectedComponent.dn }
+                                ]}
                             />
 
                         </Box>
@@ -253,30 +265,25 @@ export default function ComponentPage() {
 export function ErrorBoundary() {
     const error = useRouteError();
 
-    // Handle route-specific errors
     if (isRouteErrorResponse(error)) {
         return (
             <div>
                 <h1>
                     {error.status} {error.statusText}
                 </h1>
-                {/* Ensure error.data is displayed correctly, might need JSON.stringify if it's an object */}
-                <p>{typeof error.data === 'string' ? error.data : JSON.stringify(error.data)}</p>
+                <p>{error.data}</p>
             </div>
         );
     } else if (error instanceof Error) {
-        // Handle generic JavaScript errors
         return (
             <div>
                 <h1>Error</h1>
                 <p>{error.message}</p>
                 <p>The stack trace is:</p>
-                {/* Ensure stack is a string or provide a default message */}
-                <pre>{error.stack || 'No stack trace available'}</pre>
+                <pre>{error.stack}</pre>
             </div>
         );
     } else {
-        // Fallback for unknown error types
         return <h1>Unknown Error</h1>;
     }
 }
