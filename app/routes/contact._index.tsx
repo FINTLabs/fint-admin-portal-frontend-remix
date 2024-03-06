@@ -107,7 +107,6 @@ export default function ContactPage() {
                     className="self-center px-5"
                     onSubmit={(e) => {
                         e.preventDefault();
-                        console.log("Søk!");
                     }}
                 >
                     <Search

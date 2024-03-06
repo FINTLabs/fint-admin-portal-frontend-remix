@@ -100,7 +100,6 @@ class ComponentApi {
 
     static async delete(componentName: string) {
         const url = `${API_URL}/api/components/${componentName}`;
-        console.log("delete component url", url);
         const request = new Request(url, {
             method: 'DELETE',
             credentials: 'same-origin'

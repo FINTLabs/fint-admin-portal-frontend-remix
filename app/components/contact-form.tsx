@@ -110,13 +110,10 @@ const ContactForm: React.FC<ContactFormProps> = ({ selectedContact, f, r }) => {
 
     const handleSubmit = () => {
         if (confirmDelete) {
-            console.log("Deleting contact...");
-            // setConfirmDelete(false);
             setActionType("delete");
         }
 
         if (r && r.current) {
-            console.log("close the modal", r);
             r.current.close();
         }
     };

@@ -78,7 +78,6 @@ class OrganizationApi {
 
     static async delete(organisationName:String | undefined) {
         const url = `${API_URL}/api/organisations/${organisationName}`;
-        console.log("delete org url", url);
 
         const response = await fetch(url, {
             method: "DELETE",
@@ -101,14 +100,12 @@ class OrganizationApi {
 
     static async setLegalContact(orgName:String, contactNin:String) {
         const url = `${API_URL}/api/organisations/${orgName}/contacts/legal/${contactNin}`;
-        console.log("setLegalContact url", url);
 
         const response = await fetch(url, {
             method: "PUT",
             credentials: 'same-origin'
         });
 
-        console.log("setLegalContact response", response);
         if(response.ok) {
             return {message: "Legal contact ble satt", variant: "success"};
         } else {

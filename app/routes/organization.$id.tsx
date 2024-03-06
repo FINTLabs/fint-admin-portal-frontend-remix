@@ -87,7 +87,6 @@ export default function OrganizationDetailsPage() {
 
     useEffect(() => {
         setShow(true);
-        console.log("fetcher state:", fetcher.state);
     }, [fetcher.state]);
 
     return (

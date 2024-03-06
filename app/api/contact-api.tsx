@@ -68,10 +68,8 @@ class ContactApi {
             });
 
             if (response.ok) {
-                console.log("response ok", response.statusText);
                 return {message: "Contact updated!", variant: "success"};
             } else {
-                console.log("response ok", response.statusText);
                 return {message: "Error updating contact", variant: "error"};
             }
 
@@ -92,10 +90,8 @@ class ContactApi {
             });
 
             if (response.ok) {
-                console.log("response ok", response.statusText);
                 return {message: "Contact deleted!", variant: "success"};
             } else {
-                console.log("Error:", response.statusText);
                 return {message: "Error removing contact", variant: "error"};
             }
 
