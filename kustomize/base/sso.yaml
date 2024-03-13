@@ -1,10 +1,10 @@
 apiVersion: fintlabs.no/v1alpha1
 kind: FLAISSso
 metadata:
-  name: fint-admin-portal-frontend-sso
+  name: fint-admin-portal-sso
   labels:
-    app.kubernetes.io/name: fint-admin-portal-frontend-sso
-    app.kubernetes.io/instance: fint-admin-portal-frontend-sso_fintlabs_no
+    app.kubernetes.io/name: fint-admin-portal-sso
+    app.kubernetes.io/instance: fint-admin-portal-sso_fintlabs_no
     app.kubernetes.io/version: latest
     app.kubernetes.io/component: sso
     app.kubernetes.io/part-of: fint-core

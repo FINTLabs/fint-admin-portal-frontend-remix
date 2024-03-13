@@ -15,9 +15,10 @@ spec:
   port: 8000
   imagePullPolicy: Always
   orgId: fintlabs.no
-  image: ghcr.io/fintlabs/fint-admin-portal-frontend:latest
+  image: ghcr.io/fintlabs/fint-admin-portal-frontend-remix:latest
   url:
     hostname: admin-beta.fintlabs.no
+    basePath: /
   ingress:
     enabled: true
     middlewares:
