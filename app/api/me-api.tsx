@@ -1,4 +1,4 @@
-const API_URL = process.env.API_URL;
+const API_URL = process.env.API_URL || '';
 
 class MeApi {
     static async fetchDisplayName() {

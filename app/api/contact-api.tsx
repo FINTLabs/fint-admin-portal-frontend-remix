@@ -1,6 +1,6 @@
 import type {IContact, IOrganization} from "~/api/types";
 
-const API_URL = process.env.API_URL;
+const API_URL = process.env.API_URL || '';
 
 class ContactApi {
 
