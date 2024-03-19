@@ -1,19 +1,22 @@
+import { log, error } from '~/utils/logger';
+
 const API_URL = process.env.API_URL || '';
 
 class MeApi {
     static async fetchDisplayName() {
+        log("Fetching display name", API_URL);
         try {
             const response = await fetch(`${API_URL}/api/me`);
             if (response.ok) {
                 return await response.json();
             } else {
                 // Handle error response
-                console.error("Error fetching display name");
+                error("Error fetching display name");
                 return "try-error";
             }
-        } catch (error) {
+        } catch (err) {
             // Handle fetch error
-            console.error("Error fetching display name:", error);
+            error("Error fetching display name:", err);
             return "catch-error";
         }
     }
