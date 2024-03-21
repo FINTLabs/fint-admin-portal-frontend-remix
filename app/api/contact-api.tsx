@@ -20,6 +20,10 @@ class ContactApi {
                     'Cookie': cookies,
                 },
             });
+            if (response.redirected) {
+                log('Contact Request was redirected:', response.url);
+            }
+
             log("response from contact fetch:", response);
             if (response.ok) {
                 const responseData = await response.json(); // Properly read the JSON response
