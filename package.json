@@ -4,8 +4,8 @@
   "sideEffects": false,
   "scripts": {
     "build": "remix build",
-    "dev": "remix dev --manual",
-    "start": "remix-serve ./build/index.js",
+    "dev": "remix dev",
+    "start": "node server.js",
     "typecheck": "tsc"
   },
   "dependencies": {
@@ -14,9 +14,12 @@
     "@navikt/ds-react": "^5.17.4",
     "@navikt/ds-tokens": "^6.1.0",
     "@remix-run/css-bundle": "^2.3.1",
+    "@remix-run/express": "^2.8.1",
     "@remix-run/node": "^2.3.1",
     "@remix-run/react": "^2.3.1",
     "@remix-run/serve": "^2.3.1",
+    "express": "^4.19.1",
+    "http-proxy-middleware": "^2.0.6",
     "isbot": "^3.7.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
