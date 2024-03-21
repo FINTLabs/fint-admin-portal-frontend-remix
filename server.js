@@ -12,7 +12,7 @@ const JAVA_API_URL = 'https://admin-beta.fintlabs.no'; // Adjust this URL to you
 app.use('/api', createProxyMiddleware({
     target: JAVA_API_URL,
     changeOrigin: true,
-    //pathRewrite: { '^/api': '' }, // Optional: rewrite /api to / if needed
+    pathRewrite: { '^/api': '' }, // Optional: rewrite /api to / if needed
 }));
 
 // Serve static assets
