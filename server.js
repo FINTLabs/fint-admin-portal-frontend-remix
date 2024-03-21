@@ -6,7 +6,7 @@ const { createRequestHandler } = require('@remix-run/express');
 const app = express();
 
 // Define the target for your Java backend
-const JAVA_API_URL = 'http://localhost:8080'; // Adjust this URL to your Java backend
+const JAVA_API_URL = 'http://localhost'; // Adjust this URL to your Java backend
 
 // Proxy middleware to forward /api requests to the Java backend
 app.use('/api', createProxyMiddleware({
