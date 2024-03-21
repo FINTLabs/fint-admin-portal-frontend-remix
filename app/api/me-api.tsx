@@ -1,6 +1,6 @@
 import { log, error } from '~/utils/logger';
 
-const API_URL = process.env.API_URL || '';
+const API_URL = process.env.API_URL || 'https://admin-beta.fintlabs.no';
 
 class MeApi {
     static async fetchDisplayName() {
