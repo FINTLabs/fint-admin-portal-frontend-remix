@@ -1,4 +1,5 @@
 import type {IContact, IOrganization} from "~/api/types";
+import {json} from "@remix-run/node";
 
 const API_URL = process.env.API_URL || '';
 
@@ -10,7 +11,7 @@ class ContactApi {
             const response = await fetch(`https://admin-beta.fintlabs.no/api/contacts`);
             console.error("response", response);
             if (response.ok) {
-                return await response.json();
+                return json(await response.json());
             } else {
                 // Handle error response
                 console.error("Error fetching contacts");
