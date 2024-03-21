@@ -7,18 +7,18 @@ const API_URL = process.env.API_URL || '';
 class ContactApi {
 
     static async fetch(cookies: string) {
-        log("TESTING FROM NEW FILE");
+        log("TESTING NEW ");
         log("COOKIES", cookies);
 
         try {
-            // const response = await fetch(`${API_URL}/api/contacts`);
-           const response = await fetch(`https://admin-beta.fintlabs.no/api/contacts`, {
-                method: 'GET',
-                credentials: 'include',
-                headers: {
-                    'Cookie': cookies,
-                },
-            });
+            const response = await fetch(`${API_URL}/api/contacts`);
+           // const response = await fetch(`/api/contacts`, {
+           //      method: 'GET',
+           //      credentials: 'include',
+           //      headers: {
+           //          'Cookie': cookies,
+           //      },
+           //  });
             console.error("response", response);
             if (response.ok) {
                 return json(await response.json());
