@@ -10,10 +10,11 @@ import {useFetcher, useLoaderData} from "@remix-run/react";
 import OrganizationApi from "~/api/organization-api";
 import ContactForm from "~/components/contact-form";
 
-export const loader = async () => {
+export const loader = async ({request}) => {
+    const cookies = request.headers.get('cookie');
     try {
         const [contactsData, organizationsData] = await Promise.all([
-            ContactApi.fetch(),
+            ContactApi.fetch(cookies),
             OrganizationApi.fetch()
         ]);
         return json({contactsData, organizationsData});
@@ -22,6 +23,7 @@ export const loader = async () => {
         throw new Response("Not Found", {status: 404});
     }
 };
+
 
 export async function action({request}: ActionFunctionArgs) {
     const formData = await request.formData();

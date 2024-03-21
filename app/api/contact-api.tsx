@@ -5,10 +5,15 @@ const API_URL = process.env.API_URL || '';
 
 class ContactApi {
 
-    static async fetch() {
+    static async fetch(cookies: string) {
         try {
             // const response = await fetch(`${API_URL}/api/contacts`);
-            const response = await fetch(`https://admin-beta.fintlabs.no/api/contacts`);
+            const response = await fetch('https://admin-beta.fintlabs.no/api/contacts', {
+                headers: {
+                    // Forward the cookies received from the client
+                    'Cookie': cookies,
+                },
+            });
             console.error("response", response);
             if (response.ok) {
                 return json(await response.json());
@@ -23,6 +28,9 @@ class ContactApi {
             return null;
         }
     }
+
+
+
 
     static async create(data: {}) {
         try {
@@ -45,19 +53,20 @@ class ContactApi {
     }
 
     static async fetchTechnicalContactsByOrganization(organization: IOrganization) {
-        try {
-            const contacts = await this.fetch();
-            if (contacts && organization) {
-                return contacts.filter((contact: IContact) =>
-                    organization.techicalContacts.includes(contact.dn)
-                );
-            } else {
-                return null;
-            }
-        } catch (error) {
-            console.error("Error fetching technical contacts by organization:", error);
-            return null;
-        }
+        // try {
+        //     const contacts = await this.fetch();
+        //     if (contacts && organization) {
+        //         return contacts.filter((contact: IContact) =>
+        //             organization.techicalContacts.includes(contact.dn)
+        //         );
+        //     } else {
+        //         return null;
+        //     }
+        // } catch (error) {
+        //     console.error("Error fetching technical contacts by organization:", error);
+        //     return null;
+        // }
+        return null;
     }
 
     static async update(data: {}, nin: string) {
