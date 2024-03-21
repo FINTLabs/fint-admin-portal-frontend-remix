@@ -2,23 +2,23 @@ import type {IContact, IOrganization} from "~/api/types";
 import {json} from "@remix-run/node";
 import { log, error } from '~/utils/logger';
 
-const API_URL = process.env.API_URL || '';
+const API_URL = process.env.API_URL || 'https://admin-beta.fintlabs.no';
 
 class ContactApi {
 
     static async fetch(cookies: string) {
         log("TESTING NEW ");
-        log("COOKIES", cookies);
+        log("COOKIES in contact", cookies);
 
         try {
-            const response = await fetch(`${API_URL}/api/contacts`);
-           // const response = await fetch(`/api/contacts`, {
-           //      method: 'GET',
-           //      credentials: 'include',
-           //      headers: {
-           //          'Cookie': cookies,
-           //      },
-           //  });
+            // const response = await fetch(`${API_URL}/api/contacts`);
+           const response = await fetch(`${API_URL}/api/contacts`, {
+                method: 'GET',
+                credentials: 'include',
+                headers: {
+                    'Cookie': cookies,
+                },
+            });
             console.error("response", response);
             if (response.ok) {
                 return json(await response.json());
