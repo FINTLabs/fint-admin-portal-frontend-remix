@@ -6,7 +6,14 @@ class MeApi {
     static async fetchDisplayName() {
         log("Fetching display name", API_URL);
         try {
-            const response = await fetch(`${API_URL}/api/me`);
+            const response = await fetch('https://admin-beta.fintlabs.no/api/me', {
+                method: 'GET',
+                headers: {
+                    'Accept': 'application/json',
+                    // Include other necessary headers, such as Authorization headers, if needed
+                },
+            });
+
             if (response.ok) {
                 log("response from me fetch:", response);
                 return await response.json();
