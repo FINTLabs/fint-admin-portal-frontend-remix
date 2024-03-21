@@ -21,6 +21,7 @@ class ContactApi {
             });
             console.error("response", response);
             if (response.ok) {
+                log("response from contact fetch:", response);
                 return json(await response.json());
             } else {
                 // Handle error response
