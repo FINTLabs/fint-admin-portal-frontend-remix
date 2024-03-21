@@ -10,8 +10,11 @@ import {useFetcher, useLoaderData} from "@remix-run/react";
 import OrganizationApi from "~/api/organization-api";
 import ContactForm from "~/components/contact-form";
 
-export const loader = async ({request}) => {
+export const loader = async ({request}: {request: Request}) => {
     const cookies = request.headers.get('cookie');
+    if (cookies === null) {
+        throw new Error("No cookies found in the request headers");
+    }
     try {
         const [contactsData, organizationsData] = await Promise.all([
             ContactApi.fetch(cookies),
@@ -73,15 +76,17 @@ export default function ContactPage() {
         }
     }, [fetcher.data]);
 
-    const handleSearchInputChange = (input: any) => {
-        setSearch(input);
+const handleSearchInputChange = (input: any) => {
+    setSearch(input);
+    if (contactsData !== null) {
         const filtered = contactsData.filter(
             (row: { firstName: string; lastName: string; }) =>
                 row.firstName.toLowerCase().includes(input.toLowerCase()) ||
                 row.lastName.toLowerCase().includes(input.toLowerCase())
         );
         setFilteredData(filtered);
-    };
+    }
+};
 
     return (
         <div style={{fontFamily: "system-ui, sans-serif", lineHeight: "1.8"}}>

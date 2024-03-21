@@ -7,6 +7,9 @@ class ContactApi {
 
     static async fetch(cookies: string) {
         try {
+            console.error("TESTING FROM THURSDAY");
+            console.error("COOKIES", cookies);
+
             // const response = await fetch(`${API_URL}/api/contacts`);
             const response = await fetch('https://admin-beta.fintlabs.no/api/contacts', {
                 headers: {
