@@ -2,12 +2,13 @@ import type {IContact, IOrganization} from "~/api/types";
 import {json} from "@remix-run/node";
 
 const API_URL = process.env.API_URL || '';
+import { log, error } from '~/utils/logger';
 
 class ContactApi {
 
     static async fetch(cookies: string) {
-        console.error("TESTING FROM NEW FILE");
-        console.error("COOKIES", cookies);
+        log("TESTING FROM NEW FILE");
+        log("COOKIES", cookies);
 
         try {
             // const response = await fetch(`${API_URL}/api/contacts`);
@@ -16,17 +17,21 @@ class ContactApi {
                 credentials: 'include', // This is crucial for including cookies
                 // Other options...
             });
-            console.error("response", response);
+
+            if (response.redirected) {
+                console.warn('Contact Request was redirected:', response.url);
+            }
+
             if (response.ok) {
                 return json(await response.json());
             } else {
                 // Handle error response
-                console.error("Error fetching contacts");
+                error("Error fetching contacts");
                 return null;
             }
-        } catch (error) {
+        } catch (err) {
             // Handle fetch error
-            console.error("Error fetching contacts:", error);
+            error("Error fetching contacts:", err);
             return null;
         }
     }
