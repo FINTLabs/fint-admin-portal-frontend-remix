@@ -11,8 +11,9 @@ class ContactApi {
 
         try {
             // const response = await fetch(`${API_URL}/api/contacts`);
-            const response = await fetch('/api/contacts', {
+            const response = await fetch('https://admin-beta.fintlabs.no/api/contacts', {
                 headers: {
+                    // Forward the cookies received from the client
                     'Cookie': cookies,
                 },
             });
