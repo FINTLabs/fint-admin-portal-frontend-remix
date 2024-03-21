@@ -11,7 +11,7 @@ class MeApi {
                 method: 'GET',
                 headers: {
                     'Accept': 'application/json',
-                    'Cookie': cookies,
+                    // 'Cookie': cookies,
                 },
             });
 
