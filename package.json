@@ -5,7 +5,7 @@
   "scripts": {
     "build": "remix build",
     "dev": "remix dev",
-    "start": "node server.js",
+    "start": "node server.ts",
     "typecheck": "tsc"
   },
   "dependencies": {
