@@ -7,13 +7,17 @@ class MeApi {
         log("Fetching display name", API_URL);
         // log("COOKIES for me", cookies);
         try {
-            const response = await fetch('https://admin-beta.fintlabs.no/api/me', {
+            const response = await fetch('http://localhost:8080/api/me', {
                 method: 'GET',
                 headers: {
                     'Accept': 'application/json',
                     // 'Cookie': cookies,
                 },
             });
+
+            if (response.redirected) {
+                log('Me Request was redirected:', response.url);
+            }
 
             if (response.ok) {
                 log("response from me fetch:", response);
