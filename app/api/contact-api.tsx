@@ -6,16 +6,15 @@ const API_URL = process.env.API_URL || '';
 class ContactApi {
 
     static async fetch(cookies: string) {
-        console.error("TESTING FROM THURSDAY");
+        console.error("TESTING FROM NEW FILE");
         console.error("COOKIES", cookies);
 
         try {
             // const response = await fetch(`${API_URL}/api/contacts`);
-            const response = await fetch('https://admin-beta.fintlabs.no/api/contacts', {
-                headers: {
-                    // Forward the cookies received from the client
-                    'Cookie': cookies,
-                },
+            const response = await fetch(`${API_URL}/api/contacts`, {
+                method: 'GET', // or 'POST', etc.
+                credentials: 'include', // This is crucial for including cookies
+                // Other options...
             });
             console.error("response", response);
             if (response.ok) {
