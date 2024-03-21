@@ -7,7 +7,7 @@ class MeApi {
         log("Fetching display name", API_URL);
         // log("COOKIES for me", cookies);
         try {
-            const response = await fetch('/api/me', {
+            const response = await fetch(`${API_URL}/api/me`, {
                 method: 'GET',
                 headers: {
                     'Accept': 'application/json',
