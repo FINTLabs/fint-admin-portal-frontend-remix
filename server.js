@@ -6,13 +6,13 @@ const { createRequestHandler } = require('@remix-run/express');
 const app = express();
 
 // Define the target for your Java backend
-const JAVA_API_URL = 'http://localhost'; // Adjust this URL to your Java backend
+const JAVA_API_URL = 'https://admin-beta.fintlabs.no'; // Adjust this URL to your Java backend
 
 // Proxy middleware to forward /api requests to the Java backend
 app.use('/api', createProxyMiddleware({
     target: JAVA_API_URL,
     changeOrigin: true,
-    pathRewrite: { '^/api': '' }, // Optional: rewrite /api to / if needed
+    //pathRewrite: { '^/api': '' }, // Optional: rewrite /api to / if needed
 }));
 
 // Serve static assets
