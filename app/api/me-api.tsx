@@ -3,9 +3,9 @@ import { log, error } from '~/utils/logger';
 const API_URL = process.env.API_URL || 'https://admin-beta.fintlabs.no';
 
 class MeApi {
-    static async fetchDisplayName(cookies: string) {
+    static async fetchDisplayName() {
         log("Fetching display name", API_URL);
-        log("COOKIES for me", cookies);
+        // log("COOKIES for me", cookies);
         try {
             const response = await fetch('https://admin-beta.fintlabs.no/api/me', {
                 method: 'GET',

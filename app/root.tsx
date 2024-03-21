@@ -29,11 +29,11 @@ export const links: LinksFunction = () => [
 ];
 
 export async function loader(request: Request){
-    const cookies = request.headers.get('Cookie');
-    if (cookies === null) {
-        return json({ error: "Authentication required" }, { status: 401 });
-    }
-    const displayName = await MeApi.fetchDisplayName(cookies);
+    // const cookies = request.headers.get('Cookie');
+    // if (cookies === null) {
+    //     return json({ error: "Authentication required" }, { status: 401 });
+    // }
+    const displayName = await MeApi.fetchDisplayName();
     return json({ displayName });
 }
 
