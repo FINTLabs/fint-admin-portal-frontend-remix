@@ -1,32 +1,29 @@
-import { useLoaderData } from "@remix-run/react";
-import { json, LoaderFunction } from "@remix-run/node";
-import {log} from "~/utils/logger";
+import { json, LoaderFunction } from '@remix-run/node';
 
-// Type definition for the API response
 interface ApiResponse {
     fullName: string;
 }
 
-// Type definition for the loader data
-type LoaderData = ApiResponse;
+export const loader: LoaderFunction = async ({ request }) => {
+    const apiUrl = 'https://admin-beta.fintlabs.no/api/me';
 
-// Loader function to fetch the display name from the API
-export const loader: LoaderFunction = async (): Promise<Response> => {
-    const apiUrl = "https://admin-beta.fintlabs.no/api/me";
+    // Attempt to retrieve the token from the Cookie header or Authorization header
+    const cookies = request.headers.get('Cookie');
+    const authToken = cookies ? parseCookie(cookies, 'AuthToken') : null; // Implement parseCookie to extract token
+
+    // Alternatively, if the token is in the Authorization header
+    // const authToken = request.headers.get('Authorization')?.replace('Bearer ', '');
+
     try {
         const response = await fetch(apiUrl, {
             method: 'GET',
             headers: {
                 'Accept': 'application/json',
+                ...(authToken ? { 'Authorization': `Bearer ${authToken}` } : {}),
             },
         });
 
-        if (response.redirected) {
-            log('Me Request was redirected:', response.url);
-        }
-
         if (!response.ok) {
-            // Handle non-OK responses gracefully
             throw new Error(`API request failed with status ${response.status}`);
         }
 
@@ -34,18 +31,22 @@ export const loader: LoaderFunction = async (): Promise<Response> => {
         return json(data);
     } catch (error) {
         console.error("Failed to fetch display name:", error);
-        // In real-world scenarios, consider more nuanced error handling and response
         throw new Response("Error fetching display name", { status: 500 });
     }
 };
 
-export default function DisplayName() {
-    const { fullName } = useLoaderData<LoaderData>();
-
+// Utility function to parse cookies and extract the token
+// This is a basic implementation; you might need a more robust parser depending on your needs
+function parseCookie(cookieHeader: string, name: string): string | null {
+    const value = `; ${cookieHeader}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return parts.pop()?.split(';').shift() ?? null;
+    return null;
+}
+export default function DisplayName({ fullName }: ApiResponse) {
     return (
         <div>
-            <h1>Display Name</h1>
-            <p>{fullName}</p>
+            <h1>Hello, {fullName}</h1>
         </div>
     );
 }
