@@ -6,7 +6,7 @@ interface ApiResponse {
 }
 
 export const loader: LoaderFunction = async ({ request }) => {
-    const apiUrl = 'https://admin-beta.fintlabs.no/api/me';
+    const apiUrl = 'https://localhost/api/me';
     try {
         // Extract cookies from the incoming request
         const cookies = request.headers.get('Cookie');
