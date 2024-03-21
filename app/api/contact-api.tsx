@@ -8,7 +8,7 @@ class ContactApi {
 
     static async fetch(cookies: string) {
         log("TESTING FROM NEW FILE");
-        log("COOKIES", cookies);
+        // log("COOKIES", cookies);
 
         try {
             // const response = await fetch(`${API_URL}/api/contacts`);
@@ -23,7 +23,7 @@ class ContactApi {
             }
 
             if (response.ok) {
-                return json(await response.json());
+                return await response.json();
             } else {
                 // Handle error response
                 error("Error fetching contacts");
