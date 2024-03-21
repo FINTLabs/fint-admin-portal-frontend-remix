@@ -7,7 +7,7 @@ class MeApi {
         log("Fetching display name", API_URL);
         try {
             // const response = await fetch(`${API_URL}/api/me`);
-            const response = await fetch('${API_URL}/api/me', {
+            const response = await fetch('/api/me', {
                 method: 'GET', // or 'POST', etc.
                 credentials: 'include', // This is crucial for including cookies
                 // Other options...

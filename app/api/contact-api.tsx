@@ -1,17 +1,18 @@
 import type {IContact, IOrganization} from "~/api/types";
 import {json} from "@remix-run/node";
+import { log, error } from '~/utils/logger';
 
 const API_URL = process.env.API_URL || '';
 
 class ContactApi {
 
     static async fetch(cookies: string) {
-        console.error("TESTING FROM NEW FILE");
-        console.error("COOKIES", cookies);
+        log("TESTING FROM NEW FILE");
+        log("COOKIES", cookies);
 
         try {
             // const response = await fetch(`${API_URL}/api/contacts`);
-            const response = await fetch(`${API_URL}/api/contacts`, {
+            const response = await fetch(`https://admin-beta.fintlabs.no/api/contacts`, {
                 method: 'GET', // or 'POST', etc.
                 credentials: 'include', // This is crucial for including cookies
                 // Other options...
@@ -21,12 +22,12 @@ class ContactApi {
                 return json(await response.json());
             } else {
                 // Handle error response
-                console.error("Error fetching contacts");
+                error("Error fetching contacts");
                 return null;
             }
-        } catch (error) {
+        } catch (err) {
             // Handle fetch error
-            console.error("Error fetching contacts:", error);
+            error("Error fetching contacts:", err);
             return null;
         }
     }
