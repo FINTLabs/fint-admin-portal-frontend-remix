@@ -8,6 +8,7 @@ class MeApi {
         try {
             const response = await fetch(`/api/me`);
             if (response.ok) {
+                log("response from me fetch:", response);
                 return await response.json();
             } else {
                 // Handle error response
