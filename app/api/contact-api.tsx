@@ -20,7 +20,7 @@ class ContactApi {
                     'Cookie': cookies,
                 },
             });
-
+            log("response from contact fetch:", response);
             if (response.ok) {
                 const responseData = await response.json(); // Properly read the JSON response
                 log("response from contact fetch:", responseData); // Log the actual data
