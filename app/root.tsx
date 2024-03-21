@@ -28,8 +28,12 @@ export const links: LinksFunction = () => [
     {rel: 'stylesheet', href: styles},
 ];
 
-export async function loader(){
-    const displayName = await MeApi.fetchDisplayName();
+export async function loader(request: Request){
+    const cookies = request.headers.get('Cookie');
+    if (cookies === null) {
+        throw new Error("No cookies found in the request headers");
+    }
+    const displayName = await MeApi.fetchDisplayName(cookies);
     return json({ displayName });
 }
 

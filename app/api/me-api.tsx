@@ -3,14 +3,14 @@ import { log, error } from '~/utils/logger';
 const API_URL = process.env.API_URL || 'https://admin-beta.fintlabs.no';
 
 class MeApi {
-    static async fetchDisplayName() {
+    static async fetchDisplayName(cookies: string) {
         log("Fetching display name", API_URL);
         try {
             const response = await fetch('https://admin-beta.fintlabs.no/api/me', {
                 method: 'GET',
                 headers: {
                     'Accept': 'application/json',
-                    // Include other necessary headers, such as Authorization headers, if needed
+                    'Cookie': cookies,
                 },
             });
 
