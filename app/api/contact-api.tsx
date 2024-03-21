@@ -12,10 +12,12 @@ class ContactApi {
 
         try {
             // const response = await fetch(`${API_URL}/api/contacts`);
-            const response = await fetch(`https://admin-beta.fintlabs.no/api/contacts`, {
-                method: 'GET', // or 'POST', etc.
-                credentials: 'include', // This is crucial for including cookies
-                // Other options...
+           const response = await fetch(`https://admin-beta.fintlabs.no/api/contacts`, {
+                method: 'GET',
+                credentials: 'include',
+                headers: {
+                    'Cookie': cookies,
+                },
             });
             console.error("response", response);
             if (response.ok) {
