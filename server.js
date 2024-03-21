@@ -5,21 +5,20 @@ const { createRequestHandler } = require('@remix-run/express');
 const app = express();
 
 // Serve static assets
-app.use(express.static('public'));
+app.use('/rapportering/build', express.static(path.join(__dirname, 'public/build'), {
+    immutable: true,
+    maxAge: "1y"
+}));
 
-// Assuming your build directory is correctly set up by `npm run build`
-const BUILD_DIR = path.join(process.cwd(), 'build');
-
-app.use(
-    '/build',
-    express.static('build', { immutable: true, maxAge: '1y' })
-);
+// Serve the generated JS, CSS, and other assets from the build directory
+app.use('/rapportering/build', express.static('build', { immutable: true, maxAge: '1y' }));
 
 app.all(
     '*',
     createRequestHandler({
-        getLoadContext: () => ({}), // Adjust according to your needs
-        build: require(BUILD_DIR),
+        getLoadContext: () => ({}), // Your context here
+        // Ensure the build directory is correctly loaded
+        build: require(path.join(__dirname, 'build')),
     })
 );
 
