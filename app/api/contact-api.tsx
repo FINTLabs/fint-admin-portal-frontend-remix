@@ -7,7 +7,7 @@ class ContactApi {
     static async fetch() {
         try {
             // const response = await fetch(`${API_URL}/api/contacts`);
-            const response = await fetch(`/api/contacts`);
+            const response = await fetch(`https://admin-beta.fintlabs.no/api/contacts`);
             if (response.ok) {
                 return await response.json();
             } else {

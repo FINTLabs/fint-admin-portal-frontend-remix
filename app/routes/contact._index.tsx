@@ -133,7 +133,7 @@ export default function ContactPage() {
 export function ErrorBoundary({error}: { error: Error }) {
     return (
         <>
-            <p>Something went wrong.</p>
+            <p>Something went wrong fetching contacts.</p>
             <p>{error?.message}</p>
         </>
     );
