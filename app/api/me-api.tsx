@@ -6,7 +6,7 @@ class MeApi {
     static async fetchDisplayName() {
         log("Fetching display name", API_URL);
         try {
-            const response = await fetch(`/api/me`);
+            const response = await fetch(`${API_URL}/api/me`);
             if (response.ok) {
                 log("response from me fetch:", response);
                 return await response.json();
