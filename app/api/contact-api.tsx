@@ -7,11 +7,9 @@ const API_URL = process.env.API_URL || 'https://admin-beta.fintlabs.no';
 class ContactApi {
 
 // Assuming API_URL is correctly defined somewhere in your code
-    const API_URL = 'https://admin-beta.fintlabs.no';
-
     static async fetch(cookies: string) {
-        console.log("TESTING NEW ");
-        console.log("COOKIES in contact", cookies);
+        log("TESTING NEW ");
+        log("COOKIES in contact", cookies);
 
         try {
             const response = await fetch(`${API_URL}/api/contacts`, {
@@ -25,16 +23,16 @@ class ContactApi {
 
             if (response.ok) {
                 const responseData = await response.json(); // Properly read the JSON response
-                console.log("response from contact fetch:", responseData); // Log the actual data
+                log("response from contact fetch:", responseData); // Log the actual data
                 return responseData; // Adjust based on what you want to do with the data
             } else {
                 // Handle error response
-                console.error("Error fetching contacts, status:", response.status);
+                error("Error fetching contacts, status:", response.status);
                 return null; // Consider throwing an error or returning a more descriptive error object
             }
         } catch (err) {
             // Handle fetch error
-            console.error("Error fetching contacts:", err);
+            error("Error fetching contacts:", err);
             return null; // Consider a more descriptive error handling approach
         }
     }
