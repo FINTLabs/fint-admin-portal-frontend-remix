@@ -7,6 +7,8 @@ interface ApiResponse {
 
 export const loader: LoaderFunction = async ({ request }) => {
     const apiUrl = 'https://localhost/api/me';
+    console.log("TEST: Fetch request made to API.");
+
     try {
         // Extract cookies from the incoming request
         const cookies = request.headers.get('Cookie');
@@ -21,7 +23,9 @@ export const loader: LoaderFunction = async ({ request }) => {
             },
         });
 
-        console.log("TEST: Fetch request made to API.");
+        console.log("TEST: API response status:", response.status);
+        console.log("TEST: API response headers:", response.headers);
+        console.log("TEST: API response body:", response.body);
 
         if (!response.ok) {
             console.error(`TEST: API request failed with status ${response.status}`);
