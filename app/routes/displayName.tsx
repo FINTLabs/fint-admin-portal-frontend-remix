@@ -6,7 +6,7 @@ interface ApiResponse {
 }
 
 export const loader: LoaderFunction = async ({ request }) => {
-    const apiUrl = 'https://localhost/api/me';
+    const apiUrl = 'https://admin-beta.fintlabs.no/api/me';
     console.log("TEST: Fetch request made to API.");
 
     try {
