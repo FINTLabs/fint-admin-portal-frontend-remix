@@ -1,5 +1,6 @@
 import { json, LoaderFunction } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
+import {log} from "~/utils/logger";
 
 interface ApiResponse {
     fullName: string;
@@ -16,16 +17,20 @@ export const loader: LoaderFunction = async ({ request }) => {
 
         const response = await fetch(apiUrl, {
             method: 'GET',
-            // headers: {
-            //     'Accept': 'application/json',
-            //     // Forward cookies to the API request
-            //     ...(cookies ? { 'Cookie': cookies } : {}),
-            // },
+            headers: {
+                // 'Accept': 'application/json',
+                // Forward cookies to the API request
+                ...(cookies ? { 'Cookie': cookies } : {}),
+            },
         });
 
         console.log("TEST: API response status:", response.status);
         console.log("TEST: API response headers:", response.headers);
         console.log("TEST: API response body:", response.body);
+
+        if (response.redirected) {
+            log('TEST: Request was redirected:', response.url);
+        }
 
         if (!response.ok) {
             console.error(`TEST: API request failed with status ${response.status}`);
