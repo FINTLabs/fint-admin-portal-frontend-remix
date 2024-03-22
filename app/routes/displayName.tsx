@@ -16,11 +16,11 @@ export const loader: LoaderFunction = async ({ request }) => {
 
         const response = await fetch(apiUrl, {
             method: 'GET',
-            headers: {
-                'Accept': 'application/json',
-                // Forward cookies to the API request
-                ...(cookies ? { 'Cookie': cookies } : {}),
-            },
+            // headers: {
+            //     'Accept': 'application/json',
+            //     // Forward cookies to the API request
+            //     ...(cookies ? { 'Cookie': cookies } : {}),
+            // },
         });
 
         console.log("TEST: API response status:", response.status);
