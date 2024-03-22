@@ -32,10 +32,10 @@ export const loader: LoaderFunction = async ({ request }) => {
             throw new Error(`API request failed with status ${response.status}`);
         }
 
-        const data: ApiResponse = await response.json();
-        console.log("TEST: Data received from API:", JSON.stringify(data));
+        //const data: ApiResponse = await response.json();
+        // console.log("TEST: Data received from API:", JSON.stringify(data));
 
-        return json(data);
+        return json("data");
     } catch (error) {
         console.error("TEST: Failed to fetch display name:", error);
         throw new Response("Error fetching display name", { status: 500 });
