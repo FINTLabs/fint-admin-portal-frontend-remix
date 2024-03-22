@@ -33,7 +33,8 @@ export const loader: LoaderFunction = async ({ request }) => {
         }
 
         //const data: ApiResponse = await response.json();
-        console.log("TEST: Data received from API:", JSON.stringify(data));
+        // console.log("TEST: Data received from API:", JSON.stringify(data));
+        console.log("TEST: Data received from API:", JSON.stringify(response));
 
         return json("data");
     } catch (error) {
