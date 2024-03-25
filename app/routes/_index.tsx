@@ -6,7 +6,7 @@ import {
     HStack,
     LinkPanel,
     VStack,
-    Page,
+    Page, BodyLong, Link
 } from "@navikt/ds-react";
 import {
     Buldings3Icon,
@@ -15,7 +15,7 @@ import {
     PersonGroupIcon,
     ExternalLinkIcon,
 } from "@navikt/aksel-icons";
-import {Link} from "@remix-run/react";
+// import {Link} from "@remix-run/react";
 interface LinkItem {
     name: string;
     url: string;
@@ -33,11 +33,11 @@ export default function Dashboard() {
 
     const convertLinksToObjectComponents = (links: LinkItem[]) => {
         return links.map((link, index) => (
-            <BodyShort key={index}>
-                <Link to={link.url}>
+            <BodyLong key={index}>
+                <Link href={link.url}>
                     {link.name} <ExternalLinkIcon title="a11y-title" fontSize="1.5rem"/>
                 </Link>
-            </BodyShort>
+            </BodyLong>
         ));
     };
 

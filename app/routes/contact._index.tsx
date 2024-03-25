@@ -12,9 +12,9 @@ import ContactForm from "~/components/contact-form";
 
 export const loader = async ({request}: {request: Request}) => {
     const cookies = request.headers.get('cookie');
-    if (cookies === null) {
-        throw new Error("No cookies found in the request headers");
-    }
+    // if (cookies === null) {
+    //     throw new Error("No cookies found in the request headers");
+    // }
     try {
         const [contactsData, organizationsData] = await Promise.all([
             ContactApi.fetch(cookies),

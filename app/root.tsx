@@ -1,11 +1,12 @@
 import React from "react";
-import { cssBundleHref } from "@remix-run/css-bundle";
+// import { cssBundleHref } from "@remix-run/css-bundle";
 import type { LinksFunction , MetaFunction} from "@remix-run/node";
-import navStyles from "@navikt/ds-css/dist/index.css";
+// import navStyles from "@navikt/ds-css/dist/index.css";
 import {LayoutAppbar} from '~/components/layout-appbar';
 import { Box, Page, BodyShort } from "@navikt/ds-react";
 import MeApi from "~/api/me-api";
 import {json} from "@remix-run/node";
+
 import {
     Links,
     LiveReload,
@@ -16,6 +17,9 @@ import {
     Link,
     useRouteError
 } from "@remix-run/react";
+import "@navikt/ds-css/dist/index.css";
+import "~/styles/global.css";
+
 import styles from "~/styles/main.css";
 // export const links: LinksFunction = () => [
 //     ...(cssBundleHref
@@ -23,10 +27,10 @@ import styles from "~/styles/main.css";
 //         { rel: "stylesheet", href: navStyles }] : []),
 // ];
 
-export const links: LinksFunction = () => [
-    { rel: "stylesheet", href: navStyles },
-    {rel: 'stylesheet', href: styles},
-];
+// export const links: LinksFunction = () => [
+//     { rel: "stylesheet", href: navStyles },
+//     // {rel: 'stylesheet', href: styles},
+// ];
 
 export async function loader(request: Request){
     // const cookies = request.headers.get('Cookie');
@@ -76,7 +80,7 @@ export default function App() {
 
       <Page
           footer={
-              <Box padding="8" as="footer" className={"footer"}>
+              <Box padding="8" as="footer" background="surface-alt-3-subtle">
                   <Page.Block gutters width="lg">
                       <BodyShort><Link to={'#'}>Til Toppen</Link></BodyShort>
                       Footer from root
@@ -85,7 +89,7 @@ export default function App() {
           }
       >
           <Box
-              className={"appbar"}
+              background="surface-alt-3-subtle"
               padding="8"
               as="header"
           >

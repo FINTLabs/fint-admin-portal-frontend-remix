@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "@remix-run/react";
 import { ChevronRightIcon, HouseIcon } from '@navikt/aksel-icons';
-import styled from "styled-components";
+// import styled from "styled-components";
 
 interface BreadcrumbItem {
     name: string;
@@ -11,10 +11,10 @@ interface BreadcrumbItem {
 interface BreadcrumbsProps {
     breadcrumbs: BreadcrumbItem[];
 }
-
-const StyledChevronRightIcon = styled(ChevronRightIcon)`
-    vertical-align: middle;
-`;
+//
+// const StyledChevronRightIcon = styled(ChevronRightIcon)`
+//     vertical-align: middle;
+// `;
 
 export default function Breadcrumbs({ breadcrumbs }: BreadcrumbsProps) {
     const homeLink = '/';
@@ -22,14 +22,14 @@ export default function Breadcrumbs({ breadcrumbs }: BreadcrumbsProps) {
 
     const translateNameToNorwegian = (name: string): string => {
         const translations: Record<string, string> = {
-            'Dashboard': 'Dashbord',
+            'Dashboard': 'Dashboard',
         };
         return translations[name] || name;
     };
 
     const crumbs = breadcrumbs.map(({ name, link }) => (
         <Link to={link} style={linkStyle} key={link}>
-            <StyledChevronRightIcon title="Spacer" />
+            <ChevronRightIcon title="Spacer" />
             {translateNameToNorwegian(name)}
         </Link>
     ));

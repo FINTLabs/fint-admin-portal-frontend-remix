@@ -27,7 +27,7 @@ export function LayoutAppbar() {
                 {/*<header className="grid h-20">*/}
                     <HStack as="nav" justify="space-between" align="center">
                         <a href="/" className="px-2 py-5">
-                            <img src={"/img/Novari-big-gray.png"} height={"50px"} alt={"Novari Logo"}/>
+                            <img src={"/img/Novari-big-gray.png"} style={{maxHeight: "50px"}} alt={"Novari Logo"}/>
                         </a>
                         <div className="grid h-full">
                             <HStack align="center">
