@@ -3,7 +3,7 @@ import { log, error } from '~/utils/logger';
 const API_URL = process.env.API_URL || 'http://fint-admin-portal-backend:8080';
 
 class MeApi {
-    static async fetchDisplayName(cookies: string ) {
+    static async fetchDisplayName( ) {
         log("Fetching display name", API_URL);
         // log("COOKIES for me", cookies);
         try {
@@ -11,7 +11,7 @@ class MeApi {
                 method: 'GET',
                 headers: {
                     'Accept': 'application/json',
-                    'Cookie': cookies,
+                    // 'Cookie': cookies,
                 },
             });
 

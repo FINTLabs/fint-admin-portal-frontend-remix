@@ -16,6 +16,7 @@ import {
     useRouteError
 } from "@remix-run/react";
 import styles from "~/styles/main.css";
+// import {log} from "~/utils/logger";
 // export const links: LinksFunction = () => [
 //     ...(cssBundleHref
 //         ? [{ rel: "stylesheet", href: cssBundleHref },
@@ -27,12 +28,13 @@ export const links: LinksFunction = () => [
     {rel: 'stylesheet', href: styles},
 ];
 
-export async function loader(request: Request){
-    const cookies = request.headers.get('Cookie');
-    if (cookies === null) {
-        return json({ error: "Authentication required" }, { status: 401 });
-    }
-    const displayName = await MeApi.fetchDisplayName(cookies);
+export async function loader(){
+    // const headers = Object.fromEntries(request.headers.entries());
+
+    // if (headers === null) {
+    //     return json({ error: "Authentication required" }, { status: 401 });
+    // }
+    const displayName = await MeApi.fetchDisplayName();
     return json({ displayName });
 }
 
