@@ -28,13 +28,16 @@ export const links: LinksFunction = () => [
     {rel: 'stylesheet', href: styles},
 ];
 
-export async function loader(){
-    // const headers = Object.fromEntries(request.headers.entries());
+export async function loader(request: Request) {
+    const headers = Object.fromEntries(request.headers.entries());
+    // const cookies = headers['cookie'];
 
-    // if (headers === null) {
+    // Uncomment if you want to enforce authentication based on cookies
+    // if (!cookies) {
     //     return json({ error: "Authentication required" }, { status: 401 });
     // }
-    const displayName = await MeApi.fetchDisplayName();
+
+    const displayName = await MeApi.fetchDisplayName(headers);
     return json({ displayName });
 }
 
