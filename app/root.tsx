@@ -1,5 +1,4 @@
 import React from "react";
-import { cssBundleHref } from "@remix-run/css-bundle";
 import type { LinksFunction , MetaFunction} from "@remix-run/node";
 import navStyles from "@navikt/ds-css/dist/index.css";
 import {LayoutAppbar} from '~/components/layout-appbar';
@@ -29,11 +28,11 @@ export const links: LinksFunction = () => [
 ];
 
 export async function loader(request: Request){
-    // const cookies = request.headers.get('Cookie');
-    // if (cookies === null) {
-    //     return json({ error: "Authentication required" }, { status: 401 });
-    // }
-    const displayName = await MeApi.fetchDisplayName();
+    const cookies = request.headers.get('Cookie');
+    if (cookies === null) {
+        return json({ error: "Authentication required" }, { status: 401 });
+    }
+    const displayName = await MeApi.fetchDisplayName(cookies);
     return json({ displayName });
 }
 
@@ -71,6 +70,7 @@ export default function App() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <Meta />
         <Links />
+          <title>Admin Portal Dashboard</title>
       </head>
       <body>
 
