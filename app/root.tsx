@@ -16,6 +16,7 @@ import {
     useRouteError
 } from "@remix-run/react";
 import styles from "~/styles/main.css";
+import {log} from "~/utils/logger";
 // import {log} from "~/utils/logger";
 // export const links: LinksFunction = () => [
 //     ...(cssBundleHref
@@ -29,7 +30,8 @@ export const links: LinksFunction = () => [
 ];
 
 export async function loader(request: Request) {
-    const headers = Object.fromEntries(request.headers.entries());
+    const headers = request;
+    log('Request headers:', headers);
     // const cookies = headers['cookie'];
 
     // Uncomment if you want to enforce authentication based on cookies
