@@ -7,12 +7,13 @@ class MeApi {
         // log("Fetching display name", API_URL);
         // log("COOKIES for me", headers);
         log("Fetching display name: ", API_URL);
-        const cookies = request.headers.get("cookie") || ""
+        log("Request for me: ", request);
+        // const cookies = request.headers.get("cookie") || "";
         try {
             const response = await fetch(`${API_URL}/api/me`, {
                 method: 'GET',
                 headers: {
-                    'cookie': cookies,
+                    // 'cookie': cookies,
                     'Accept': 'application/json',
                 },
             });

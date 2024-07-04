@@ -33,7 +33,7 @@ export async function loader(request: Request) {
     const headers = request.headers;
     log('Request headers:', headers);
     // const cookies = headers['cookie'];
-    log('Cookies:', request.headers.get('cookie'))
+    // log('Cookies:', request.headers.get('cookie'))
     // Uncomment if you want to enforce authentication based on cookies
     // if (!cookies) {
     //     return json({ error: "Authentication required" }, { status: 401 });
