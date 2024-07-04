@@ -39,7 +39,7 @@ export async function loader(request: Request) {
     //     return json({ error: "Authentication required" }, { status: 401 });
     // }
 
-    const displayName = await MeApi.fetchDisplayName(headers);
+    const displayName = await MeApi.fetchDisplayName(request);
     return json({ displayName });
 }
 
