@@ -14,6 +14,7 @@ import {
 } from '@navikt/aksel-icons';
 import {Link, useLoaderData} from "@remix-run/react";
 import {ILoaderData} from "~/api/types";
+import logo from '/img/Novari-big-gray.png';
 
 export function LayoutAppbar() {
 
@@ -27,7 +28,7 @@ export function LayoutAppbar() {
                 {/*<header className="grid h-20">*/}
                     <HStack as="nav" justify="space-between" align="center">
                         <a href="/" className="px-2 py-5">
-                            <img src={"/img/Novari-big-gray.png"} height={"50px"} alt={"Novari Logo"}/>
+                            <img src={logo} height="50px" alt="Novari Logo"/>
                         </a>
                         <div className="grid h-full">
                             <HStack align="center">
