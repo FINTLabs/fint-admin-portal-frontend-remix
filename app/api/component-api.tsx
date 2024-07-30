@@ -13,6 +13,7 @@ class ComponentApi {
             }
         } catch (error) {
             // Handle fetch error
+            console.error("Request url:", `${API_URL}/api/components/` );
             console.error("Error fetching components:", error);
             return null;
         }
