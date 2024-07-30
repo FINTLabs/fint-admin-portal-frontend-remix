@@ -19,6 +19,7 @@ class ContactApi {
                     'Accept': 'application/json',
                     'Cookie': cookies,
                 },
+                redirect: 'follow'
             });
 
             log("Response status:", response.status);
