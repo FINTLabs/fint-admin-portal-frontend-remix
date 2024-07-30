@@ -20,19 +20,26 @@ class ContactApi {
                     'Cookie': cookies,
                 },
             });
+
+            log("Response status:", response.status);
+            log("Response headers:", response.headers);
+
             if (response.redirected) {
                 log('Contact Request was redirected:', response.url);
             }
 
             log("response from contact fetch:", response);
             if (response.status === 200) {
-                const responseData = await response.json(); // Properly read the JSON response
-                log("response from contact fetch:", responseData); // Log the actual data
-                return responseData; // Adjust based on what you want to do with the data
-            } else {
-                // Handle error response
-                error("Error fetching contacts, status:", response.status);
-                return null; // Consider throwing an error or returning a more descriptive error object
+                try {
+                    const responseData = await response.json(); // Properly read the JSON response
+                    log("response from contact fetch:", responseData); // Log the actual data
+                    return responseData; // Adjust based on what you want to do with the data
+                } catch (jsonError) {
+                    const responseText = await response.text(); // Read the response text
+                    error("Error parsing JSON:", jsonError);
+                    error("Response text:", responseText);
+                    return null; // Consider a more descriptive error handling approach
+                }
             }
         } catch (err) {
             // Handle fetch error
