@@ -24,8 +24,10 @@ app.use('/rapportering/build', express.static('build', { immutable: true, maxAge
 
 // Handle all other requests with Remix
 app.all('*', createRequestHandler({
-    getLoadContext: () => ({}), // Your context here
-    build: require(path.join(__dirname, 'build')),
+    getLoadContext() {
+        return {};
+    },
+    mode: process.env.NODE_ENV,
 }));
 
 const port = process.env.PORT || 8000;
