@@ -11,7 +11,7 @@ spec:
     - name: API_URL
       value: http://fint-admin-portal-backend:8080
   url:
-    hostname: admin-beta.felleskomponent.no
+    hostname: admin-beta.fintlabs.no
     basePath: /
   ingress:
     enabled: true
