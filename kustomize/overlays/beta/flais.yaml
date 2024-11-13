@@ -1,0 +1,17 @@
+apiVersion: fintlabs.no/v1alpha1
+kind: Application
+metadata:
+  name: fint-admin-portal-frontend
+  namespace: fintlabs-no
+spec:
+  port: 8000
+  orgId: fintlabs.no
+  image: ghcr.io/fintlabs/fint-admin-portal-frontend-remix:latest
+  env:
+    - name: API_URL
+      value: http://fint-admin-portal-backend:8080
+  url:
+    hostname: admin-beta.felleskomponent.no
+    basePath: /
+  ingress:
+    enabled: true
