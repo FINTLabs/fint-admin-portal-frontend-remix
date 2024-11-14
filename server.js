@@ -18,13 +18,12 @@ app.use('/rapportering/build', express.static(path.join(__dirname, 'public/build
 }));
 app.use('/rapportering/build', express.static('build', { immutable: true, maxAge: '1y' }));
 
-// Handle all other requests with Remix
-// app.all('*', createRequestHandler({
-//     getLoadContext() {
-//         return {};
-//     },
-//     mode: process.env.NODE_ENV,
-// }));
+app.all('*', createRequestHandler({
+    getLoadContext() {
+        return {};
+    },
+    mode: process.env.NODE_ENV,
+}));
 
 const port = process.env.PORT || 8000;
 app.listen(port, () => {
