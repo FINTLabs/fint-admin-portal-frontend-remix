@@ -1,8 +1,15 @@
 const express = require('express');
 const path = require('path');
 const { createRequestHandler } = require('@remix-run/express');
+const { createProxyMiddleware } = require('http-proxy-middleware');
 
 const app = express();
+
+app.use('/api', createProxyMiddleware({
+    target: process.env.API_URL,
+    changeOrigin: true,
+    pathRewrite: { '^/api': '' },
+}));
 
 // Serve static assets
 app.use('/rapportering/build', express.static(path.join(__dirname, 'public/build'), {

@@ -1,6 +1,6 @@
 import { log, error } from '~/utils/logger';
 
-const API_URL = process.env.API_URL || 'http://fint-admin-portal-backend:8080';
+const API_URL = process.env.API_URL ||'';
 
 class MeApi {
     static async fetchDisplayName(request: Request) {
