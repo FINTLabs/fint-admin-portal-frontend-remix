@@ -4,9 +4,11 @@ const { createRequestHandler } = require('@remix-run/express');
 const { createProxyMiddleware } = require('http-proxy-middleware');
 
 const app = express();
+const target = process.env.API_URL || ""
+
 
 app.use('/api', createProxyMiddleware({
-    target: process.env.API_URL,
+    target: target,
     changeOrigin: true,
     pathRewrite: { '^/api': '' },
 }));
