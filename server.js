@@ -4,8 +4,13 @@ const { createRequestHandler } = require('@remix-run/express');
 const { createProxyMiddleware } = require('http-proxy-middleware');
 
 const app = express();
-const target = process.env.API_URL || ""
+const target = process.env.API_URL || "http://localhost:8080";
 
+console.log("Taget api: ",target)
+
+if (!target) {
+    throw new Error('Missing API_URL environment variable. Please set it to a valid URL.');
+}
 
 app.use('/api', createProxyMiddleware({
     target: target,
