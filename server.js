@@ -1,7 +1,9 @@
 const express = require('express');
 const path = require('path');
 const { createRequestHandler } = require('@remix-run/express');
-const { createProxyMiddleware } = require('http-proxy-middleware');
+const { createProxyMiddleware } = require('http-proxy-middleware')
+const remixBuild = require(path.join(__dirname, 'build'));
+;
 
 const app = express();
 const target = process.env.API_URL || "http://localhost:8080";
@@ -25,12 +27,16 @@ app.use('/rapportering/build', express.static(path.join(__dirname, 'public/build
 }));
 app.use('/rapportering/build', express.static('build', { immutable: true, maxAge: '1y' }));
 
-app.all('*', createRequestHandler({
-    getLoadContext() {
-        return {};
-    },
-    mode: process.env.NODE_ENV,
-}));
+app.all(
+    '*',
+    createRequestHandler({
+        getLoadContext() {
+            return {};
+        },
+        build: remixBuild,
+        mode: process.env.NODE_ENV || "production",
+    })
+);
 
 const port = process.env.PORT || 8000;
 app.listen(port, () => {
